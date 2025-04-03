@@ -2,9 +2,8 @@ package model;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Objects;
 
-// Item class - Represents IoT devices in the system
+// Item class (Represents IoT devices in the system)
 public class Item implements Serializable {
     
     private String itemId;
@@ -19,12 +18,6 @@ public class Item implements Serializable {
     private Date lastRestocked;
     private Date lastModifiedDate;
     
-    // Default constructor
-    public Item() {
-        this.dateAdded = new Date();
-        this.lastModifiedDate = new Date();
-    }
-    
     // Constructor with essential fields
     public Item(String itemId, String name, double price, int quantity) {
         this.itemId = itemId;
@@ -34,10 +27,9 @@ public class Item implements Serializable {
         this.dateAdded = new Date();
         this.lastModifiedDate = new Date();
     }
-    
+
     // Full constructor
-    public Item(String itemId, String name, int quantity, String description, 
-            double price, String category, String manufacturer, String imageURL) {
+    public Item(String itemId, String name, int quantity, String description, double price, String category, String manufacturer, String imageURL) {
         this.itemId = itemId;
         this.name = name;
         this.quantity = quantity;
@@ -147,7 +139,6 @@ public class Item implements Serializable {
         this.lastModifiedDate = lastModifiedDate;
     }
     
-    // Business methods
     public boolean updateStock() {
         this.lastRestocked = new Date();
         this.lastModifiedDate = new Date();
@@ -156,30 +147,5 @@ public class Item implements Serializable {
     
     public int checkAvailability() {
         return this.quantity;
-    }
-    
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Item item = (Item) o;
-        return Objects.equals(itemId, item.itemId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(itemId);
-    }
-
-    @Override
-    public String toString() {
-        return "Item{" +
-                "itemId='" + itemId + '\'' +
-                ", name='" + name + '\'' +
-                ", price=" + price +
-                ", quantity=" + quantity +
-                ", category='" + category + '\'' +
-                ", manufacturer='" + manufacturer + '\'' +
-                '}';
     }
 }

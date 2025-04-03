@@ -2,9 +2,8 @@ package model;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Objects;
 
-// User class - Parent class for Staff and Customer
+// User class (Parent class for Staff and Customer)
 public class User implements Serializable {
     
     private String id;
@@ -18,12 +17,6 @@ public class User implements Serializable {
     private Date createdDate;
     private Date lastModifiedDate;
     
-    // Default constructor
-    public User() {
-        this.createdDate = new Date();
-        this.lastModifiedDate = new Date();
-    }
-    
     // Constructor with basic fields
     public User(String email, String name, String password) {
         this.email = email;
@@ -32,10 +25,9 @@ public class User implements Serializable {
         this.createdDate = new Date();
         this.lastModifiedDate = new Date();
     }
-    
+
     // Full constructor
-    public User(String id, String name, String password, String email, 
-            String phone, String address, boolean isStaff) {
+    public User(String id, String name, String password, String email, String phone, String address, boolean isStaff) {
         this.id = id;
         this.name = name;
         this.password = password;
@@ -136,51 +128,20 @@ public class User implements Serializable {
     
     // Login functionality
     public boolean login() {
-        this.lastLoginDate = new Date();
         return true;
     }
     
     // Logout functionality
     public void logout() {
-        // Logout logic could be added here if needed
     }
     
     // Method to reset password
     public boolean resetPassword() {
-        // Password reset logic would go here
         return true;
     }
     
     // Method to update profile
     public boolean updateProfile() {
-        this.lastModifiedDate = new Date();
         return true;
-    }
-    
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return isStaff == user.isStaff && 
-               Objects.equals(id, user.id) && 
-               Objects.equals(email, user.email);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, email, isStaff);
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", phone='" + phone + '\'' +
-                ", address='" + address + '\'' +
-                ", isStaff=" + isStaff +
-                '}';
     }
 }

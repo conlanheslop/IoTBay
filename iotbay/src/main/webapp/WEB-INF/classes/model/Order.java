@@ -4,9 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
-// Order class - Represents customer orders in the system
+// Order class (Represents customer orders in the system)
 public class Order implements Serializable {
     
     private String orderId;
@@ -23,25 +22,11 @@ public class Order implements Serializable {
     
     // Default constructor
     public Order() {
-        this.orderDate = new Date();
-        this.status = "Pending";
-        this.orderItems = new ArrayList<>();
+        
     }
-    
-    // Constructor with essential fields
-    public Order(String orderId, String userId, String shippingAddress) {
-        this.orderId = orderId;
-        this.userId = userId;
-        this.shippingAddress = shippingAddress;
-        this.orderDate = new Date();
-        this.status = "Pending";
-        this.orderItems = new ArrayList<>();
-    }
-    
+
     // Full constructor
-    public Order(String orderId, String userId, Date orderDate, double totalAmount,
-            String status, String shippingAddress, boolean isAnonymousOrder,
-            String anonymousEmail) {
+    public Order(String orderId, String userId, Date orderDate, double totalAmount, String status, String shippingAddress, boolean isAnonymousOrder, String anonymousEmail) {
         this.orderId = orderId;
         this.userId = userId;
         this.orderDate = orderDate;
@@ -142,76 +127,24 @@ public class Order implements Serializable {
         this.orderItems = orderItems;
     }
     
-    // Business methods
     public double calculateTotal() {
-        double total = 0;
-        for (OrderItem item : orderItems) {
-            total += (item.getUnitPrice() * item.getQuantity());
-        }
-        this.totalAmount = total;
-        return total;
+        return 0;
     }
     
     public boolean updateStatus(String newStatus) {
-        this.status = newStatus;
-        if ("Shipped".equals(newStatus)) {
-            this.shippedDate = new Date();
-        }
+
         return true;
     }
     
     public boolean addItem(Item item, int quantity) {
-        OrderItem orderItem = new OrderItem();
-        orderItem.setItemId(item.getItemId());
-        orderItem.setQuantity(quantity);
-        orderItem.setUnitPrice(item.getPrice());
-        
-        this.orderItems.add(orderItem);
-        calculateTotal();
-        
         return true;
     }
     
     public boolean removeItem(String itemId) {
-        for (int i = 0; i < orderItems.size(); i++) {
-            if (orderItems.get(i).getItemId().equals(itemId)) {
-                orderItems.remove(i);
-                calculateTotal();
-                return true;
-            }
-        }
-        return false;
+        return true;
     }
     
     public String trackShipment() {
-        if (trackingNumber != null && !trackingNumber.isEmpty()) {
-            return "Tracking information for order " + orderId + ": " + trackingNumber;
-        }
-        return "No tracking information available for this order.";
-    }
-    
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Order order = (Order) o;
-        return Objects.equals(orderId, order.orderId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(orderId);
-    }
-
-    @Override
-    public String toString() {
-        return "Order{" +
-                "orderId='" + orderId + '\'' +
-                ", userId='" + userId + '\'' +
-                ", orderDate=" + orderDate +
-                ", totalAmount=" + totalAmount +
-                ", status='" + status + '\'' +
-                ", items=" + orderItems.size() +
-                '}';
+        return "";
     }
 }

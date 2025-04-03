@@ -127,16 +127,6 @@
         <div class="form-container">
             <h2>Login to Your Account</h2>
             
-            <%-- Display error message if login fails --%>
-            <% 
-                String error = request.getParameter("error");
-                if (error != null && error.equals("true")) { 
-            %>
-                <div class="error-message">
-                    Invalid email or password. Please try again.
-                </div>
-            <% } %>
-            
             <form action="welcome.jsp" method="post">
                 <div class="form-group">
                     <label for="email">Email</label>

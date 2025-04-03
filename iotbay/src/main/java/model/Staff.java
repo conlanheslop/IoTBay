@@ -1,28 +1,20 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.List;
 
-// Staff class - Extends User
+// Staff class (Child of User class)
 public class Staff extends User {
     
     private String staffId;
-    
-    // Default constructor
-    public Staff() {
-        super();
-        setStaff(true);
-    }
-    
+
     // Constructor with basic fields
     public Staff(String email, String name, String password) {
         super(email, name, password);
         setStaff(true);
     }
-    
+
     // Full constructor
-    public Staff(String id, String name, String password, String email, 
-            String phone, String address, String staffId) {
+    public Staff(String id, String name, String password, String email, String phone, String address, String staffId) {
         super(id, name, password, email, phone, address, true);
         this.staffId = staffId;
     }
@@ -36,34 +28,19 @@ public class Staff extends User {
         this.staffId = staffId;
     }
     
-    // Staff-specific methods
     public boolean manageInventory() {
-        // Logic for managing inventory would be implemented here
         return true;
     }
     
     public boolean manageBills() {
-        // Logic for managing bills would be implemented here
         return true;
     }
     
     public boolean processOrders() {
-        // Logic for processing orders would be implemented here
         return true;
     }
     
-    public List<Customer> viewCustomers() {
-        // Logic for viewing customers would be implemented here
+    public ArrayList<Customer> viewCustomers() {
         return new ArrayList<>();
-    }
-    
-    @Override
-    public String toString() {
-        return "Staff{" +
-                "id='" + getId() + '\'' +
-                ", staffId='" + staffId + '\'' +
-                ", name='" + getName() + '\'' +
-                ", email='" + getEmail() + '\'' +
-                '}';
     }
 }

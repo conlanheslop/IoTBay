@@ -178,6 +178,8 @@
             Item item2 = new Item("ITM002", "Motion Detector", 24.99, 30);
             Item item3 = new Item("ITM003", "Smart Thermostat", 89.99, 15);
             Item item4 = new Item("ITM004", "Humidity Sensor", 19.99, 40);
+            Item item5 = new Item("ITM005", "Smart Light Bulb", 15.99, 100);
+            Item item6 = new Item("ITM006", "Door/Window Sensor", 12.50, 75);
         %>
 
         <%
@@ -187,10 +189,11 @@
             boolean isLoggedIn = false;
             
             if (user != null) {
-                isStaff = user.isStaff();
+                isStaff = (user instanceof Staff);
                 isLoggedIn = true;
             }
 
+            items.clear();
             items.add(item1);
             items.get(0).setDescription("Precision temperature sensor with digital output");
             items.get(0).setCategory("Sensors");
@@ -210,6 +213,16 @@
             items.get(3).setDescription("Accurate humidity sensor for environmental monitoring");
             items.get(3).setCategory("Sensors");
             items.get(3).setManufacturer("TechSense");
+
+            items.add(item5);
+            items.get(4).setDescription("Wi-Fi enabled RGB smart bulb with app control");
+            items.get(4).setCategory("Lighting");
+            items.get(4).setManufacturer("SmartHome");
+            
+            items.add(item6);
+            items.get(5).setDescription("Magnetic sensor for doors and windows security");
+            items.get(5).setCategory("Security");
+            items.get(5).setManufacturer("SecureTech");
         %>
         
         <header>

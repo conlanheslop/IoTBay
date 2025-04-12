@@ -1,31 +1,32 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 // Staff class (Child of User class)
 public class Staff extends User {
     
-    private String staffId;
+    private String userId;
 
     // Constructor with basic fields
     public Staff(String email, String name, String password) {
         super(email, name, password);
-        setStaff(true);
     }
 
     // Full constructor
-    public Staff(String id, String name, String password, String email, String phone, String address, String staffId) {
-        super(id, name, password, email, phone, address, true);
-        this.staffId = staffId;
+    public Staff(String id, String name, String password, String email, String phone, String address) {
+        super(id, name, password, email, phone, address);
+        this.userId = id;
     }
     
     // Getters and Setters
-    public String getStaffId() {
-        return staffId;
+    public String getUserId() {
+        return this.getId();
     }
 
-    public void setStaffId(String staffId) {
-        this.staffId = staffId;
+    public void setUserId(String userId) {
+        this.userId = userId;
+        this.setId(userId);
     }
     
     public boolean manageInventory() {
@@ -40,7 +41,7 @@ public class Staff extends User {
         return true;
     }
     
-    public ArrayList<Customer> viewCustomers() {
+    public List<Customer> viewCustomers() {
         return new ArrayList<>();
     }
 }

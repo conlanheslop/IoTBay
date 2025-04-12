@@ -133,7 +133,7 @@
                         if (user == null) { 
                     %>
                         <a href="main.jsp">Browse as Guest</a>
-                    <% } else if (user.isStaff()) { %>
+                    <% } else if (user instanceof Staff) { %>
                         <span>Welcome, <%= user.getName() %></span>
                         <a href="main.jsp">Dashboard</a>
                         <a href="logout.jsp">Logout</a>

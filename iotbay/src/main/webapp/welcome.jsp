@@ -152,14 +152,14 @@
                             customer.setAddress(address);
                         }
                         
-                        customer.setRegistered(true);
+                        customer.setIsRegistered(true);
                         message = "Registration successful!";
                         
                         // Store user in session
                         session.setAttribute("user", customer);
                         user = customer;
                     } else {
-                        // Registration failed - redirect back to register page
+                        // Registration failed (redirect back to register page)
                         response.sendRedirect("register.jsp?error=validation");
                         return;
                     }
@@ -168,7 +168,7 @@
             
             // If user is still null, something went wrong
             if (user == null) {
-                // Login or registration failed - redirect back
+                // Login or registration failed (redirect back)
                 if (action != null && action.equals("login")) {
                     response.sendRedirect("login.jsp?error=true");
                 } else {
@@ -192,14 +192,14 @@
             <div class="welcome-info">
                 <p><strong>Name:</strong> <%= user.getName() %></p>
                 <p><strong>Email:</strong> <%= user.getEmail() %></p>
-                <p><strong>Account Type:</strong> <%= user.isStaff() ? "Staff" : "Customer" %></p>
+                <p><strong>Account Type:</strong> <%= (user instanceof Staff) ? "Staff" : "Customer" %></p>
                 <p><strong>Login Time:</strong> <%= user.getLastLoginDate() %></p>
             </div>
             
             <p>You have been successfully logged in. You can now access your account and start shopping for IoT devices.</p>
             
             <div class="btn-container">
-                <a href="main.jsp" class="btn">Continue to <%= user.isStaff() ? "Dashboard" : "Shop" %></a>
+                <a href="main.jsp" class="btn">Continue to <%= (user instanceof Staff) ? "Dashboard" : "Shop" %></a>
             </div>
         </div>
         

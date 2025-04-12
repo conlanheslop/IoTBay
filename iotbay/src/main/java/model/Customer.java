@@ -6,38 +6,43 @@ import java.util.List;
 // Customer class (Child of User class)
 public class Customer extends User {
     
-    private String customerId;
+    private String userId;
     private boolean isRegistered;
     
     // Constructor for registered customer with basic fields
     public Customer(String email, String name, String password) {
         super(email, name, password);
-        setStaff(false);
         this.isRegistered = true;
     }
 
     // Full constructor
-    public Customer(String id, String name, String password, String email, String phone, String address, String customerId, boolean isRegistered) {
-        super(id, name, password, email, phone, address, false);
-        this.customerId = customerId;
+    public Customer(String id, String name, String password, String email, String phone, String address, boolean isRegistered) {
+        super(id, name, password, email, phone, address);
+        this.userId = id;
         this.isRegistered = isRegistered;
     }
     
     // Getters and Setters
-    public String getCustomerId() {
-        return customerId;
+    public String getUserId() {
+        return this.getId();
     }
 
-    public void setCustomerId(String customerId) {
-        this.customerId = customerId;
+    public void setUserId(String userId) {
+        this.userId = userId;
+        this.setId(userId);
     }
 
-    public boolean isRegistered() {
+    public boolean getIsRegistered() {
         return isRegistered;
     }
 
-    public void setRegistered(boolean isRegistered) {
+    public void setIsRegistered(boolean isRegistered) {
         this.isRegistered = isRegistered;
+    }
+    
+    // Legacy method for JSP compatibility
+    public boolean isRegistered() {
+        return isRegistered;
     }
     
     public Order placeOrder() {

@@ -13,26 +13,23 @@ public class Order implements Serializable {
     private Date orderDate;
     private double totalAmount;
     private String status;
-    private String shippingAddress;
     private boolean isAnonymousOrder;
     private String anonymousEmail;
-    private Date shippedDate;
-    private String trackingNumber;
     private List<OrderItem> orderItems;
     
     // Default constructor
     public Order() {
-        
+        this.orderItems = new ArrayList<>();
+        this.orderDate = new Date();
     }
 
     // Full constructor
-    public Order(String orderId, String userId, Date orderDate, double totalAmount, String status, String shippingAddress, boolean isAnonymousOrder, String anonymousEmail) {
+    public Order(String orderId, String userId, Date orderDate, double totalAmount, String status, boolean isAnonymousOrder, String anonymousEmail) {
         this.orderId = orderId;
         this.userId = userId;
         this.orderDate = orderDate;
         this.totalAmount = totalAmount;
         this.status = status;
-        this.shippingAddress = shippingAddress;
         this.isAnonymousOrder = isAnonymousOrder;
         this.anonymousEmail = anonymousEmail;
         this.orderItems = new ArrayList<>();
@@ -79,20 +76,17 @@ public class Order implements Serializable {
         this.status = status;
     }
 
-    public String getShippingAddress() {
-        return shippingAddress;
-    }
-
-    public void setShippingAddress(String shippingAddress) {
-        this.shippingAddress = shippingAddress;
-    }
-
-    public boolean isAnonymousOrder() {
+    public boolean getIsAnonymousOrder() {
         return isAnonymousOrder;
     }
 
-    public void setAnonymousOrder(boolean isAnonymousOrder) {
+    public void setIsAnonymousOrder(boolean isAnonymousOrder) {
         this.isAnonymousOrder = isAnonymousOrder;
+    }
+    
+    // Legacy method for JSP compatibility
+    public boolean isAnonymousOrder() {
+        return isAnonymousOrder;
     }
 
     public String getAnonymousEmail() {
@@ -101,22 +95,6 @@ public class Order implements Serializable {
 
     public void setAnonymousEmail(String anonymousEmail) {
         this.anonymousEmail = anonymousEmail;
-    }
-
-    public Date getShippedDate() {
-        return shippedDate;
-    }
-
-    public void setShippedDate(Date shippedDate) {
-        this.shippedDate = shippedDate;
-    }
-
-    public String getTrackingNumber() {
-        return trackingNumber;
-    }
-
-    public void setTrackingNumber(String trackingNumber) {
-        this.trackingNumber = trackingNumber;
     }
 
     public List<OrderItem> getOrderItems() {
@@ -128,23 +106,25 @@ public class Order implements Serializable {
     }
     
     public double calculateTotal() {
-        return 0;
+        double total = 0.0;
+        for (OrderItem item : orderItems) {
+            total += item.calculateSubtotal();
+        }
+        this.totalAmount = total;
+        return total;
     }
     
     public boolean updateStatus(String newStatus) {
-
+        this.status = newStatus;
         return true;
     }
     
     public boolean addItem(Item item, int quantity) {
-        return true;
+        OrderItem orderItem = new OrderItem(this.orderId, item.getItemId(), quantity, item.getPrice());
+        return orderItems.add(orderItem);
     }
     
     public boolean removeItem(String itemId) {
-        return true;
-    }
-    
-    public String trackShipment() {
-        return "";
+        return orderItems.removeIf(item -> item.getItemId().equals(itemId));
     }
 }

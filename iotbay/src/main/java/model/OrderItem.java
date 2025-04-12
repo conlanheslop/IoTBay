@@ -56,6 +56,10 @@ public class OrderItem implements Serializable {
     }
     
     public boolean updateQuantity(int newQuantity) {
-        return true;
+        if (newQuantity > 0) {
+            this.quantity = newQuantity;
+            return true;
+        }
+        return false;
     }
 }

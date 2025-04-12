@@ -12,7 +12,6 @@ public class User implements Serializable {
     private String email;
     private String phone;
     private String address;
-    private boolean isStaff;
     private Date lastLoginDate;
     private Date createdDate;
     private Date lastModifiedDate;
@@ -27,14 +26,13 @@ public class User implements Serializable {
     }
 
     // Full constructor
-    public User(String id, String name, String password, String email, String phone, String address, boolean isStaff) {
+    public User(String id, String name, String password, String email, String phone, String address) {
         this.id = id;
         this.name = name;
         this.password = password;
         this.email = email;
         this.phone = phone;
         this.address = address;
-        this.isStaff = isStaff;
         this.createdDate = new Date();
         this.lastModifiedDate = new Date();
     }
@@ -93,15 +91,6 @@ public class User implements Serializable {
         this.lastModifiedDate = new Date();
     }
 
-    public boolean isStaff() {
-        return isStaff;
-    }
-
-    public void setStaff(boolean isStaff) {
-        this.isStaff = isStaff;
-        this.lastModifiedDate = new Date();
-    }
-
     public Date getLastLoginDate() {
         return lastLoginDate;
     }
@@ -128,11 +117,13 @@ public class User implements Serializable {
     
     // Login functionality
     public boolean login() {
+        this.lastLoginDate = new Date();
         return true;
     }
     
     // Logout functionality
     public void logout() {
+        // Logout logic would go here
     }
     
     // Method to reset password
@@ -142,6 +133,7 @@ public class User implements Serializable {
     
     // Method to update profile
     public boolean updateProfile() {
+        this.lastModifiedDate = new Date();
         return true;
     }
 }

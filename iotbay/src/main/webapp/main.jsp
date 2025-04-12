@@ -253,7 +253,13 @@
             <div class="user-welcome">
                 <% if (isLoggedIn) { %>
                     <h2>Welcome <%= user.getName() %></h2>
-                    <p>You are logged in as <%= isStaff ? "Staff" : "Customer" %>.</p>
+                    <p>You are logged in as 
+                    <% if (isStaff) { %>
+                        Staff
+                    <% } else { %>
+                        Customer
+                    <% } %>
+                    .</p>
                     <% if (!isStaff) { %>
                             <a href="edit_profile.jsp" class="btn">Edit Profile</a>
                     <% } %>

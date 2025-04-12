@@ -192,14 +192,26 @@
             <div class="welcome-info">
                 <p><strong>Name:</strong> <%= user.getName() %></p>
                 <p><strong>Email:</strong> <%= user.getEmail() %></p>
-                <p><strong>Account Type:</strong> <%= (user instanceof Staff) ? "Staff" : "Customer" %></p>
+                <p><strong>Account Type:</strong> 
+                <% if (user instanceof Staff) { %>
+                    Staff
+                <% } else { %>
+                    Customer
+                <% } %>
+                </p>
                 <p><strong>Login Time:</strong> <%= user.getLastLoginDate() %></p>
             </div>
             
             <p>You have been successfully logged in. You can now access your account and start shopping for IoT devices.</p>
             
             <div class="btn-container">
-                <a href="main.jsp" class="btn">Continue to <%= (user instanceof Staff) ? "Dashboard" : "Shop" %></a>
+                <a href="main.jsp" class="btn">Continue to 
+                <% if (user instanceof Staff) { %>
+                    Dashboard
+                <% } else { %>
+                    Shop
+                <% } %>
+                </a>
             </div>
         </div>
         

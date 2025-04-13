@@ -180,6 +180,8 @@
             Item item4 = new Item("ITM004", "Humidity Sensor", 19.99, 40);
             Item item5 = new Item("ITM005", "Smart Light Bulb", 15.99, 100);
             Item item6 = new Item("ITM006", "Door/Window Sensor", 12.50, 75);
+            Item item7 = new Item("ITM007", "Smart Plug", 24.99, 60);
+            Item item8 = new Item("ITM008", "Water Leak Detector", 34.99, 25);
         %>
 
         <%
@@ -223,6 +225,16 @@
             items.get(5).setDescription("Magnetic sensor for doors and windows security");
             items.get(5).setCategory("Security");
             items.get(5).setManufacturer("SecureTech");
+
+            items.add(item7);
+            items.get(6).setDescription("Wi-Fi connected smart plug with energy monitoring");
+            items.get(6).setCategory("Home Automation");
+            items.get(6).setManufacturer("SmartHome");
+            
+            items.add(item8);
+            items.get(7).setDescription("Early warning system for water leaks and flooding");
+            items.get(7).setCategory("Safety");
+            items.get(7).setManufacturer("TechSense");
         %>
         
         <header>

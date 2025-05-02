@@ -10,13 +10,17 @@ public class Bill implements Serializable {
     private String orderId;
     private double amount;
     private Date billDate;
+    private String paymentId;
+    private boolean isPaid;
     
     // Constructor
-    public Bill(String billId, String orderId, double amount, Date billDate) {
+    public Bill(String billId, String orderId, double amount, Date billDate, String PaymentId, boolean IsPaid) {
         this.billId = billId;
         this.orderId = orderId;
         this.amount = amount;
         this.billDate = billDate;
+        this.paymentId = PaymentId;
+        this.isPaid = IsPaid;
     }
     
     // Getters and Setters
@@ -50,5 +54,21 @@ public class Bill implements Serializable {
 
     public void setBillDate(Date billDate) {
         this.billDate = billDate;
+    }
+
+    public String getPaymentId() {
+        return paymentId;
+    }
+
+    public void setPaymentId(String paymentId) {
+        this.paymentId = paymentId;
+    }
+
+    public boolean getIsPaid() {
+        return isPaid;
+    }
+
+    public void setIsPaid(boolean isPaid) {
+        this.isPaid = isPaid;
     }
 }

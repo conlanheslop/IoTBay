@@ -22,6 +22,14 @@ public class Bill implements Serializable {
         this.paymentId = PaymentId;
         this.isPaid = IsPaid;
     }
+
+    public Bill(String billId, String orderId, double amount, Date billDate) {
+        this.billId = billId;
+        this.orderId = orderId;
+        this.amount = amount;
+        this.billDate = billDate;
+
+    }
     
     // Getters and Setters
     public String getBillId() {

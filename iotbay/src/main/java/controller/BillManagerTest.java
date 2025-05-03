@@ -1,4 +1,4 @@
-package test;
+package controller;
 
 import model.dao.BillManager;
 import model.dao.DBConnector;

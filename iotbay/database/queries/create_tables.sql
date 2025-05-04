@@ -10,7 +10,7 @@ CREATE TABLE USER (
     password VARCHAR(128) NULL,
     email VARCHAR(100) UNIQUE,
     phone VARCHAR(15),
-    address VARCHAR(200),
+    address VARCHAR(200)
 );
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -41,13 +41,13 @@ DROP TABLE IF EXISTS Orders;
 
 -- Create the Orders table with full constraints
 CREATE TABLE Orders (
-    orderId VARCHAR(8) PRIMARY KEY,           -- Primary Key for orderId
-    userId VARCHAR(8) NOT NULL,               -- Foreign Key to link to Customer (or User)
-    orderDate DATETIME NOT NULL,              -- Date and time when the order was placed
-    totalAmount DECIMAL(10, 2) CHECK (totalAmount >= 0), -- The total order amount (>= 0)
-    status VARCHAR(20) NOT NULL,              -- Order status (Pending, Processing, etc.)
-    isAnonymousOrder BOOLEAN DEFAULT FALSE,   -- Flag for anonymous orders (default is false)
-    anonymousEmail VARCHAR(100),              -- Email for anonymous orders (if applicable)
+    orderId VARCHAR(8) PRIMARY KEY,      
+    userId VARCHAR(8) NOT NULL,               
+    orderDate DATETIME NOT NULL,              
+    totalAmount DECIMAL(10, 2) CHECK (totalAmount >= 0), 
+    status VARCHAR(20) NOT NULL,            
+    isAnonymousOrder BOOLEAN DEFAULT FALSE,  
+    anonymousEmail VARCHAR(100),             
 
     -- Foreign key to link to the Customer or User table
     FOREIGN KEY (userId) REFERENCES Customer(userId)

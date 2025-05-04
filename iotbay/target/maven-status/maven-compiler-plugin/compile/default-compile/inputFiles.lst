@@ -4,6 +4,7 @@ c:\Users\Dyzos\Documents\UTS\Semester 4 (Autumn 2024)\Introduction to Software D
 c:\Users\Dyzos\Documents\UTS\Semester 4 (Autumn 2024)\Introduction to Software Development\41025 ISD Assignment 2\gitrepo\IoTBay\iotbay\src\main\java\model\OrderItem.java
 c:\Users\Dyzos\Documents\UTS\Semester 4 (Autumn 2024)\Introduction to Software Development\41025 ISD Assignment 2\gitrepo\IoTBay\iotbay\src\main\java\model\Cart.java
 c:\Users\Dyzos\Documents\UTS\Semester 4 (Autumn 2024)\Introduction to Software Development\41025 ISD Assignment 2\gitrepo\IoTBay\iotbay\src\main\java\model\dao\DB.java
+c:\Users\Dyzos\Documents\UTS\Semester 4 (Autumn 2024)\Introduction to Software Development\41025 ISD Assignment 2\gitrepo\IoTBay\iotbay\src\main\java\controller\ConnServlet.java
 c:\Users\Dyzos\Documents\UTS\Semester 4 (Autumn 2024)\Introduction to Software Development\41025 ISD Assignment 2\gitrepo\IoTBay\iotbay\src\main\java\model\dao\OrderManager.java
 c:\Users\Dyzos\Documents\UTS\Semester 4 (Autumn 2024)\Introduction to Software Development\41025 ISD Assignment 2\gitrepo\IoTBay\iotbay\src\main\java\model\CartItem.java
 c:\Users\Dyzos\Documents\UTS\Semester 4 (Autumn 2024)\Introduction to Software Development\41025 ISD Assignment 2\gitrepo\IoTBay\iotbay\src\main\java\model\Staff.java
@@ -12,5 +13,6 @@ c:\Users\Dyzos\Documents\UTS\Semester 4 (Autumn 2024)\Introduction to Software D
 c:\Users\Dyzos\Documents\UTS\Semester 4 (Autumn 2024)\Introduction to Software Development\41025 ISD Assignment 2\gitrepo\IoTBay\iotbay\src\main\java\model\Order.java
 c:\Users\Dyzos\Documents\UTS\Semester 4 (Autumn 2024)\Introduction to Software Development\41025 ISD Assignment 2\gitrepo\IoTBay\iotbay\src\main\java\model\User.java
 c:\Users\Dyzos\Documents\UTS\Semester 4 (Autumn 2024)\Introduction to Software Development\41025 ISD Assignment 2\gitrepo\IoTBay\iotbay\src\main\java\model\dao\DBConnector.java
+c:\Users\Dyzos\Documents\UTS\Semester 4 (Autumn 2024)\Introduction to Software Development\41025 ISD Assignment 2\gitrepo\IoTBay\iotbay\src\main\java\model\dao\ItemManager.java
 c:\Users\Dyzos\Documents\UTS\Semester 4 (Autumn 2024)\Introduction to Software Development\41025 ISD Assignment 2\gitrepo\IoTBay\iotbay\src\main\java\model\dao\BillManager.java
 c:\Users\Dyzos\Documents\UTS\Semester 4 (Autumn 2024)\Introduction to Software Development\41025 ISD Assignment 2\gitrepo\IoTBay\iotbay\src\main\java\controller\BillManagerTest.java

@@ -59,3 +59,58 @@ VALUES
 ('ORD00001', 'CUST00001', '2025-04-27 09:00:00', 200.00, 'Pending', FALSE, NULL),
 ('ORD00002', 'CUST00002', '2025-04-27 09:30:00', 300.50, 'Processing', TRUE, 'anon@example.com');
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+-- Drop the Items table if it already exists
+DROP TABLE IF EXISTS Items;
+
+-- Create the Items table with full constraints
+CREATE TABLE Items (
+    itemId VARCHAR(8) PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    quantity INT NOT NULL CHECK (quantity >= 0),
+    description VARCHAR(255),
+    price DECIMAL(10, 2) NOT NULL CHECK (price > 0),
+    category VARCHAR(50) NOT NULL,
+    manufacturer VARCHAR(50),
+    dateAdded TIMESTAMP NOT NULL,
+    lastRestocked TIMESTAMP,
+    lastModifiedDate TIMESTAMP NOT NULL
+);
+
+-- Insert sample items, at least 20 as required (25 items (20 instock, 5 not instock)
+INSERT INTO Items (itemId, name, quantity, description, price, category, manufacturer, dateAdded, lastRestocked, lastModifiedDate)
+VALUES 
+    -- Sensors Category
+    ('ITM00001', 'Temperature Sensor', 50, 'Precision temperature sensor with digital output for IoT projects', 29.99, 'Sensors', 'TechSense', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    ('ITM00002', 'Humidity Sensor', 0, 'Accurate humidity measurement sensor for environmental monitoring', 19.99, 'Sensors', 'TechSense', CURRENT_TIMESTAMP, NULL, CURRENT_TIMESTAMP),
+    ('ITM00003', 'Pressure Sensor', 35, 'Barometric pressure sensor for weather stations and altitude measurement', 24.99, 'Sensors', 'SenseTech', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    ('ITM00004', 'Motion Sensor', 60, 'PIR motion detection sensor for security and automation', 15.99, 'Sensors', 'SecureTech', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    ('ITM00005', 'Light Sensor', 70, 'Ambient light sensor for adaptive lighting systems', 9.99, 'Sensors', 'LightWise', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    
+    -- Home Automation Category
+    ('ITM00006', 'Smart Thermostat', 25, 'Wi-Fi enabled smart thermostat with mobile app control', 89.99, 'Home Automation', 'SmartHome', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    ('ITM00007', 'Smart Light Bulb', 0, 'RGB smart light bulb with voice control compatibility', 15.99, 'Home Automation', 'SmartHome', CURRENT_TIMESTAMP, NULL, CURRENT_TIMESTAMP),
+    ('ITM00008', 'Smart Plug', 80, 'Wi-Fi connected smart plug with energy monitoring', 24.99, 'Home Automation', 'SmartHome', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    ('ITM00009', 'Smart Lock', 15, 'Keyless entry door lock with smartphone control', 129.99, 'Home Automation', 'SecureTech', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    ('ITM00010', 'Smart Doorbell', 20, 'Video doorbell with motion detection and two-way audio', 99.99, 'Home Automation', 'SecureTech', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    
+    -- Security Category
+    ('ITM00011', 'Security Camera', 30, 'Indoor security camera with night vision and motion alerts', 59.99, 'Security', 'SecureTech', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    ('ITM00012', 'Door/Window Sensor', 0, 'Magnetic contact sensor for doors and windows', 12.50, 'Security', 'SecureTech', CURRENT_TIMESTAMP, NULL, CURRENT_TIMESTAMP),
+    ('ITM00013', 'Glass Break Sensor', 25, 'Acoustic sensor that detects the sound of breaking glass', 34.99, 'Security', 'SecureTech', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    ('ITM00014', 'Water Leak Detector', 40, 'Water detection sensor to prevent damage from leaks and floods', 29.99, 'Security', 'HomeSafe', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    ('ITM00015', 'Smoke Detector', 45, 'Smart smoke detector with mobile alerts and battery monitoring', 39.99, 'Security', 'HomeSafe', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    
+    -- Health & Wellness Category
+    ('ITM00016', 'Smart Scale', 30, 'Wi-Fi connected scale that tracks weight, BMI, and body composition', 49.99, 'Health', 'HealthTech', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    ('ITM00017', 'Air Quality Monitor', 0, 'Monitors indoor air quality including CO2, VOCs, and particulate matter', 79.99, 'Health', 'HealthTech', CURRENT_TIMESTAMP, NULL, CURRENT_TIMESTAMP),
+    ('ITM00018', 'Smart Water Bottle', 35, 'Tracks water intake and reminds you to stay hydrated', 29.99, 'Health', 'HealthTech', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    ('ITM00019', 'Sleep Monitor', 25, 'Tracks sleep patterns and provides insights for better rest quality', 69.99, 'Health', 'HealthTech', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    ('ITM00020', 'UV Sensor Wristband', 30, 'Wearable device that alerts when UV exposure reaches harmful levels', 34.99, 'Health', 'HealthTech', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+
+    -- Energy Management Category
+    ('ITM00021', 'Smart Power Strip', 40, 'Multi-outlet smart power strip with individual outlet control', 39.99, 'Energy', 'PowerSmart', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    ('ITM00022', 'Energy Monitor', 0, 'Whole-home energy monitoring system with real-time usage tracking', 89.99, 'Energy', 'PowerSmart', CURRENT_TIMESTAMP, NULL, CURRENT_TIMESTAMP),
+    ('ITM00023', 'Solar Power Controller', 20, 'Smart controller for residential solar panel systems with app monitoring', 129.99, 'Energy', 'PowerSmart', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    ('ITM00024', 'Smart Thermostat for HVAC', 15, 'Energy-efficient thermostat that optimizes heating and cooling cycles', 99.99, 'Energy', 'EcoSmart', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    ('ITM00025', 'Wireless Energy Monitor Display', 25, 'Portable display showing real-time energy consumption data from all connected devices', 59.99, 'Energy', 'PowerSmart', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);

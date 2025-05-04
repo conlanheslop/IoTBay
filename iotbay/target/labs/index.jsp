@@ -129,7 +129,7 @@
                 <div class="logo">IoTBay</div>
                 <div class="nav-links">
                     <% 
-                        User user = (User)session.getAttribute("user");
+                        User user = (User) session.getAttribute("user");
                         if (user == null) { 
                     %>
                         <a href="main.jsp">Browse as Guest</a>

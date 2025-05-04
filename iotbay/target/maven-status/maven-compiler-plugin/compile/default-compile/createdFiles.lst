@@ -2,6 +2,7 @@ model\CartItem.class
 model\dao\BillManager.class
 model\dao\OrderManager.class
 model\Cart.class
+controller\ConnServlet.class
 model\dao\DB.class
 model\dao\DBConnector.class
 model\Payment.class
@@ -12,5 +13,6 @@ controller\BillManagerTest.class
 model\OrderItem.class
 model\Item.class
 model\Customer.class
+model\dao\ItemManager.class
 model\Bill.class
 model\User.class

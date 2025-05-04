@@ -13,23 +13,29 @@ public class Item implements Serializable {
     private double price;
     private String category;
     private String manufacturer;
-    private String imageURL;
     private Date dateAdded;
     private Date lastRestocked;
     private Date lastModifiedDate;
-    
-    // Constructor with essential fields
-    public Item(String itemId, String name, double price, int quantity) {
-        this.itemId = itemId;
-        this.name = name;
-        this.price = price;
-        this.quantity = quantity;
-        this.dateAdded = new Date();
-        this.lastModifiedDate = new Date();
+
+    // For creating new Item through UI
+    public Item(String itemId, String name, int quantity, String description, double price, String category, String manufacturer) {
+        this.itemId       = itemId;
+        this.name         = name;
+        this.quantity     = quantity;
+        this.description  = description;
+        this.price        = price;
+        this.category     = category;
+        this.manufacturer = manufacturer;
+        this.dateAdded  = new Date();                   
+        if (quantity > 0) {
+            this.lastRestocked = new Date();
+        } else {
+            this.lastRestocked = null;
+        }
     }
 
-    // Full constructor
-    public Item(String itemId, String name, int quantity, String description, double price, String category, String manufacturer, String imageURL) {
+    // For get Item from DB
+    public Item(String itemId, String name, int quantity, String description, double price, String category, String manufacturer, Date dateAdded, Date lastRestocked, Date lastModifiedDate) {
         this.itemId = itemId;
         this.name = name;
         this.quantity = quantity;
@@ -37,9 +43,9 @@ public class Item implements Serializable {
         this.price = price;
         this.category = category;
         this.manufacturer = manufacturer;
-        this.imageURL = imageURL;
-        this.dateAdded = new Date();
-        this.lastModifiedDate = new Date();
+        this.dateAdded = dateAdded;
+        this.lastRestocked = lastRestocked;
+        this.lastModifiedDate = lastModifiedDate;
     }
     
     // Getters and Setters
@@ -102,15 +108,6 @@ public class Item implements Serializable {
 
     public void setManufacturer(String manufacturer) {
         this.manufacturer = manufacturer;
-        this.lastModifiedDate = new Date();
-    }
-
-    public String getImageURL() {
-        return imageURL;
-    }
-
-    public void setImageURL(String imageURL) {
-        this.imageURL = imageURL;
         this.lastModifiedDate = new Date();
     }
 

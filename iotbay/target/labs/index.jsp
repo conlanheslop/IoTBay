@@ -1,6 +1,7 @@
 <%@ page import="model.User"%>
 <%@ page import="model.Staff"%>
 <%@ page import="model.Customer"%>
+<jsp:include page="/ConnServlet" flush="true"/>
 
 <html>
     <head>

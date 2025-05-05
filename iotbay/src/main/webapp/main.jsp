@@ -161,6 +161,9 @@
                 text-align: center;
                 padding: 1rem;
                 margin-top: 2rem;
+                position: fixed;
+                bottom: 0;
+                width: 100%;
             }
             
             .section-title {

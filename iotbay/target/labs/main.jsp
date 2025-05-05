@@ -174,14 +174,16 @@
         <%-- Some samples of item for demonstration --%>
         <%!
             ArrayList<Item> items = new ArrayList<>();
-            Item item1 = new Item("ITM001", "Temperature Sensor", 29.99, 50);
-            Item item2 = new Item("ITM002", "Motion Detector", 24.99, 30);
-            Item item3 = new Item("ITM003", "Smart Thermostat", 89.99, 15);
-            Item item4 = new Item("ITM004", "Humidity Sensor", 19.99, 40);
-            Item item5 = new Item("ITM005", "Smart Light Bulb", 15.99, 100);
-            Item item6 = new Item("ITM006", "Door/Window Sensor", 12.50, 75);
-            Item item7 = new Item("ITM007", "Smart Plug", 24.99, 60);
-            Item item8 = new Item("ITM008", "Water Leak Detector", 34.99, 25);
+            private void initializeItems() {
+                items.add(new Item("ITM001", "Temperature Sensor", 50, "Precision temperature sensor with digital output", 29.99, "Sensors", "TechSense"));
+                items.add(new Item("ITM002", "Motion Detector", 30, "Infrared motion detection sensor for security systems", 24.99, "Sensors", "SecureTech"));
+                items.add(new Item("ITM003", "Smart Thermostat", 15, "Wi-Fi connected thermostat for smart home integration", 89.99, "Home Automation", "SmartHome"));
+                items.add(new Item("ITM004", "Humidity Sensor", 40, "Accurate humidity sensor for environmental monitoring", 19.99, "Sensors", "TechSense"));
+                items.add(new Item("ITM005", "Smart Light Bulb", 100, "Wi-Fi enabled RGB smart bulb with app control", 15.99, "Lighting", "SmartHome"));
+                items.add(new Item("ITM006", "Door/Window Sensor", 75, "Magnetic sensor for doors and windows security", 12.50, "Security", "SecureTech"));
+                items.add(new Item("ITM007", "Smart Plug", 60, "Wi-Fi connected smart plug with energy monitoring", 24.99, "Home Automation", "SmartHome"));
+                items.add(new Item("ITM008", "Water Leak Detector", 25, "Early warning system for water leaks and flooding", 34.99, "Safety", "TechSense"));
+            }
         %>
 
         <%
@@ -195,46 +197,9 @@
                 isLoggedIn = true;
             }
 
-            items.clear();
-            items.add(item1);
-            items.get(0).setDescription("Precision temperature sensor with digital output");
-            items.get(0).setCategory("Sensors");
-            items.get(0).setManufacturer("TechSense");
-            
-            items.add(item2);
-            items.get(1).setDescription("Infrared motion detection sensor for security systems");
-            items.get(1).setCategory("Sensors");
-            items.get(1).setManufacturer("SecureTech");
-            
-            items.add(item3);
-            items.get(2).setDescription("Wi-Fi connected thermostat for smart home integration");
-            items.get(2).setCategory("Home Automation");
-            items.get(2).setManufacturer("SmartHome");
-            
-            items.add(item4);
-            items.get(3).setDescription("Accurate humidity sensor for environmental monitoring");
-            items.get(3).setCategory("Sensors");
-            items.get(3).setManufacturer("TechSense");
-
-            items.add(item5);
-            items.get(4).setDescription("Wi-Fi enabled RGB smart bulb with app control");
-            items.get(4).setCategory("Lighting");
-            items.get(4).setManufacturer("SmartHome");
-            
-            items.add(item6);
-            items.get(5).setDescription("Magnetic sensor for doors and windows security");
-            items.get(5).setCategory("Security");
-            items.get(5).setManufacturer("SecureTech");
-
-            items.add(item7);
-            items.get(6).setDescription("Wi-Fi connected smart plug with energy monitoring");
-            items.get(6).setCategory("Home Automation");
-            items.get(6).setManufacturer("SmartHome");
-            
-            items.add(item8);
-            items.get(7).setDescription("Early warning system for water leaks and flooding");
-            items.get(7).setCategory("Safety");
-            items.get(7).setManufacturer("TechSense");
+            if (items.isEmpty()) {
+                initializeItems();
+            }
         %>
         
         <header>

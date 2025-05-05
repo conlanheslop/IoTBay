@@ -11,20 +11,20 @@ public class Item implements Serializable {
     private int quantity;
     private String description;
     private double price;
-    private String category;
+    private String type;
     private String manufacturer;
     private Date dateAdded;
     private Date lastRestocked;
     private Date lastModifiedDate;
 
     // For creating new Item through UI
-    public Item(String itemId, String name, int quantity, String description, double price, String category, String manufacturer) {
+    public Item(String itemId, String name, int quantity, String description, double price, String type, String manufacturer) {
         this.itemId       = itemId;
         this.name         = name;
         this.quantity     = quantity;
         this.description  = description;
         this.price        = price;
-        this.category     = category;
+        this.type     = type;
         this.manufacturer = manufacturer;
         this.dateAdded  = new Date();                   
         if (quantity > 0) {
@@ -35,13 +35,13 @@ public class Item implements Serializable {
     }
 
     // For get Item from DB
-    public Item(String itemId, String name, int quantity, String description, double price, String category, String manufacturer, Date dateAdded, Date lastRestocked, Date lastModifiedDate) {
+    public Item(String itemId, String name, int quantity, String description, double price, String type, String manufacturer, Date dateAdded, Date lastRestocked, Date lastModifiedDate) {
         this.itemId = itemId;
         this.name = name;
         this.quantity = quantity;
         this.description = description;
         this.price = price;
-        this.category = category;
+        this.type = type;
         this.manufacturer = manufacturer;
         this.dateAdded = dateAdded;
         this.lastRestocked = lastRestocked;
@@ -93,12 +93,12 @@ public class Item implements Serializable {
         this.lastModifiedDate = new Date();
     }
 
-    public String getCategory() {
-        return category;
+    public String getType() {
+        return type;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setType(String type) {
+        this.type = type;
         this.lastModifiedDate = new Date();
     }
 
@@ -142,7 +142,7 @@ public class Item implements Serializable {
         return true;
     }
     
-    public int checkAvailability() {
-        return this.quantity;
+    public boolean checkAvailability() {
+        return (this.quantity > 0);
     }
 }

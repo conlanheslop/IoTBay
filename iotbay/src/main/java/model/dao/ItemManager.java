@@ -15,9 +15,9 @@ public class ItemManager {
     }
     
     // Insert a new item into the database
-    public void addItem(String itemId, String name, int quantity, String description, double price, String category, String manufacturer) throws SQLException {
+    public void addItem(String itemId, String name, int quantity, String description, double price, String type, String manufacturer) throws SQLException {
         PreparedStatement ps = conn.prepareStatement("INSERT INTO \"Items\" " +  
-            "(itemId, name, quantity, description, price, category, manufacturer, dateAdded, lastRestocked, lastModifiedDate) " +
+            "(itemId, name, quantity, description, price, type, manufacturer, dateAdded, lastRestocked, lastModifiedDate) " +
             "VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, ?, CURRENT_TIMESTAMP)");
         
         ps.setString(1, itemId);
@@ -25,7 +25,7 @@ public class ItemManager {
         ps.setInt(3, quantity);
         ps.setString(4, description);
         ps.setDouble(5, price);
-        ps.setString(6, category);
+        ps.setString(6, type);
         ps.setString(7, manufacturer);
         
         if (quantity > 0) {
@@ -51,13 +51,13 @@ public class ItemManager {
             int quantity = rs.getInt("quantity");
             String description = rs.getString("description"); // can be null
             double price = rs.getDouble("price");
-            String category = rs.getString("category");
+            String type = rs.getString("type");
             String manufacturer = rs.getString("manufacturer"); // can be null
             Date dateAdded = rs.getTimestamp("dateAdded");
             Date lastRestocked = rs.getTimestamp("lastRestocked");  // can be null
             Date lastModifiedDate = rs.getTimestamp("lastModifiedDate");
             
-            item = new Item(itemId, name, quantity, description, price, category, manufacturer, dateAdded, lastRestocked, lastModifiedDate);
+            item = new Item(itemId, name, quantity, description, price, type, manufacturer, dateAdded, lastRestocked, lastModifiedDate);
         }
         rs.close();
         ps.close();
@@ -76,13 +76,13 @@ public class ItemManager {
             int quantity = rs.getInt("quantity");
             String description = rs.getString("description"); // can be null
             double price = rs.getDouble("price");
-            String category = rs.getString("category");
+            String type = rs.getString("type");
             String manufacturer = rs.getString("manufacturer"); // can be null
             Date dateAdded = rs.getTimestamp("dateAdded");
             Date lastRestocked = rs.getTimestamp("lastRestocked");  // can be null
             Date lastModifiedDate = rs.getTimestamp("lastModifiedDate");
             
-            Item item = new Item(itemId, name, quantity, description, price, category, manufacturer, dateAdded, lastRestocked, lastModifiedDate);
+            Item item = new Item(itemId, name, quantity, description, price, type, manufacturer, dateAdded, lastRestocked, lastModifiedDate);
             items.add(item);
         }
         rs.close();
@@ -90,8 +90,8 @@ public class ItemManager {
         return items;
     }
 
-    // Read (Search items by name and/or category)
-    public List<Item> searchItems(String nameQuery, String categoryQuery) throws SQLException {
+    // Read (Search items by name and/or type)
+    public List<Item> searchItems(String nameQuery, String typeQuery) throws SQLException {
         List<Item> items = new ArrayList<>();
         // Using 1=1 as a default condition so we can always add filters with AND
         StringBuilder queryBuilder = new StringBuilder("SELECT * FROM \"Items\" WHERE 1=1");
@@ -105,10 +105,10 @@ public class ItemManager {
             params.add("%" + nameQuery + "%");
         }
         
-        // Add category filter if provided
-        if (categoryQuery != null && !categoryQuery.isEmpty()) {
-            queryBuilder.append(" AND LOWER(category) LIKE LOWER(?)");
-            params.add("%" + categoryQuery + "%");
+        // Add type filter if provided
+        if (typeQuery != null && !typeQuery.isEmpty()) {
+            queryBuilder.append(" AND LOWER(type) LIKE LOWER(?)");
+            params.add("%" + typeQuery + "%");
         }
         
         String query = queryBuilder.toString();
@@ -127,13 +127,13 @@ public class ItemManager {
             int quantity = rs.getInt("quantity");
             String description = rs.getString("description"); // can be null
             double price = rs.getDouble("price");
-            String category = rs.getString("category");
+            String type = rs.getString("type");
             String manufacturer = rs.getString("manufacturer"); // can be null
             Date dateAdded = rs.getTimestamp("dateAdded");
             Date lastRestocked = rs.getTimestamp("lastRestocked");  // can be null
             Date lastModifiedDate = rs.getTimestamp("lastModifiedDate");
             
-            Item item = new Item(itemId, name, quantity, description, price, category, manufacturer, dateAdded, lastRestocked, lastModifiedDate);
+            Item item = new Item(itemId, name, quantity, description, price, type, manufacturer, dateAdded, lastRestocked, lastModifiedDate);
             items.add(item);
         }
         
@@ -143,9 +143,9 @@ public class ItemManager {
     }
     
     // Update (Update item details)
-    public void updateItem(String itemId, String name, int quantity, String description, double price, String category, String manufacturer) throws SQLException {
+    public void updateItem(String itemId, String name, int quantity, String description, double price, String type, String manufacturer) throws SQLException {
         PreparedStatement ps = conn.prepareStatement("UPDATE \"Items\" SET name = ?, quantity = ?, description = ?, price = ?, " +
-            "category = ?, manufacturer = ?, lastModifiedDate = CURRENT_TIMESTAMP " +
+            "type = ?, manufacturer = ?, lastModifiedDate = CURRENT_TIMESTAMP " +
             "WHERE itemId = ?");
         
         ps.setString(1, name);
@@ -159,7 +159,7 @@ public class ItemManager {
         }
         
         ps.setDouble(4, price);
-        ps.setString(5, category);
+        ps.setString(5, type);
         
         // Handle potentially null manufacturer while updating item attributes through UI
         if (manufacturer != null) {

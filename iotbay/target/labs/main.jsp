@@ -16,6 +16,9 @@
             }
             
             body {
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
                 background-color: #f4f4f4;
             }
             
@@ -50,6 +53,7 @@
             }
             
             .main-container {
+                flex: 1;
                 max-width: 1200px;
                 margin: 30px auto;
                 padding: 0 20px;
@@ -160,7 +164,6 @@
                 color: white;
                 text-align: center;
                 padding: 1rem;
-                margin-top: 2rem;
             }
             
             .section-title {

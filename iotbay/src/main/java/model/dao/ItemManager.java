@@ -90,8 +90,8 @@ public class ItemManager {
         return items;
     }
 
-    // Read (Search items by name and/or type)
-    public List<Item> searchItems(String nameQuery, String typeQuery) throws SQLException {
+    // Read (Search items by name, description, and/or type)
+    public List<Item> searchItems(String searchQuery, String typeQuery) throws SQLException {
         List<Item> items = new ArrayList<>();
         // Using 1=1 as a default condition so we can always add filters with AND
         StringBuilder queryBuilder = new StringBuilder("SELECT * FROM \"Items\" WHERE 1=1");
@@ -99,16 +99,17 @@ public class ItemManager {
         // Prepare parameter list for dynamic WHERE clause
         List<String> params = new ArrayList<>();
         
-        // Add name filter if provided
-        if (nameQuery != null && !nameQuery.isEmpty()) {
-            queryBuilder.append(" AND LOWER(name) LIKE LOWER(?)");
-            params.add("%" + nameQuery + "%");
+        // Add search filter for name OR description if provided
+        if (searchQuery != null && !searchQuery.isEmpty()) {
+            queryBuilder.append(" AND (LOWER(name) LIKE LOWER(?) OR LOWER(description) LIKE LOWER(?))");
+            params.add("%" + searchQuery + "%");
+            params.add("%" + searchQuery + "%");
         }
         
-        // Add type filter if provided
-        if (typeQuery != null && !typeQuery.isEmpty()) {
-            queryBuilder.append(" AND LOWER(type) LIKE LOWER(?)");
-            params.add("%" + typeQuery + "%");
+        // Add type filter if provided and not "All Types"
+        if (typeQuery != null && !typeQuery.isEmpty() && !typeQuery.equals("All Types")) {
+            queryBuilder.append(" AND type = ?");
+            params.add(typeQuery);
         }
         
         String query = queryBuilder.toString();

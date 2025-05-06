@@ -21,12 +21,51 @@
             
             body {
                 background-color: #f4f4f4;
+                padding-top: 70px; /* Add padding to body to account for fixed header */
+            }
+
+            .search-container {
+                display: flex;
+                align-items: center;
+                margin: 0 15px;
+            }
+
+            .search-container input[type="text"] {
+                padding: 8px;
+                margin-right: 10px;
+                border-radius: 5px;
+                border: none;
+                width: 200px;
+            }
+
+            .search-container select {
+                padding: 8px;
+                margin-right: 10px;
+                border-radius: 5px;
+                border: none;
+            }
+
+            .search-container button {
+                padding: 8px 15px;
+                background-color: #007BFF;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+
+            .search-container button:hover {
+                background-color: #0056b3;
             }
             
             header {
                 background-color: #333;
                 color: white;
                 padding: 1rem;
+                position: fixed;
+                top: 0;
+                width: 100%;
+                z-index: 1000;
             }
             
             .header-container {
@@ -326,6 +365,20 @@
         <header>
             <div class="header-container">
                 <div class="logo"><a href="index.jsp">IoTBay</a></div>
+                
+                <form action="SearchServlet" method="get" class="search-container">
+                    <input type="text" name="searchQuery" placeholder="Search Products">
+                    <select name="typeQuery">
+                        <option value="All Types" selected>All Types</option>
+                        <option value="Energy">Energy Management</option>
+                        <option value="Health">Health & Wellness</option>
+                        <option value="Home Automation">Home Automation</option>
+                        <option value="Security">Security</option>
+                        <option value="Sensors">Sensors</option>
+                    </select>
+                    <button type="submit">Search</button>
+                </form>
+                
                 <div class="nav-links">
                     <% if (!isLoggedIn) { %>
                         <a href="login.jsp">Login</a>
@@ -373,7 +426,7 @@
                 <div class="dashboard">
                     <div class="dashboard-card">
                         <h3>Total Products</h3>
-                        <p>124</p>
+                        <p><%= items != null ? items.size() : 0 %></p>
                     </div>
                     <div class="dashboard-card">
                         <h3>Pending Orders</h3>
@@ -385,7 +438,17 @@
                     </div>
                     <div class="dashboard-card">
                         <h3>Out of Stock Items</h3>
-                        <p>3</p>
+                        <%
+                            int outOfStockCount = 0;
+                            if (items != null) {
+                                for (Item item : items) {
+                                    if (item.getQuantity() == 0) {
+                                        outOfStockCount++;
+                                    }
+                                }
+                            }
+                        %>
+                        <p><%= outOfStockCount %></p>
                     </div>
                 </div>
                 

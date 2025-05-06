@@ -90,7 +90,7 @@ VALUES
     ('ITM00007', 'Smart Window Film Controller', 15, 'Adjustable window tinting for optimal energy efficiency', 119.99, 'Energy', 'EcoSmart', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
     ('ITM00008', 'Home Wind Turbine Monitor', 0, 'Performance tracking system for residential wind power generation', 89.99, 'Energy', 'PowerSmart', CURRENT_TIMESTAMP, NULL, CURRENT_TIMESTAMP),
     
-    -- Health & Wellness Type
+    -- v Type
     ('ITM00009', 'Smart Scale', 30, 'Wi-Fi connected scale that tracks weight, BMI, and body composition', 49.99, 'Health', 'HealthTech', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
     ('ITM00010', 'Air Quality Monitor', 0, 'Monitors indoor air quality including CO2, VOCs, and particulate matter', 79.99, 'Health', 'HealthTech', CURRENT_TIMESTAMP, NULL, CURRENT_TIMESTAMP),
     ('ITM00011', 'Smart Water Bottle', 35, 'Tracks water intake and reminds you to stay hydrated', 29.99, 'Health', 'HealthTech', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),

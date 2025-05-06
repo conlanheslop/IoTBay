@@ -6,7 +6,10 @@ import jakarta.servlet.http.*;
 
 import model.Bill;
 import model.OrderItem;
+import model.Payment;
+import model.User;
 import model.dao.*;
+import utils.DatabaseUtils;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -25,6 +28,7 @@ public class PaymentServlet extends HttpServlet {
     private Connection conn;
     private BillManager billManager;
     private OrderItemManager orderItemManager;
+    private PaymentManager paymentManager;
 
     @Override
     public void init() {
@@ -47,6 +51,7 @@ public class PaymentServlet extends HttpServlet {
         try {
             billManager = new BillManager(conn);
             orderItemManager = new OrderItemManager(conn);
+            paymentManager = new PaymentManager(conn);
 
             String orderId = request.getParameter("orderId");
             if (orderId == null || orderId.isEmpty()) {
@@ -60,18 +65,48 @@ public class PaymentServlet extends HttpServlet {
             for (OrderItem item : items) {
                 totalAmount += item.calculateSubtotal();
             }
-
-            String billId = UUID.randomUUID().toString(); // Generate unique bill ID
             Date billDate = Date.valueOf(LocalDate.now());
 
-            billManager.addBill(billId, orderId, totalAmount, billDate);
+            // Retrieve form data
+            String cardholderName = request.getParameter("cardholderName");
+            String cardNumber = request.getParameter("cardNumber");
+            String expiryDate = request.getParameter("expiryDate");
+            String cvv = request.getParameter("cvv");
 
-            Bill bill = new Bill(billId, orderId, totalAmount, billDate);
-            session.setAttribute("bill", bill);
-            session.setAttribute("message", "Bill created successfully");
+            // Get userId from session (assuming user is logged in and userId is stored in session)
+            User user = (User) session.getAttribute("user");
+            String userId = user.getId();
 
-            response.sendRedirect("/payment_management/billConfirm.jsp");
+            // Create the payment method (combining cardholder name, card number, expiry date, and CVV)
+            String paymentMethod = "Cardholder: " + cardholderName + ", Card Number: " + cardNumber +
+                    ", Expiry Date: " + expiryDate + ", CVV: " + cvv;
 
+            // Create Payment object
+            Date currentDate = Date.valueOf(LocalDate.now()); // Current date as addedDate
+            Payment payment = new Payment(
+                    DatabaseUtils.generateUniqueId("Pay"),  // You could implement a method to generate a unique paymentId
+                    userId,
+                    currentDate,
+                    paymentMethod,
+                    true  // Set isVerified to true
+            );
+
+            // Get the action (confirm or save)
+            String paymentAction = request.getParameter("paymentAction");
+
+            if ("confirm".equals(paymentAction)) {
+                billManager.addBill(orderId, totalAmount, billDate, payment.getPaymentId(), true);
+                session.setAttribute("message", "Bill created successfully");
+
+                response.sendRedirect("/paymentManagement/billConfirm.jsp");
+            } else if ("save".equals(paymentAction)) {
+                billManager.addBill(orderId, totalAmount, billDate, payment.getPaymentId(), false);
+                session.setAttribute("message", "Bill saved");
+
+                response.sendRedirect("/paymentManagement/billConfirm.jsp");
+            }
+
+            paymentManager.addPayment(payment.getPaymentId(), userId, currentDate, paymentMethod, true);
         } catch (SQLException ex) {
             Logger.getLogger(PaymentServlet.class.getName()).log(Level.SEVERE, null, ex);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database error");

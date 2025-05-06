@@ -9,8 +9,13 @@ model\Staff.class
 model\Order.class
 model\Delivery.class
 controller\BillManagerTest.class
+model\dao\OrderItemManager.class
 model\OrderItem.class
+model\dao\CartItemManager.class
+controller\PaymentServlet.class
+model\dao\CartManager.class
 model\Item.class
 model\Customer.class
 model\Bill.class
 model\User.class
+controller\Validator.class

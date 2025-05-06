@@ -59,3 +59,36 @@ VALUES
 ('ORD00001', 'CUST00001', '2025-04-27 09:00:00', 200.00, 'Pending', FALSE, NULL),
 ('ORD00002', 'CUST00002', '2025-04-27 09:30:00', 300.50, 'Processing', TRUE, 'anon@example.com');
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+-- CART TABLE
+CREATE TABLE Cart (
+    cart_id VARCHAR(50) PRIMARY KEY,
+    user_id VARCHAR(50) NOT NULL,
+    date_created TIMESTAMP NOT NULL,
+    last_updated TIMESTAMP NOT NULL
+);
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+-- CART_ITEM TABLE
+CREATE TABLE CartItem (
+    cart_id VARCHAR(50),
+    item_id VARCHAR(50),
+    quantity INT NOT NULL,
+    unit_price DOUBLE NOT NULL,
+    PRIMARY KEY (cart_id, item_id),
+    FOREIGN KEY (cart_id) REFERENCES Cart(cart_id)
+);
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+-- Payment Table
+CREATE TABLE payments (
+    payment_id VARCHAR(255) PRIMARY KEY,
+    user_id VARCHAR(255) NOT NULL,
+    added_date TIMESTAMP NOT NULL,
+    payment_method VARCHAR(255) NOT NULL,
+    is_verified BOOLEAN NOT NULL
+);
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------

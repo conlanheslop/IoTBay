@@ -271,6 +271,11 @@
                 height: auto;
                 object-fit: contain;
             }
+            .product-item-id {
+                font-size: 0.8rem;
+                color: #6c757d;
+                margin-bottom: 5px;
+            }
         </style>
     </head>
     <body>
@@ -407,54 +412,56 @@
                         <a href="#" class="btn btn-primary">Add New Product</a>
                     </div>
                 <% } %>
-                <h2 class="section-title">Featured Products</h2>
-                <div class="product-grid">
-                    <% 
-                    Random random = new Random();
-                    // Show 8 random products
-                    for (int i = 0; i < 8; i++) { 
-                        int randomIndex = random.nextInt(items.size());
-                        Item item = items.get(randomIndex);
-                    %>
-                        <div class="product-card">
-                            <div class="product-image">
-                                <% if (item.getType().equals("Home Automation")) { %>
-                                    <img src="images/Home Automation.png" alt="Home Automation"/>
-                                <% } else if (item.getType().equals("Health")) { %>
-                                    <img src="images/Health.png" alt="Health & Wellness"/>
-                                <% } else if (item.getType().equals("Energy")) { %>
-                                    <img src="images/Energy.png" alt="Energy Management"/>
-                                <% } else if (item.getType().equals("Sensors")) { %>
-                                    <img src="images/Sensors.png" alt="Sensors"/>
-                                <% } else if (item.getType().equals("Security")) { %>
-                                    <img src="images/Security.png" alt="Security"/>
-                                <% } %>
-                            </div>
-                            <div class="product-info">
-                                <div class="product-title"><%= item.getName() %></div>
-                                <div class="product-price">$<%= String.format("%.2f", item.getPrice()) %></div>
-                                <div class="product-description"><%= item.getDescription() %></div>
-                                <div class="product-action">
-                                    <% if (item.checkAvailability()) { %>
-                                        <div class="in-stock">In Stock</div>
-                                    <% } else { %>
-                                        <div class="out-of-stock">Out of Stock</div>
-                                    <% } %>
-                                    <a href="#" class="btn btn-primary">View Details</a>
-                                    <% if (!isStaff) { %>
-                                        <% if (item.checkAvailability()) { %>
-                                            <a href="#" class="btn btn-add-to-cart">Add to Cart</a>
-                                        <% } else { %>
-                                            <span class="btn btn-disabled">Add to Cart</span>
-                                        <% } %>
-                                    <% } else { %>
-                                        <a href="#" class="btn btn-edit">Edit</a>
+                <% if (!isStaff) { %>
+                    <h2 class="section-title">Featured Products</h2>
+                    <div class="product-grid">
+                        <% 
+                        Random random = new Random();
+                        // Show 8 random products (only for Customer view)
+                        for (int i = 0; i < 8; i++) { 
+                            int randomIndex = random.nextInt(items.size());
+                            Item item = items.get(randomIndex);
+                        %>
+                            <div class="product-card">
+                                <div class="product-image">
+                                    <% if (item.getType().equals("Home Automation")) { %>
+                                        <img src="images/Home Automation.png" alt="Home Automation"/>
+                                    <% } else if (item.getType().equals("Health")) { %>
+                                        <img src="images/Health.png" alt="Health & Wellness"/>
+                                    <% } else if (item.getType().equals("Energy")) { %>
+                                        <img src="images/Energy.png" alt="Energy Management"/>
+                                    <% } else if (item.getType().equals("Sensors")) { %>
+                                        <img src="images/Sensors.png" alt="Sensors"/>
+                                    <% } else if (item.getType().equals("Security")) { %>
+                                        <img src="images/Security.png" alt="Security"/>
                                     <% } %>
                                 </div>
+                                <div class="product-info">
+                                    <div class="product-title"><%= item.getName() %></div>
+                                    <div class="product-price">$<%= String.format("%.2f", item.getPrice()) %></div>
+                                    <div class="product-description"><%= item.getDescription() %></div>
+                                    <div class="product-action">
+                                        <% if (item.checkAvailability()) { %>
+                                            <div class="in-stock">In Stock</div>
+                                        <% } else { %>
+                                            <div class="out-of-stock">Out of Stock</div>
+                                        <% } %>
+                                        <a href="item_detail.jsp?itemId=<%= item.getItemId() %>" class="btn btn-primary">View Details</a>
+                                        <% if (!isStaff) { %>
+                                            <% if (item.checkAvailability()) { %>
+                                                <a href="#" class="btn btn-add-to-cart">Add to Cart</a>
+                                            <% } else { %>
+                                                <span class="btn btn-disabled">Add to Cart</span>
+                                            <% } %>
+                                        <% } else { %>
+                                            <a href="#" class="btn btn-edit">Edit</a>
+                                        <% } %>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    <% } %>
-                </div>
+                        <% } %>
+                    </div>
+                <% } %>
 
                 <h2 class="section-title">Energy Management Type</h2>
                 <% if (energyTypeItems.isEmpty()) { %>
@@ -471,6 +478,9 @@
                                 </div>
                                 <div class="product-info">
                                     <div class="product-title"><%= item.getName() %></div>
+                                    <% if (isStaff) { %>
+                                        <div class="product-item-id">ID: <%= item.getItemId() %></div>
+                                    <% } %>
                                     <div class="product-price">$<%= String.format("%.2f", item.getPrice()) %></div>
                                     <div class="product-description"><%= item.getDescription() %></div>
                                     <div class="product-action">
@@ -479,7 +489,7 @@
                                         <% } else { %>
                                             <div class="out-of-stock">Out of Stock</div>
                                         <% } %>
-                                        <a href="#" class="btn btn-primary">View Details</a>
+                                        <a href="item_detail.jsp?itemId=<%= item.getItemId() %>" class="btn btn-primary">View Details</a>
                                         <% if (!isStaff) { %>
                                             <% if (item.checkAvailability()) { %>
                                                 <a href="#" class="btn btn-add-to-cart">Add to Cart</a>
@@ -511,6 +521,9 @@
                                 </div>
                                 <div class="product-info">
                                     <div class="product-title"><%= item.getName() %></div>
+                                    <% if (isStaff) { %>
+                                        <div class="product-item-id">ID: <%= item.getItemId() %></div>
+                                    <% } %>            
                                     <div class="product-price">$<%= String.format("%.2f", item.getPrice()) %></div>
                                     <div class="product-description"><%= item.getDescription() %></div>
                                     <div class="product-action">
@@ -519,7 +532,7 @@
                                         <% } else { %>
                                             <div class="out-of-stock">Out of Stock</div>
                                         <% } %>
-                                        <a href="#" class="btn btn-primary">View Details</a>
+                                        <a href="item_detail.jsp?itemId=<%= item.getItemId() %>" class="btn btn-primary">View Details</a>
                                         <% if (!isStaff) { %>
                                             <% if (item.checkAvailability()) { %>
                                                 <a href="#" class="btn btn-add-to-cart">Add to Cart</a>
@@ -551,6 +564,9 @@
                                 </div>
                                 <div class="product-info">
                                     <div class="product-title"><%= item.getName() %></div>
+                                    <% if (isStaff) { %>
+                                        <div class="product-item-id">ID: <%= item.getItemId() %></div>
+                                    <% } %>
                                     <div class="product-price">$<%= String.format("%.2f", item.getPrice()) %></div>
                                     <div class="product-description"><%= item.getDescription() %></div>
                                     <div class="product-action">
@@ -559,7 +575,7 @@
                                         <% } else { %>
                                             <div class="out-of-stock">Out of Stock</div>
                                         <% } %>
-                                        <a href="#" class="btn btn-primary">View Details</a>
+                                        <a href="item_detail.jsp?itemId=<%= item.getItemId() %>" class="btn btn-primary">View Details</a>
                                         <% if (!isStaff) { %>
                                             <% if (item.checkAvailability()) { %>
                                                 <a href="#" class="btn btn-add-to-cart">Add to Cart</a>
@@ -591,6 +607,9 @@
                                 </div>
                                 <div class="product-info">
                                     <div class="product-title"><%= item.getName() %></div>
+                                    <% if (isStaff) { %>
+                                        <div class="product-item-id">ID: <%= item.getItemId() %></div>
+                                    <% } %>
                                     <div class="product-price">$<%= String.format("%.2f", item.getPrice()) %></div>
                                     <div class="product-description"><%= item.getDescription() %></div>
                                     <div class="product-action">
@@ -599,7 +618,7 @@
                                         <% } else { %>
                                             <div class="out-of-stock">Out of Stock</div>
                                         <% } %>
-                                        <a href="#" class="btn btn-primary">View Details</a>
+                                        <a href="item_detail.jsp?itemId=<%= item.getItemId() %>" class="btn btn-primary">View Details</a>
                                         <% if (!isStaff) { %>
                                             <% if (item.checkAvailability()) { %>
                                                 <a href="#" class="btn btn-add-to-cart">Add to Cart</a>
@@ -631,6 +650,9 @@
                                 </div>
                                 <div class="product-info">
                                     <div class="product-title"><%= item.getName() %></div>
+                                    <% if (isStaff) { %>
+                                        <div class="product-item-id">ID: <%= item.getItemId() %></div>
+                                    <% } %>
                                     <div class="product-price">$<%= String.format("%.2f", item.getPrice()) %></div>
                                     <div class="product-description"><%= item.getDescription() %></div>
                                     <div class="product-action">
@@ -639,7 +661,7 @@
                                         <% } else { %>
                                             <div class="out-of-stock">Out of Stock</div>
                                         <% } %>
-                                        <a href="#" class="btn btn-primary">View Details</a>
+                                        <a href="item_detail.jsp?itemId=<%= item.getItemId() %>" class="btn btn-primary">View Details</a>
                                         <% if (!isStaff) { %>
                                             <% if (item.checkAvailability()) { %>
                                                 <a href="#" class="btn btn-add-to-cart">Add to Cart</a>

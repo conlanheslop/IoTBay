@@ -5,13 +5,13 @@ model\Cart.class
 controller\ConnServlet.class
 model\dao\DB.class
 model\dao\DBConnector.class
-controller\SearchServlet.class
 model\Payment.class
 model\Staff.class
 model\Order.class
 model\Delivery.class
 controller\BillManagerTest.class
 model\OrderItem.class
+controller\SearchItemServlet.class
 model\Item.class
 model\Customer.class
 model\dao\ItemManager.class

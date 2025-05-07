@@ -21,7 +21,7 @@
             
             body {
                 background-color: #f4f4f4;
-                padding-top: 70px; /* Add padding to body to account for fixed header */
+                padding-top: 70px;
             }
 
             .search-container {
@@ -180,8 +180,8 @@
                 padding: 15px;
                 display: flex;
                 flex-direction: column;
-                flex: 1; /* Mengambil sisa ruang yang tersedia */
-                position: relative; /* Untuk positioning konten di dalamnya */
+                flex: 1;
+                position: relative;
             }
             
             .product-title {
@@ -315,7 +315,23 @@
                 color: #6c757d;
                 margin-bottom: 5px;
             }
+
+            .btn-delete {
+                background-color: #dc3545;
+            }
+        
+            .btn-delete:hover {
+                background-color: #c82333;
+            }
         </style>
+
+        <script>
+            function confirmDelete(itemId) {
+                if (confirm("Are you sure you want to delete this item (" + itemId + ")? This action cannot be undone.")) {
+                    window.location.href = "DeleteItemServlet?itemId=" + itemId;
+                }
+            }
+        </script>
     </head>
     <body>
         <%  
@@ -349,6 +365,10 @@
                         }  
                     }
                 }
+            } else {
+                // Redirect to starting page index.jsp if itemManager value back to null (when session timeout occurred)
+                response.sendRedirect("index.jsp");
+                return;
             }
             
             // Get user from session
@@ -366,7 +386,7 @@
             <div class="header-container">
                 <div class="logo"><a href="index.jsp">IoTBay</a></div>
                 
-                <form action="SearchServlet" method="get" class="search-container">
+                <form action="SearchItemServlet" method="get" class="search-container">
                     <input type="text" name="searchQuery" placeholder="Search Products">
                     <select name="typeQuery">
                         <option value="All Types" selected>All Types</option>
@@ -406,11 +426,10 @@
                     <h2>Welcome <%= user.getName() %></h2>
                     <p>You are logged in as 
                     <% if (isStaff) { %>
-                        Staff
+                        Staff.</p>
                     <% } else { %>
-                        Customer
+                        Customer.</p>
                     <% } %>
-                    .</p>
                     <% if (!isStaff) { %>
                             <a href="edit_profile.jsp" class="btn">Edit Profile</a>
                     <% } %>
@@ -456,7 +475,7 @@
                 <p>This feature will be implemented in future releases.</p>
             <% } %>
             
-            <% if (items == null) { %>
+            <% if (items == null || items.isEmpty()) { %>
                 <!-- When item table empty -->
                 <div class="empty-catalogue">
                     <h3>No products available at the moment</h3>
@@ -561,6 +580,7 @@
                                             <% } %>
                                         <% } else { %>
                                             <a href="#" class="btn btn-edit">Edit</a>
+                                            <a href="#" class="btn btn-delete" onclick="confirmDelete('<%= item.getItemId() %>')">Delete</a>
                                         <% } %>
                                     </div>
                                 </div>
@@ -604,6 +624,7 @@
                                             <% } %>
                                         <% } else { %>
                                             <a href="#" class="btn btn-edit">Edit</a>
+                                            <a href="#" class="btn btn-delete" onclick="confirmDelete('<%= item.getItemId() %>')">Delete</a>
                                         <% } %>
                                     </div>
                                 </div>
@@ -647,6 +668,7 @@
                                             <% } %>
                                         <% } else { %>
                                             <a href="#" class="btn btn-edit">Edit</a>
+                                            <a href="#" class="btn btn-delete" onclick="confirmDelete('<%= item.getItemId() %>')">Delete</a>
                                         <% } %>
                                     </div>
                                 </div>
@@ -690,6 +712,7 @@
                                             <% } %>
                                         <% } else { %>
                                             <a href="#" class="btn btn-edit">Edit</a>
+                                            <a href="#" class="btn btn-delete" onclick="confirmDelete('<%= item.getItemId() %>')">Delete</a>
                                         <% } %>
                                     </div>
                                 </div>
@@ -733,6 +756,7 @@
                                             <% } %>
                                         <% } else { %>
                                             <a href="#" class="btn btn-edit">Edit</a>
+                                            <a href="#" class="btn btn-delete" onclick="confirmDelete('<%= item.getItemId() %>')">Delete</a>
                                         <% } %>
                                     </div>
                                 </div>

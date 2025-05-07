@@ -148,7 +148,7 @@
         </header>
         
         <section class="hero">
-            <h1>Welcome to ahhh</h1>
+            <h1>Welcome to IoTBay</h1>
             <p>Your one-stop shop for Internet of Things devices. Discover our wide range of sensors, actuators, and IoT gateways for your smart home or business needs.</p>
             <% if (user == null) { %>
                 <a href="register.jsp" class="btn">Register Now</a>

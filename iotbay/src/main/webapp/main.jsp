@@ -323,6 +323,25 @@
             .btn-delete:hover {
                 background-color: #c82333;
             }
+            
+            .message {
+                padding: 10px 15px;
+                margin-bottom: 20px;
+                border-radius: 4px;
+                text-align: center;
+            }
+
+            .error-message {
+                background-color: #f8d7da;
+                color: #721c24;
+                border: 1px solid #f5c6cb;
+            }
+
+            .success-message {
+                background-color: #d4edda;
+                color: #155724;
+                border: 1px solid #c3e6cb;
+            }
         </style>
 
         <script>
@@ -438,6 +457,31 @@
                     <p>You are browsing as a guest. <a href="login.jsp">Login</a> or <a href="register.jsp">Register</a> to access all features.</p>
                 <% } %>
             </div>
+
+            <!-- Add message display section here -->
+            <% 
+                // Display error message if any
+                String errorMessage = (String) session.getAttribute("errorMessage");
+                if (errorMessage != null && !errorMessage.isEmpty()) {
+            %>
+                <div class="message error-message">
+                    <%= errorMessage %>
+                </div>
+            <%
+                    session.removeAttribute("errorMessage");
+                }
+                
+                // Display success message if any
+                String successMessage = (String) session.getAttribute("successMessage");
+                if (successMessage != null && !successMessage.isEmpty()) {
+            %>
+                <div class="message success-message">
+                    <%= successMessage %>
+                </div>
+            <%
+                    session.removeAttribute("successMessage");
+                }
+            %>
             
             <% if (isStaff) { %>
                 <!-- Staff Dashboard -->

@@ -485,7 +485,7 @@
                             </div>
                             
                             <div class="staff-actions">
-                                <a href="edit_item.jsp?itemId=<%= item.getItemId() %>" class="btn btn-edit">Edit Item</a>
+                                <a href="item_form.jsp?itemId=<%= item.getItemId() %>" class="btn btn-edit">Edit</a>
                                 <a href="#" class="btn btn-delete" onclick="confirmDelete('<%= item.getItemId() %>')">Delete Item</a>
                             </div>
                         <% } else { %>

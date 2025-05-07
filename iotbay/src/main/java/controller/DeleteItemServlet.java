@@ -18,16 +18,16 @@ import model.dao.ItemManager;
 public class DeleteItemServlet extends HttpServlet {
     
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         
         HttpSession session = request.getSession();
         
-        // Check if user is logged in and is staff (this is optional, just in case if not staff user directly access this servlet, so I added this access page restriction)
+        // Check if user is logged in and is staff (this is optional, just in case if not staff user directly access this servlet page, so I added this access page restriction rules)
         User user = (User) session.getAttribute("user");
         if (user == null || !(user instanceof Staff)) {
             // User is not staff, redirect to main page
-            response.sendRedirect("main.jsp");
+            session.setAttribute("errorMessage", "Access denied. Staff privileges required.");
+            request.getRequestDispatcher("main.jsp").include(request, response);
             return;
         }
         
@@ -36,7 +36,7 @@ public class DeleteItemServlet extends HttpServlet {
         
         if (itemId == null || itemId.isEmpty()) {
             session.setAttribute("errorMessage", "Invalid item ID. Please try again.");
-            response.sendRedirect("main.jsp");
+            request.getRequestDispatcher("main.jsp").include(request, response);
             return;
         }
         

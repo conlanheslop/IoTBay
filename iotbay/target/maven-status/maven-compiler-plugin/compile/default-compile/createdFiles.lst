@@ -10,6 +10,7 @@ model\Staff.class
 model\Order.class
 model\Delivery.class
 controller\BillManagerTest.class
+controller\ItemValidator.class
 model\OrderItem.class
 controller\SearchItemServlet.class
 model\Item.class

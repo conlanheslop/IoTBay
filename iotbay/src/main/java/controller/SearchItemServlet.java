@@ -18,8 +18,7 @@ import model.dao.ItemManager;
 public class SearchItemServlet extends HttpServlet {
     
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         
         HttpSession session = request.getSession();
         
@@ -42,9 +41,9 @@ public class SearchItemServlet extends HttpServlet {
                 List<Item> searchResults = itemManager.searchItems(searchQuery, typeQuery);
                 
                 // Store the search results and queries in the session
-                session.setAttribute("searchResults", searchResults);
-                session.setAttribute("searchQuery", searchQuery);
-                session.setAttribute("typeQuery", typeQuery);
+                request.setAttribute("searchResults", searchResults);
+                request.setAttribute("searchQuery", searchQuery);
+                request.setAttribute("typeQuery", typeQuery);
                 
                 // Forward to the search results page using include() 
                 request.getRequestDispatcher("search_items.jsp").include(request, response);

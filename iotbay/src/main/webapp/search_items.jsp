@@ -318,9 +318,9 @@
     <body>
         <%  
             // Get session attributes
-            List<Item> searchResults = (List<Item>) session.getAttribute("searchResults");
-            String searchQuery = (String) session.getAttribute("searchQuery");
-            String typeQuery = (String) session.getAttribute("typeQuery");
+            List<Item> searchResults = (List<Item>) request.getAttribute("searchResults");
+            String searchQuery = (String) request.getAttribute("searchQuery");
+            String typeQuery = (String) request.getAttribute("typeQuery");
             
             // Get user from session
             User user = (User)session.getAttribute("user");
@@ -437,7 +437,7 @@
                                             <span class="btn btn-disabled">Add to Cart</span>
                                         <% } %>
                                     <% } else { %>
-                                        <a href="#" class="btn btn-edit">Edit</a>
+                                        <a href="item_form.jsp?itemId=<%= item.getItemId() %>" class="btn btn-edit">Edit</a>
                                         <a href="#" class="btn btn-delete" onclick="confirmDelete('<%= item.getItemId() %>')">Delete</a>
                                     <% } %>
                                 </div>
@@ -447,7 +447,6 @@
                 </div>
             <% } %>
         </div>
-        
         <footer>
             <p>2025 IoTBay. wrk1-G5-06.</p>
         </footer>

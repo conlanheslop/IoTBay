@@ -526,7 +526,7 @@
                     <p>Our inventory is currently being updated. Please check back later.</p>
                     <% if (isStaff) { %>
                         <div class="admin-actions">
-                            <a href="#" class="btn btn-primary">Add New Product</a>
+                            <a href="item_form.jsp" class="btn btn-primary">Add New Product</a>
                         </div>
                     <% } %>
                 </div>
@@ -535,7 +535,7 @@
                 <h1>Product Catalogue</h1>
                 <% if (isStaff) { %>
                     <div class="admin-actions">
-                        <a href="#" class="btn btn-primary">Add New Product</a>
+                        <a href="item_form.jsp" class="btn btn-primary">Add New Product</a>
                     </div>
                 <% } %>
                 <% if (!isStaff) { %>
@@ -580,7 +580,7 @@
                                                 <span class="btn btn-disabled">Add to Cart</span>
                                             <% } %>
                                         <% } else { %>
-                                            <a href="#" class="btn btn-edit">Edit</a>
+                                            <a href="item_form.jsp?itemId=<%= item.getItemId() %>" class="btn btn-edit">Edit</a>
                                         <% } %>
                                     </div>
                                 </div>
@@ -623,7 +623,7 @@
                                                 <span class="btn btn-disabled">Add to Cart</span>
                                             <% } %>
                                         <% } else { %>
-                                            <a href="#" class="btn btn-edit">Edit</a>
+                                            <a href="item_form.jsp?itemId=<%= item.getItemId() %>" class="btn btn-edit">Edit</a>
                                             <a href="#" class="btn btn-delete" onclick="confirmDelete('<%= item.getItemId() %>')">Delete</a>
                                         <% } %>
                                     </div>
@@ -667,7 +667,7 @@
                                                 <span class="btn btn-disabled">Add to Cart</span>
                                             <% } %>
                                         <% } else { %>
-                                            <a href="#" class="btn btn-edit">Edit</a>
+                                            <a href="item_form.jsp?itemId=<%= item.getItemId() %>" class="btn btn-edit">Edit</a>
                                             <a href="#" class="btn btn-delete" onclick="confirmDelete('<%= item.getItemId() %>')">Delete</a>
                                         <% } %>
                                     </div>
@@ -711,7 +711,7 @@
                                                 <span class="btn btn-disabled">Add to Cart</span>
                                             <% } %>
                                         <% } else { %>
-                                            <a href="#" class="btn btn-edit">Edit</a>
+                                            <a href="item_form.jsp?itemId=<%= item.getItemId() %>" class="btn btn-edit">Edit</a>
                                             <a href="#" class="btn btn-delete" onclick="confirmDelete('<%= item.getItemId() %>')">Delete</a>
                                         <% } %>
                                     </div>
@@ -755,7 +755,7 @@
                                                 <span class="btn btn-disabled">Add to Cart</span>
                                             <% } %>
                                         <% } else { %>
-                                            <a href="#" class="btn btn-edit">Edit</a>
+                                            <a href="item_form.jsp?itemId=<%= item.getItemId() %>" class="btn btn-edit">Edit</a>
                                             <a href="#" class="btn btn-delete" onclick="confirmDelete('<%= item.getItemId() %>')">Delete</a>
                                         <% } %>
                                     </div>
@@ -799,7 +799,7 @@
                                                 <span class="btn btn-disabled">Add to Cart</span>
                                             <% } %>
                                         <% } else { %>
-                                            <a href="#" class="btn btn-edit">Edit</a>
+                                            <a href="item_form.jsp?itemId=<%= item.getItemId() %>" class="btn btn-edit">Edit</a>
                                             <a href="#" class="btn btn-delete" onclick="confirmDelete('<%= item.getItemId() %>')">Delete</a>
                                         <% } %>
                                     </div>

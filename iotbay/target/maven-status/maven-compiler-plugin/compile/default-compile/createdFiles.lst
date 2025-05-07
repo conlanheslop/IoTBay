@@ -15,5 +15,6 @@ controller\SearchItemServlet.class
 model\Item.class
 model\Customer.class
 model\dao\ItemManager.class
+controller\DeleteItemServlet.class
 model\Bill.class
 model\User.class

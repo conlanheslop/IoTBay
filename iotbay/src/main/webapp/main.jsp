@@ -528,7 +528,7 @@
                                         <% } else { %>
                                             <div class="out-of-stock">Out of Stock</div>
                                         <% } %>
-                                        <a href="item_detail.jsp?itemId=<%= item.getItemId() %>" class="btn btn-primary">View Details</a>
+                                        <a href="item_details.jsp?itemId=<%= item.getItemId() %>" class="btn btn-primary">View Details</a>
                                         <% if (!isStaff) { %>
                                             <% if (item.checkAvailability()) { %>
                                                 <a href="#" class="btn btn-add-to-cart">Add to Cart</a>
@@ -571,7 +571,7 @@
                                         <% } else { %>
                                             <div class="out-of-stock">Out of Stock</div>
                                         <% } %>
-                                        <a href="item_detail.jsp?itemId=<%= item.getItemId() %>" class="btn btn-primary">View Details</a>
+                                        <a href="item_details.jsp?itemId=<%= item.getItemId() %>" class="btn btn-primary">View Details</a>
                                         <% if (!isStaff) { %>
                                             <% if (item.checkAvailability()) { %>
                                                 <a href="#" class="btn btn-add-to-cart">Add to Cart</a>
@@ -615,7 +615,7 @@
                                         <% } else { %>
                                             <div class="out-of-stock">Out of Stock</div>
                                         <% } %>
-                                        <a href="item_detail.jsp?itemId=<%= item.getItemId() %>" class="btn btn-primary">View Details</a>
+                                        <a href="item_details.jsp?itemId=<%= item.getItemId() %>" class="btn btn-primary">View Details</a>
                                         <% if (!isStaff) { %>
                                             <% if (item.checkAvailability()) { %>
                                                 <a href="#" class="btn btn-add-to-cart">Add to Cart</a>
@@ -659,7 +659,7 @@
                                         <% } else { %>
                                             <div class="out-of-stock">Out of Stock</div>
                                         <% } %>
-                                        <a href="item_detail.jsp?itemId=<%= item.getItemId() %>" class="btn btn-primary">View Details</a>
+                                        <a href="item_details.jsp?itemId=<%= item.getItemId() %>" class="btn btn-primary">View Details</a>
                                         <% if (!isStaff) { %>
                                             <% if (item.checkAvailability()) { %>
                                                 <a href="#" class="btn btn-add-to-cart">Add to Cart</a>
@@ -703,7 +703,7 @@
                                         <% } else { %>
                                             <div class="out-of-stock">Out of Stock</div>
                                         <% } %>
-                                        <a href="item_detail.jsp?itemId=<%= item.getItemId() %>" class="btn btn-primary">View Details</a>
+                                        <a href="item_details.jsp?itemId=<%= item.getItemId() %>" class="btn btn-primary">View Details</a>
                                         <% if (!isStaff) { %>
                                             <% if (item.checkAvailability()) { %>
                                                 <a href="#" class="btn btn-add-to-cart">Add to Cart</a>
@@ -747,7 +747,7 @@
                                         <% } else { %>
                                             <div class="out-of-stock">Out of Stock</div>
                                         <% } %>
-                                        <a href="item_detail.jsp?itemId=<%= item.getItemId() %>" class="btn btn-primary">View Details</a>
+                                        <a href="item_details.jsp?itemId=<%= item.getItemId() %>" class="btn btn-primary">View Details</a>
                                         <% if (!isStaff) { %>
                                             <% if (item.checkAvailability()) { %>
                                                 <a href="#" class="btn btn-add-to-cart">Add to Cart</a>

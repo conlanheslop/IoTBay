@@ -13,9 +13,9 @@ CREATE TABLE USER (
     email VARCHAR(100) UNIQUE,
     phone VARCHAR(15),
     address VARCHAR(200),
-    lastLoginDate TEXT,
-    createdDate TEXT NOT NULL,
-    lastModifiedDate TEXT
+    lastLoginDate DATETIME,
+    createdDate DATETIME NOT NULL,
+    lastModifiedDate DATETIME
 );
 
 
@@ -44,28 +44,6 @@ CREATE TABLE Orders ( -- s at the end is only here because "order" is a keyword 
     isAnonymousOrder BOOLEAN DEFAULT FALSE,  
     anonymousEmail VARCHAR(100),             
     FOREIGN KEY (userId) REFERENCES Customer(userId)
-);
-
-
-DROP TABLE IF EXISTS Cart;
-
-CREATE TABLE Cart (
-    cart_id VARCHAR(50) PRIMARY KEY,
-    user_id VARCHAR(50) NOT NULL,
-    date_created TIMESTAMP NOT NULL,
-    last_updated TIMESTAMP NOT NULL
-);
-
-
-DROP TABLE IF EXISTS CartItem;
-
-CREATE TABLE CartItem (
-    cart_id VARCHAR(50),
-    item_id VARCHAR(50),
-    quantity INT NOT NULL,
-    unit_price DOUBLE NOT NULL,
-    PRIMARY KEY (cart_id, item_id),
-    FOREIGN KEY (cart_id) REFERENCES Cart(cart_id)
 );
 
 

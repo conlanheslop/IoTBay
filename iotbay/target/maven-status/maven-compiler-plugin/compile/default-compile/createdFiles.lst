@@ -1,6 +1,8 @@
 model\CartItem.class
 model\dao\BillManager.class
+controller\BillListServlet.class
 model\dao\OrderManager.class
+model\dao\PaymentManager.class
 model\Cart.class
 model\dao\DB.class
 model\dao\DBConnector.class
@@ -8,10 +10,10 @@ model\Payment.class
 model\Staff.class
 model\Order.class
 model\Delivery.class
-controller\BillManagerTest.class
 model\dao\OrderItemManager.class
 model\OrderItem.class
 model\dao\CartItemManager.class
+utils\DatabaseUtils.class
 controller\PaymentServlet.class
 model\dao\CartManager.class
 model\Item.class

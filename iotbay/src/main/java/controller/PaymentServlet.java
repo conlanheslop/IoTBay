@@ -4,8 +4,9 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
-import model.Bill;
-import model.OrderItem;
+import model.Cart;
+import model.CartItem;
+import model.Order;
 import model.Payment;
 import model.User;
 import model.dao.*;
@@ -17,7 +18,6 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,6 +29,9 @@ public class PaymentServlet extends HttpServlet {
     private BillManager billManager;
     private OrderItemManager orderItemManager;
     private PaymentManager paymentManager;
+    private CartItemManager cartItemManager;
+    private CartManager cartManager;
+    private OrderManager orderManager;
 
     @Override
     public void init() {
@@ -37,6 +40,15 @@ public class PaymentServlet extends HttpServlet {
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(PaymentServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+                
+        response.setContentType("text/html;charset=UTF-8");
+
+        request.getRequestDispatcher("/paymentManagement/billConfirm.jsp").forward(request, response);
     }
 
     @Override
@@ -52,17 +64,20 @@ public class PaymentServlet extends HttpServlet {
             billManager = new BillManager(conn);
             orderItemManager = new OrderItemManager(conn);
             paymentManager = new PaymentManager(conn);
+            cartItemManager = new CartItemManager(conn);
+            cartManager = new CartManager(conn);
+            orderManager = new OrderManager(conn);
 
-            String orderId = request.getParameter("orderId");
-            if (orderId == null || orderId.isEmpty()) {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing orderId");
+            String cartId = request.getParameter("cartId");
+            if (cartId == null || cartId.isEmpty()) {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing cartId");
                 return;
             }
 
-            List<OrderItem> items = orderItemManager.getItemsByOrderId(orderId);
+            List<CartItem> items = cartItemManager.fetchItemsByCartId(cartId);
             double totalAmount = 0.0;
 
-            for (OrderItem item : items) {
+            for (CartItem item : items) {
                 totalAmount += item.calculateSubtotal();
             }
             Date billDate = Date.valueOf(LocalDate.now());
@@ -95,12 +110,20 @@ public class PaymentServlet extends HttpServlet {
             String paymentAction = request.getParameter("paymentAction");
 
             if ("confirm".equals(paymentAction)) {
-                billManager.addBill(orderId, totalAmount, billDate, payment.getPaymentId(), true);
+                Cart cart = cartManager.findCart(cartId);
+                Order order = DatabaseUtils.mapCartToOrder(cart, userId, "Shipping", false, user.getEmail());
+
+                orderItemManager.addOrderItems(order.getOrderId(), order.getOrderItems());
+
+                billManager.addBill(order.getOrderId(), totalAmount, billDate, payment.getPaymentId(), true);
+                orderManager.addOrder(order.getOrderId(), userId, Date.valueOf(LocalDate.now()), 
+                    totalAmount, "shipping", false, "");
+                
                 session.setAttribute("message", "Bill created successfully");
 
                 response.sendRedirect("/paymentManagement/billConfirm.jsp");
             } else if ("save".equals(paymentAction)) {
-                billManager.addBill(orderId, totalAmount, billDate, payment.getPaymentId(), false);
+                billManager.addBill(null, totalAmount, billDate, payment.getPaymentId(), false, cartId);
                 session.setAttribute("message", "Bill saved");
 
                 response.sendRedirect("/paymentManagement/billConfirm.jsp");

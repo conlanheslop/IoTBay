@@ -20,6 +20,25 @@ public class OrderItemManager {
         st.executeUpdate(query);
     }
 
+    public void addOrderItems(String orderId, List<OrderItem> orderItems) throws SQLException {
+        StringBuilder queryBuilder = new StringBuilder();
+        for (OrderItem orderItem : orderItems) {
+            if (queryBuilder.length() > 0) {
+                queryBuilder.append(", ");
+            }
+            queryBuilder.append("('")
+                        .append(orderId).append("', '")
+                        .append(orderItem.getItemId()).append("', ")
+                        .append(orderItem.getQuantity()).append(", ")
+                        .append(orderItem.getUnitPrice()).append(")");
+        }
+
+        String query = "INSERT INTO OrderItems (orderId, itemId, quantity, unitPrice) VALUES " + queryBuilder.toString();
+        
+        // Execute the batch insert using Statement
+        st.executeUpdate(query);
+    }
+
     // Read (Find a specific order item)
     public OrderItem findOrderItem(String orderId, String itemId) throws SQLException {
         String query = "SELECT * FROM OrderItems WHERE orderId = '" + orderId + "' AND itemId = '" + itemId + "'";

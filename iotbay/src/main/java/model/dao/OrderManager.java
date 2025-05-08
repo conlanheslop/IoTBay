@@ -15,7 +15,7 @@ public class OrderManager {
     }
 
     // Create (Add a new order)
-    public void addOrder(String orderId, String userId, Timestamp orderDate, double totalAmount, 
+    public void addOrder(String orderId, String userId, Date orderDate, double totalAmount, 
                          String status, boolean isAnonymousOrder, String anonymousEmail) throws SQLException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String orderDateStr = sdf.format(orderDate);
@@ -45,7 +45,7 @@ public class OrderManager {
     }
 
     // Update (Update an order's details)
-    public void updateOrder(String orderId, String userId, Timestamp orderDate, double totalAmount, 
+    public void updateOrder(String orderId, String userId, Date orderDate, double totalAmount, 
                             String status, boolean isAnonymousOrder, String anonymousEmail) throws SQLException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String orderDateStr = sdf.format(orderDate);

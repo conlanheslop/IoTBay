@@ -4,7 +4,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
-    Cart cart = (Cart) session.getAttribute("cart");
+    Cart cart;
+    if(request.getAttribute("cart")){
+        cart = (Cart) request.getAttribute("cart")
+    } else {
+        cart = (Cart) session.getAttribute("cart");
+    }
 
     if (cart == null) {
         cart = new Cart("CART123", "USER001", new Date(), new Date());
@@ -173,7 +178,7 @@
 
     <!-- Payment Method Section -->
    <form action="PaymentServlet" method="post">
-        <%-- <input type="hidden" name="billId" value="<%= bill.getBillId() %>"> --%>
+        <input type="hidden" name="cartId" value="<%= cart.getCartId() %>">
 
         <label>Cardholder Name</label>
         <input type="text" name="cardholderName" required>

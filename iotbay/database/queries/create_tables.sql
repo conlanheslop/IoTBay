@@ -19,21 +19,16 @@ DROP TABLE IF EXISTS Bill;
 
 -- Create the Bill table with full constraints
 CREATE TABLE Bill (
-    billId VARCHAR(8) PRIMARY KEY,                   
-    orderId VARCHAR(8) NOT NULL,                       
-    amount DECIMAL(10,2) NOT NULL CHECK (amount > 0),  
-    billDate DATETIME NOT NULL,                        
-
-    -- Foreign key constraint
-    FOREIGN KEY (orderId) REFERENCES Orders(orderId)
+    billId VARCHAR(50) PRIMARY KEY,
+    orderId VARCHAR(50),
+    amount DECIMAL(10, 2),
+    billDate DATETIME,
+    paymentId VARCHAR(50),
+    isPaid BOOLEAN,
+    cartId VARCHAR(50),
+    FOREIGN KEY (cartId) REFERENCES Cart(cart_id)
 );
 
-INSERT INTO Orders (orderId) VALUES ('ORD00001'), ('ORD00002');
-
-INSERT INTO Bill (billId, orderId, amount, billDate) 
-VALUES 
-('BILL0001', 'ORD00001', 150.00, '2025-04-27 10:30:00'),
-('BILL0002', 'ORD00002', 200.50, '2025-04-27 11:00:00');
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 -- Drop the Order table if it already exists
@@ -53,11 +48,6 @@ CREATE TABLE Orders (
     FOREIGN KEY (userId) REFERENCES Customer(userId)
 );
 
--- Insert sample orders into the Orders table
-INSERT INTO Orders (orderId, userId, orderDate, totalAmount, status, isAnonymousOrder, anonymousEmail)
-VALUES
-('ORD00001', 'CUST00001', '2025-04-27 09:00:00', 200.00, 'Pending', FALSE, NULL),
-('ORD00002', 'CUST00002', '2025-04-27 09:30:00', 300.50, 'Processing', TRUE, 'anon@example.com');
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 -- CART TABLE

@@ -4,6 +4,7 @@ import model.Item;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Date;
 
 
@@ -181,5 +182,33 @@ public class ItemManager {
         ps.setString(1, itemId);
         ps.executeUpdate();
         ps.close();
+    }
+
+    // Generates a unique item ID that doesn't exist in the database.
+    // Format: ITM followed by 5 digits (e.g., ITM00123)
+    public String generateUniqueItemId() throws SQLException {
+        Random random = new Random();
+        String itemId;
+        boolean isUnique = false;
+        
+        // Keep generating IDs until we find a unique one
+        do {
+            // Generate a random number between 1 and 99999
+            int randomNum = random.nextInt(99999) + 1;
+            
+            // Format the ID as "ITM" followed by 5 digits with leading zeros
+            itemId = String.format("ITM%05d", randomNum);
+            
+            // Check if the ID already exists in the database
+            Item existingItem = this.findItem(itemId);
+            
+            // If the item doesn't exist, we have a unique ID
+            if (existingItem == null) {
+                isUnique = true;
+            }
+            
+        } while (!isUnique);
+        
+        return itemId;
     }
 }

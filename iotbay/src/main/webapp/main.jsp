@@ -362,6 +362,8 @@
             List<Item> homeAutomationTypeItems = new ArrayList<>();
             List<Item> securityTypeItems = new ArrayList<>();
             List<Item> sensorsTypeItems = new ArrayList<>();
+            int inStockItemsCount = 0;
+            int outOfStockItemsCount = 0;
 
             if (itemManager != null) {
                 try {
@@ -382,7 +384,12 @@
                         } else if (item.getType().equals("Security")) { 
                             securityTypeItems.add(item);
                         }  
-                    }
+                        if (item.getQuantity() == 0) {
+                            outOfStockCount++;
+                        } else {
+                            inStockItemsCount++;
+                        }
+                    }                   
                 }
             } else {
                 // Redirect to starting page index.jsp if itemManager value back to null (when session timeout occurred)
@@ -492,26 +499,40 @@
                         <p><%= items != null ? items.size() : 0 %></p>
                     </div>
                     <div class="dashboard-card">
+                        <h3>Total Energy Type Products</h3>
+                        <p><%= <%= energyTypeItems.isEmpty() ? items.size() : 0 %> %></p>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>Total Health Type Products</h3>
+                        <p><%= <%= healthTypeItems.isEmpty() ? healthTypeItems.size() : 0 %> %></p>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>Total Hoeme Automation Type Products</h3>
+                        <p><%= <%= homeAutomationTypeItems.isEmpty() ? homeAutomationTypeItems.size() : 0 %> %></p>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>Total Security Type Products</h3>
+                        <p><%= <%= securityTypeItems.isEmpty() ? securityTypeItems.size() : 0 %> %></p>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>Total Sensors Type Products</h3>
+                        <p><%= <%= sensorsTypeItems.isEmpty() ? sensorsTypeItems.size() : 0 %> %></p>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>In Stock Items</h3>
+                        <p><%= inStockItemsCount %></p>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>Out of Stock Items</h3>
+                        <p><%= outOfStockCount %></p>
+                    </div>
+                    <div class="dashboard-card">
                         <h3>Pending Orders</h3>
                         <p>12</p>
                     </div>
                     <div class="dashboard-card">
                         <h3>Registered Customers</h3>
                         <p>45</p>
-                    </div>
-                    <div class="dashboard-card">
-                        <h3>Out of Stock Items</h3>
-                        <%
-                            int outOfStockCount = 0;
-                            if (items != null) {
-                                for (Item item : items) {
-                                    if (item.getQuantity() == 0) {
-                                        outOfStockCount++;
-                                    }
-                                }
-                            }
-                        %>
-                        <p><%= outOfStockCount %></p>
                     </div>
                 </div>
                 

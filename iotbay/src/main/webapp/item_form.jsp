@@ -183,7 +183,12 @@
             
             // Get ItemManager from session
             ItemManager itemManager = (ItemManager) session.getAttribute("itemManager");
-            
+            if (itemManager == null) {
+                // Redirect to starting page index.jsp if itemManager value back to null (when session timeout occurred)
+                response.sendRedirect("index.jsp");
+                return;
+            }
+
             // Variables to hold form values
             String name = "";
             String quantityStr = "";
@@ -219,7 +224,7 @@
                     return;
                 }
             }
-            
+                        
             // Override values with request attributes if they exist (e.g., from validation failure)
             if (request.getAttribute("name") != null) name = (String) request.getAttribute("name");
             if (request.getAttribute("quantity") != null) quantityStr = (String) request.getAttribute("quantity");

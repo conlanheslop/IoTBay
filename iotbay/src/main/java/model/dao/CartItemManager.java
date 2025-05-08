@@ -13,12 +13,14 @@ public class CartItemManager {
         st = conn.createStatement();
     }
 
+    // CREATE
     public void addCartItem(String cartId, String itemId, int quantity, double unitPrice) throws SQLException {
         String query = "INSERT INTO CartItem (cartId, itemId, quantity, unitPrice) VALUES ('" +
                 cartId + "','" + itemId + "'," + quantity + "," + unitPrice + ")";
         st.executeUpdate(query);
     }
 
+    // READ
     public CartItem findCartItem(String cartId, String itemId) throws SQLException {
         String query = "SELECT * FROM CartItem WHERE cartId='" + cartId + "' AND itemId='" + itemId + "'";
         ResultSet rs = st.executeQuery(query);
@@ -31,17 +33,20 @@ public class CartItemManager {
         return null;
     }
 
+    // UPDATE
     public void updateCartItem(String cartId, String itemId, int quantity, double unitPrice) throws SQLException {
         String query = "UPDATE CartItem SET quantity=" + quantity + ", unitPrice=" + unitPrice +
                 " WHERE cartId='" + cartId + "' AND itemId='" + itemId + "'";
         st.executeUpdate(query);
     }
 
+    // DELETE
     public void deleteCartItem(String cartId, String itemId) throws SQLException {
         String query = "DELETE FROM CartItem WHERE cartId='" + cartId + "' AND itemId='" + itemId + "'";
         st.executeUpdate(query);
     }
 
+    // Optional
     public List<CartItem> fetchItemsByCartId(String cartId) throws SQLException {
         List<CartItem> items = new ArrayList<>();
         String query = "SELECT * FROM CartItem WHERE cartId='" + cartId + "'";

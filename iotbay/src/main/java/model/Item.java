@@ -11,7 +11,7 @@ public class Item implements Serializable {
     private int quantity;
     private String description;
     private double price;
-    private String type;
+    private String category;
     private String manufacturer;
     private String imageURL;
     private Date dateAdded;
@@ -29,13 +29,13 @@ public class Item implements Serializable {
     }
 
     // Full constructor
-    public Item(String itemId, String name, int quantity, String description, double price, String type, String manufacturer, String imageURL) {
+    public Item(String itemId, String name, int quantity, String description, double price, String category, String manufacturer, String imageURL) {
         this.itemId = itemId;
         this.name = name;
         this.quantity = quantity;
         this.description = description;
         this.price = price;
-        this.type = type;
+        this.category = category;
         this.manufacturer = manufacturer;
         this.imageURL = imageURL;
         this.dateAdded = new Date();
@@ -87,12 +87,12 @@ public class Item implements Serializable {
         this.lastModifiedDate = new Date();
     }
 
-    public String getType() {
-        return type;
+    public String getCategory() {
+        return category;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setCategory(String category) {
+        this.category = category;
         this.lastModifiedDate = new Date();
     }
 
@@ -112,40 +112,5 @@ public class Item implements Serializable {
     public void setImageURL(String imageURL) {
         this.imageURL = imageURL;
         this.lastModifiedDate = new Date();
-    }
-
-    public Date getDateAdded() {
-        return dateAdded;
-    }
-
-    public void setDateAdded(Date dateAdded) {
-        this.dateAdded = dateAdded;
-    }
-
-    public Date getLastRestocked() {
-        return lastRestocked;
-    }
-
-    public void setLastRestocked(Date lastRestocked) {
-        this.lastRestocked = lastRestocked;
-        this.lastModifiedDate = new Date();
-    }
-
-    public Date getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(Date lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
-    
-    public boolean updateStock() {
-        this.lastRestocked = new Date();
-        this.lastModifiedDate = new Date();
-        return true;
-    }
-    
-    public int checkAvailability() {
-        return this.quantity;
     }
 }

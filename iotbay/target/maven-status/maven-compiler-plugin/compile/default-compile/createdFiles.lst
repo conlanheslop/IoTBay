@@ -1,6 +1,7 @@
 model\CartItem.class
 model\dao\BillManager.class
 model\dao\OrderManager.class
+controller\AddItemServlet.class
 model\Cart.class
 controller\ConnServlet.class
 model\dao\DB.class

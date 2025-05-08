@@ -362,6 +362,9 @@
             List<Item> homeAutomationTypeItems = new ArrayList<>();
             List<Item> securityTypeItems = new ArrayList<>();
             List<Item> sensorsTypeItems = new ArrayList<>();
+            int totalProductQuantity = 0;
+            int inStockItemsCount = 0;
+            int outOfStockItemsCount = 0;
 
             if (itemManager != null) {
                 try {
@@ -382,7 +385,13 @@
                         } else if (item.getType().equals("Security")) { 
                             securityTypeItems.add(item);
                         }  
-                    }
+                        if (item.checkAvailability()) {
+                            inStockItemsCount++;
+                        } else {
+                            outOfStockItemsCount++;
+                        }
+                        totalProductQuantity += item.getQuantity();
+                    }                   
                 }
             } else {
                 // Redirect to starting page index.jsp if itemManager value back to null (when session timeout occurred)
@@ -484,39 +493,46 @@
             %>
             
             <% if (isStaff) { %>
-                <!-- Staff Dashboard -->
-                <h2 class="section-title">Staff Dashboard</h2>
+                <!-- IoT Device Management Dashboard -->
+                <h2 class="section-title">IoT Device Management Dashboard</h2>
                 <div class="dashboard">
                     <div class="dashboard-card">
                         <h3>Total Products</h3>
                         <p><%= items != null ? items.size() : 0 %></p>
                     </div>
                     <div class="dashboard-card">
-                        <h3>Pending Orders</h3>
-                        <p>12</p>
+                        <h3>Total Energy Type Products</h3>
+                        <p><%= !energyTypeItems.isEmpty() ? energyTypeItems.size() : 0 %></p>
                     </div>
                     <div class="dashboard-card">
-                        <h3>Registered Customers</h3>
-                        <p>45</p>
+                        <h3>Total Health Type Products</h3>
+                        <p><%= !healthTypeItems.isEmpty() ? healthTypeItems.size() : 0 %></p>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>Total Home Automation Type Products</h3>
+                        <p><%= !homeAutomationTypeItems.isEmpty() ? homeAutomationTypeItems.size() : 0 %></p>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>Total Security Type Products</h3>
+                        <p><%= !securityTypeItems.isEmpty() ? securityTypeItems.size() : 0 %></p>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>Total Sensors Type Products</h3>
+                        <p><%= !sensorsTypeItems.isEmpty() ? sensorsTypeItems.size() : 0 %></p>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>Total Product Quantity</h3>
+                        <p><%= totalProductQuantity %></p>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>In Stock Items</h3>
+                        <p><%= inStockItemsCount %></p>
                     </div>
                     <div class="dashboard-card">
                         <h3>Out of Stock Items</h3>
-                        <%
-                            int outOfStockCount = 0;
-                            if (items != null) {
-                                for (Item item : items) {
-                                    if (item.getQuantity() == 0) {
-                                        outOfStockCount++;
-                                    }
-                                }
-                            }
-                        %>
-                        <p><%= outOfStockCount %></p>
+                        <p><%= outOfStockItemsCount %></p>
                     </div>
                 </div>
-                
-                <h2 class="section-title">Recent Orders</h2>
-                <p>This feature will be implemented in future releases.</p>
             <% } %>
             
             <% if (items == null || items.isEmpty()) { %>

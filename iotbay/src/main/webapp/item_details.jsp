@@ -448,12 +448,12 @@
                         
                         <div class="item-section">
                             <span class="section-label">Manufacturer:</span>
-                            <%= item.getManufacturer() != null ? item.getManufacturer() : "Unknown" %>
+                            <%= (item.getManufacturer() != null && !item.getManufacturer().isEmpty()) ? item.getManufacturer() : "Unknown" %>
                         </div>
-                        
+
                         <div class="item-section">
                             <span class="section-label">Description:</span>
-                            <%= item.getDescription() != null ? item.getDescription() : "Unknown" %>
+                            <%= (item.getDescription() != null && !item.getDescription().isEmpty()) ? item.getDescription() : "Unknown" %>
                         </div>
                         
                         <div class="item-section">

@@ -57,32 +57,32 @@ public class AddItemServlet extends HttpServlet {
         
         if (!validator.validateName(name)) {
             isValid = false;
-            errorMessage += "Name is required and must be between 1-50 characters.";
+            errorMessage += "Name is required and must be between 1-50 characters. ";
         }
         
         if (!validator.validateQuantity(quantityStr)) {
             isValid = false;
-            errorMessage += "Quantity must be a non-negative integer.";
+            errorMessage += "Quantity must be a non-negative integer. ";
         }
         
         if (!validator.validatePrice(priceStr)) {
             isValid = false;
-            errorMessage += "Price must be a positive number with up to 2 decimal places.";
+            errorMessage += "Price must be a positive number with up to 2 decimal places. ";
         }
         
         if (!validator.validateType(type)) {
             isValid = false;
-            errorMessage += "Type must be a valid selection.";
+            errorMessage += "Type must be a valid selection. ";
         }
         
         if (!validator.validateDescription(description)) {
             isValid = false;
-            errorMessage += "Description must be at most 255 characters.";
+            errorMessage += "Description must be at most 255 characters. ";
         }
         
         if (!validator.validateManufacturer(manufacturer)) {
             isValid = false;
-            errorMessage += "Manufacturer must be at most 50 characters.";
+            errorMessage += "Manufacturer must be at most 50 characters. ";
         }
         
         // If validation fails, redirect back to form with error message
@@ -112,8 +112,8 @@ public class AddItemServlet extends HttpServlet {
             // Set success message in session
             session.setAttribute("successMessage", "Item " + itemId + " has been successfully added.");
             
-            // Redirect to main page
-            request.getRequestDispatcher("main.jsp").include(request, response);
+            // Redirect to main.jsp using sendRedirect() rather than forward() to prevent form resubmission (duplicate adding new product) when the page is refreshed
+            response.sendRedirect("main.jsp");
             
         } catch (SQLException ex) {
             Logger.getLogger(AddItemServlet.class.getName()).log(Level.SEVERE, null, ex);

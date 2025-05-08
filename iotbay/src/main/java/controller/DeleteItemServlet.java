@@ -22,7 +22,7 @@ public class DeleteItemServlet extends HttpServlet {
         
         HttpSession session = request.getSession();
         
-        // Check if user is logged in and is staff (this is optional, just in case if not staff user directly access this servlet page, so I added this access page restriction rules)
+        // Check if user is logged in and is staff (this is optional, just in case if not staff user directly access this servlet page, so I added this access page restriction rule)
         User user = (User) session.getAttribute("user");
         if (user == null || !(user instanceof Staff)) {
             // User is not staff, redirect to main page
@@ -54,7 +54,6 @@ public class DeleteItemServlet extends HttpServlet {
                 // Forward to the main.jsp page using include() 
                 request.getRequestDispatcher("main.jsp").include(request, response);
             } catch (SQLException ex) {
-                // Log the error
                 Logger.getLogger(DeleteItemServlet.class.getName()).log(Level.SEVERE, null, ex);
                 
                 // Set error message in session

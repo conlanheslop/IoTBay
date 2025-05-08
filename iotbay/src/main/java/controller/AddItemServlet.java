@@ -22,7 +22,7 @@ public class AddItemServlet extends HttpServlet {
         
         HttpSession session = request.getSession();
         
-        // Check if user is logged in and is staff (this is optional, just in case if not staff user directly access this servlet page, so I added this access page restriction rules)
+        // Check if user is logged in and is staff (this is optional, just in case if not staff user directly access this servlet page, so I added this access page restriction rule)
         User user = (User) session.getAttribute("user");
         if (user == null || !(user instanceof Staff)) {
             // User is not staff, redirect to main page
@@ -112,7 +112,7 @@ public class AddItemServlet extends HttpServlet {
             // Set success message in session
             session.setAttribute("successMessage", "Item " + itemId + " has been successfully added.");
             
-            // Redirect to main.jsp using sendRedirect() rather than forward() to prevent form resubmission (duplicate adding new product) when the page is refreshed
+            // Redirect to main.jsp using response.sendRedirect() rather than getRequestDispatcher().include(request, response) to prevent form resubmission (duplicate adding new product) when the page is refreshed
             response.sendRedirect("main.jsp");
             
         } catch (SQLException ex) {

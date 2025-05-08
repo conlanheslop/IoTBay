@@ -146,14 +146,28 @@ public class ItemManager {
     
     // Update (Update item details)
     public void updateItem(String itemId, String name, int quantity, String description, double price, String type, String manufacturer) throws SQLException {
-        PreparedStatement ps = conn.prepareStatement("UPDATE \"Items\" SET name = ?, quantity = ?, description = ?, price = ?, " +
-            "type = ?, manufacturer = ?, lastModifiedDate = CURRENT_TIMESTAMP " +
-            "WHERE itemId = ?");
+        // First get the current item to check if quantity is increasing
+        Item currentItem = this.findItem(itemId);
+        boolean isRestocked = (currentItem != null && quantity > currentItem.getQuantity());
+        
+        PreparedStatement ps;
+        
+        if (isRestocked) {
+            // If quantity has increased, update the lastRestocked timestamp
+            ps = conn.prepareStatement("UPDATE \"Items\" SET name = ?, quantity = ?, description = ?, price = ?, " +
+                "type = ?, manufacturer = ?, lastModifiedDate = CURRENT_TIMESTAMP, lastRestocked = CURRENT_TIMESTAMP " +
+                "WHERE itemId = ?");
+        } else {
+            // Otherwise just update other fields without changing lastRestocked
+            ps = conn.prepareStatement("UPDATE \"Items\" SET name = ?, quantity = ?, description = ?, price = ?, " +
+                "type = ?, manufacturer = ?, lastModifiedDate = CURRENT_TIMESTAMP " +
+                "WHERE itemId = ?");
+        }
         
         ps.setString(1, name);
         ps.setInt(2, quantity);
         
-        // Handle potentially null description while updating item attributes through UI
+        // Handle potentially null description
         if (description != null) {
             ps.setString(3, description);
         } else {
@@ -163,7 +177,7 @@ public class ItemManager {
         ps.setDouble(4, price);
         ps.setString(5, type);
         
-        // Handle potentially null manufacturer while updating item attributes through UI
+        // Handle potentially null manufacturer
         if (manufacturer != null) {
             ps.setString(6, manufacturer);
         } else {

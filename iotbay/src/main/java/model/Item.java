@@ -11,7 +11,7 @@ public class Item implements Serializable {
     private int quantity;
     private String description;
     private double price;
-    private String category;
+    private String type;
     private String manufacturer;
     private String imageURL;
     private Date dateAdded;
@@ -29,13 +29,13 @@ public class Item implements Serializable {
     }
 
     // Full constructor
-    public Item(String itemId, String name, int quantity, String description, double price, String category, String manufacturer, String imageURL) {
+    public Item(String itemId, String name, int quantity, String description, double price, String type, String manufacturer, String imageURL) {
         this.itemId = itemId;
         this.name = name;
         this.quantity = quantity;
         this.description = description;
         this.price = price;
-        this.category = category;
+        this.type = type;
         this.manufacturer = manufacturer;
         this.imageURL = imageURL;
         this.dateAdded = new Date();
@@ -87,12 +87,12 @@ public class Item implements Serializable {
         this.lastModifiedDate = new Date();
     }
 
-    public String getCategory() {
-        return category;
+    public String getType() {
+        return type;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setType(String type) {
+        this.type = type;
         this.lastModifiedDate = new Date();
     }
 

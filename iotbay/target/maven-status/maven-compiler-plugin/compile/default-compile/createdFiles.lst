@@ -1,0 +1,16 @@
+model\CartItem.class
+model\dao\BillManager.class
+model\dao\OrderManager.class
+model\Cart.class
+model\dao\DB.class
+model\dao\DBConnector.class
+model\Payment.class
+model\Staff.class
+model\Order.class
+model\Delivery.class
+controller\BillManagerTest.class
+model\OrderItem.class
+model\Item.class
+model\Customer.class
+model\Bill.class
+model\User.class

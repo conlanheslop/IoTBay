@@ -84,7 +84,7 @@ public class Order implements Serializable {
         this.isAnonymousOrder = isAnonymousOrder;
     }
     
-    // Legacy method for JSP compatibility
+    // Necessary methods
     public boolean isAnonymousOrder() {
         return isAnonymousOrder;
     }

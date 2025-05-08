@@ -6,6 +6,7 @@ model\Cart.class
 controller\ConnServlet.class
 model\dao\DB.class
 model\dao\DBConnector.class
+controller\ItemManagerTest.class
 model\Payment.class
 model\Staff.class
 model\Order.class

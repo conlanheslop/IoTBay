@@ -22,9 +22,9 @@ VALUES
     ('ITM00001', 'Smart Power Strip', 40, 'Multi-outlet smart power strip with individual outlet control', 39.99, 'Energy', 'PowerSmart', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
     ('ITM00002', 'Energy Monitor', 0, 'Whole-home energy monitoring system with real-time usage tracking', 89.99, 'Energy', 'PowerSmart', CURRENT_TIMESTAMP, NULL, CURRENT_TIMESTAMP),
     ('ITM00003', 'Solar Power Controller', 20, 'Smart controller for residential solar panel systems with app monitoring', 129.99, 'Energy', 'PowerSmart', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-    ('ITM00004', 'Smart Thermostat for HVAC', 15, 'Energy-efficient thermostat that optimizes heating and cooling cycles', 99.99, 'Energy', 'EcoSmart', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    ('ITM00004', 'Smart Thermostat for HVAC', 15, 'Energy-efficient thermostat that optimises heating and cooling cycles', 99.99, 'Energy', 'EcoSmart', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
     ('ITM00005', 'Wireless Energy Monitor Display', 25, 'Portable display showing real-time energy consumption data from all connected devices', 59.99, 'Energy', 'PowerSmart', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-    ('ITM00006', 'Smart Battery Monitor', 35, 'Track and optimize battery usage for home energy storage systems', 45.99, 'Energy', 'PowerSmart', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    ('ITM00006', 'Smart Battery Monitor', 35, 'Track and optimise battery usage for home energy storage systems', 45.99, 'Energy', 'PowerSmart', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
     ('ITM00007', 'Smart Window Film Controller', 15, 'Adjustable window tinting for optimal energy efficiency', 119.99, 'Energy', 'EcoSmart', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
     ('ITM00008', 'Home Wind Turbine Monitor', 0, 'Performance tracking system for residential wind power generation', 89.99, 'Energy', 'PowerSmart', CURRENT_TIMESTAMP, NULL, CURRENT_TIMESTAMP),
     

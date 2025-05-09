@@ -113,39 +113,4 @@ public class Item implements Serializable {
         this.imageURL = imageURL;
         this.lastModifiedDate = new Date();
     }
-
-    public Date getDateAdded() {
-        return dateAdded;
-    }
-
-    public void setDateAdded(Date dateAdded) {
-        this.dateAdded = dateAdded;
-    }
-
-    public Date getLastRestocked() {
-        return lastRestocked;
-    }
-
-    public void setLastRestocked(Date lastRestocked) {
-        this.lastRestocked = lastRestocked;
-        this.lastModifiedDate = new Date();
-    }
-
-    public Date getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(Date lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
-    
-    public boolean updateStock() {
-        this.lastRestocked = new Date();
-        this.lastModifiedDate = new Date();
-        return true;
-    }
-    
-    public int checkAvailability() {
-        return this.quantity;
-    }
 }

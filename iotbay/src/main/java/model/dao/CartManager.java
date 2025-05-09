@@ -15,6 +15,7 @@ public class CartManager {
         st = conn.createStatement();
     }
 
+    // CREATE
     public void addCart(String cartId, String userId, Date dateCreated, Date lastUpdated) throws SQLException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String createdStr = sdf.format(dateCreated);
@@ -25,6 +26,7 @@ public class CartManager {
         st.executeUpdate(query);
     }
 
+    // READ
     public Cart findCart(String cartId) throws SQLException {
         String query = "SELECT * FROM Cart WHERE cartId = '" + cartId + "'";
         ResultSet rs = st.executeQuery(query);
@@ -38,6 +40,7 @@ public class CartManager {
         return null;
     }
 
+    // UPDATE
     public void updateCart(String cartId, String userId, Date dateCreated, Date lastUpdated) throws SQLException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String createdStr = sdf.format(dateCreated);
@@ -48,11 +51,13 @@ public class CartManager {
         st.executeUpdate(query);
     }
 
+    // DELETE
     public void deleteCart(String cartId) throws SQLException {
         String query = "DELETE FROM Cart WHERE cartId='" + cartId + "'";
         st.executeUpdate(query);
     }
 
+    // Optional
     public List<Cart> fetchAllCarts() throws SQLException {
         List<Cart> carts = new ArrayList<>();
         String query = "SELECT * FROM Cart";

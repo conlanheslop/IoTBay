@@ -69,4 +69,13 @@ public class BillListServlet extends HttpServlet{
 
         request.getRequestDispatcher("/paymentManagement/billList.jsp").forward(request, response);
     }
+
+    @Override
+    public void destroy() {
+        try {
+            db.closeConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(PaymentServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

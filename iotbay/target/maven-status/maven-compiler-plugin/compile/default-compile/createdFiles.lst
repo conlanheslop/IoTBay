@@ -13,6 +13,7 @@ model\Delivery.class
 model\dao\OrderItemManager.class
 model\OrderItem.class
 model\dao\CartItemManager.class
+controller\BillConfirmServlet.class
 utils\DatabaseUtils.class
 controller\PaymentServlet.class
 model\dao\CartManager.class

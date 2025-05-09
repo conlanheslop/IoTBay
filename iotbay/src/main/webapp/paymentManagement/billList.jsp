@@ -1,10 +1,20 @@
-<%@ page import="model.Payment" %>
+<%@ page import="model.Bill" %>
 <%@ page import="java.util.List" %>
 <%@ page import="model.User" %>
 
 <%
+    User mockUser = new User(
+    "U001",                  // id
+    "John Doe",              // name
+    "password123",           // password
+    "john.doe@example.com",  // email
+    "0123456789",            // phone
+    "123 Main Street"        // address
+    );
+    session.setAttribute("user", mockUser);
+
     User user = (User)session.getAttribute("user");
-    List<Payment> payments = (List<Payment>) request.getAttribute("payments");
+    List<Bill> bills = (List<Bill>) request.getAttribute("bills");
 %>
 
 <html>

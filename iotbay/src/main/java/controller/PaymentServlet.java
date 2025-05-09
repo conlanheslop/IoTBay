@@ -2,8 +2,11 @@ package controller;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.*;
-
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import model.Bill;
 import model.Cart;
 import model.CartItem;
 import model.Order;
@@ -44,11 +47,8 @@ public class PaymentServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-                
-        response.setContentType("text/html;charset=UTF-8");
-
-        request.getRequestDispatcher("/paymentManagement/billConfirm.jsp").forward(request, response);
+        throws ServletException, IOException {
+            request.getRequestDispatcher("/paymentManagement/billConfirm.jsp").forward(request, response);
     }
 
     @Override

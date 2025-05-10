@@ -11,35 +11,41 @@ public class Item implements Serializable {
     private int quantity;
     private String description;
     private double price;
-    private String category;
+    private String type;
     private String manufacturer;
-    private String imageURL;
     private Date dateAdded;
     private Date lastRestocked;
     private Date lastModifiedDate;
-    
-    // Constructor with essential fields
-    public Item(String itemId, String name, double price, int quantity) {
-        this.itemId = itemId;
-        this.name = name;
-        this.price = price;
-        this.quantity = quantity;
-        this.dateAdded = new Date();
-        this.lastModifiedDate = new Date();
+
+    // For creating new Item through UI
+    public Item(String itemId, String name, int quantity, String description, double price, String type, String manufacturer) {
+        this.itemId       = itemId;
+        this.name         = name;
+        this.quantity     = quantity;
+        this.description  = description;
+        this.price        = price;
+        this.type     = type;
+        this.manufacturer = manufacturer;
+        this.dateAdded  = new Date();                   
+        if (quantity > 0) {
+            this.lastRestocked = new Date();
+        } else {
+            this.lastRestocked = null;
+        }
     }
 
-    // Full constructor
-    public Item(String itemId, String name, int quantity, String description, double price, String category, String manufacturer, String imageURL) {
+    // For get Item from DB
+    public Item(String itemId, String name, int quantity, String description, double price, String type, String manufacturer, Date dateAdded, Date lastRestocked, Date lastModifiedDate) {
         this.itemId = itemId;
         this.name = name;
         this.quantity = quantity;
         this.description = description;
         this.price = price;
-        this.category = category;
+        this.type = type;
         this.manufacturer = manufacturer;
-        this.imageURL = imageURL;
-        this.dateAdded = new Date();
-        this.lastModifiedDate = new Date();
+        this.dateAdded = dateAdded;
+        this.lastRestocked = lastRestocked;
+        this.lastModifiedDate = lastModifiedDate;
     }
     
     // Getters and Setters
@@ -87,12 +93,12 @@ public class Item implements Serializable {
         this.lastModifiedDate = new Date();
     }
 
-    public String getCategory() {
-        return category;
+    public String getType() {
+        return type;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setType(String type) {
+        this.type = type;
         this.lastModifiedDate = new Date();
     }
 
@@ -105,12 +111,38 @@ public class Item implements Serializable {
         this.lastModifiedDate = new Date();
     }
 
-    public String getImageURL() {
-        return imageURL;
+    public Date getDateAdded() {
+        return dateAdded;
     }
 
-    public void setImageURL(String imageURL) {
-        this.imageURL = imageURL;
+    public void setDateAdded(Date dateAdded) {
+        this.dateAdded = dateAdded;
+    }
+
+    public Date getLastRestocked() {
+        return lastRestocked;
+    }
+
+    public void setLastRestocked(Date lastRestocked) {
+        this.lastRestocked = lastRestocked;
         this.lastModifiedDate = new Date();
+    }
+
+    public Date getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(Date lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+    
+    public boolean updateStock() {
+        this.lastRestocked = new Date();
+        this.lastModifiedDate = new Date();
+        return true;
+    }
+    
+    public boolean checkAvailability() {
+        return (this.quantity > 0);
     }
 }

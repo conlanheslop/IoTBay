@@ -3,6 +3,10 @@
 <%@ page import="model.Customer" %>
 <%@ page import="model.Item" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.Random" %>
+<%@ page import="model.dao.ItemManager" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.sql.SQLException" %>
 
 <html>
     <head>
@@ -17,12 +21,51 @@
             
             body {
                 background-color: #f4f4f4;
+                padding-top: 70px;
+            }
+
+            .search-container {
+                display: flex;
+                align-items: center;
+                margin: 0 15px;
+            }
+
+            .search-container input[type="text"] {
+                padding: 8px;
+                margin-right: 10px;
+                border-radius: 5px;
+                border: none;
+                width: 200px;
+            }
+
+            .search-container select {
+                padding: 8px;
+                margin-right: 10px;
+                border-radius: 5px;
+                border: none;
+            }
+
+            .search-container button {
+                padding: 8px 15px;
+                background-color: #007BFF;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+
+            .search-container button:hover {
+                background-color: #0056b3;
             }
             
             header {
                 background-color: #333;
                 color: white;
                 padding: 1rem;
+                position: fixed;
+                top: 0;
+                width: 100%;
+                z-index: 1000;
             }
             
             .header-container {
@@ -73,6 +116,10 @@
                 font-size: 0.9rem;
                 margin-top: 10px;
             }
+
+            .user-welcome .btn:hover {
+                background-color: #0056b3;
+            }
             
             .dashboard {
                 display: grid;
@@ -108,8 +155,17 @@
             .product-card {
                 background-color: white;
                 border-radius: 5px;
+                transition: transform 0.3s;
                 box-shadow: 0 2px 5px rgba(0,0,0,0.1);
                 overflow: hidden;
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+            }
+
+            .product-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             }
             
             .product-image {
@@ -122,6 +178,10 @@
             
             .product-info {
                 padding: 15px;
+                display: flex;
+                flex-direction: column;
+                flex: 1;
+                position: relative;
             }
             
             .product-title {
@@ -139,20 +199,21 @@
                 font-size: 0.9rem;
                 color: #666;
                 margin-bottom: 15px;
+                flex-grow: 1;
+            }
+
+            .product-action {
+                margin-top: auto;
+                width: 100%;
             }
             
             .btn {
                 display: inline-block;
-                background-color: #007BFF;
                 color: white;
                 padding: 8px 15px;
                 border-radius: 5px;
                 text-decoration: none;
                 font-size: 0.9rem;
-            }
-            
-            .btn:hover {
-                background-color: #0056b3;
             }
             
             footer {
@@ -168,23 +229,176 @@
                 font-size: 1.5rem;
                 color: #333;
             }
+
+            h1 {
+                margin-bottom: 15px;
+            }
+
+            .in-stock {
+                color: #28a745;
+            }
+            .out-of-stock {
+                color: #dc3545;
+            }
+
+            /* Buttons for Edit Profile and View Details (blue colour) */
+            .btn-primary {
+                background-color: #007BFF;
+            }
+
+            .btn-primary:hover {
+                background-color: #0056b3;
+            }
+
+            /* Button for Add to Cart (green colour) */
+            .btn-add-to-cart {
+                background-color: #28a745;
+            }
+            .btn-add-to-cart:hover {
+                background-color: rgb(17, 192, 14);
+            }
+
+            /* Button for Edit (yellow colour) */
+            .btn-edit {
+                background-color: #ffc107;
+                color: #333;
+            }
+            .btn-edit:hover {
+                background-color: rgb(228, 162, 18);
+            }
+
+            /* Disabled button for Add to Cart */
+            .btn-disabled {
+                background-color: #888;
+                cursor: not-allowed;
+                opacity: 0.7;
+            }
+
+            .empty-catalogue {
+                background-color: white;
+                padding: 30px;
+                border-radius: 5px;
+                text-align: center;
+                margin: 30px 0;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            }
+
+            .empty-catalogue h3 {
+                color: #333;
+                margin-bottom: 15px;
+                font-size: 1.3rem;
+            }
+
+            .empty-catalogue p {
+                color: #666;
+                margin-bottom: 20px;
+            }
+
+            .empty-catalogue .btn {
+                margin-top: 15px;
+                display: inline-block;
+            } 
+
+            .admin-actions {
+                margin-bottom: 20px;
+            }
+
+            .product-image img {
+                max-width: 100%;
+                max-height: 100%;
+                width: auto;
+                height: auto;
+                object-fit: contain;
+            }
+            .product-item-id {
+                font-size: 0.8rem;
+                color: #6c757d;
+                margin-bottom: 5px;
+            }
+
+            .btn-delete {
+                background-color: #dc3545;
+            }
+        
+            .btn-delete:hover {
+                background-color: #c82333;
+            }
+            
+            .message {
+                padding: 10px 15px;
+                margin-bottom: 20px;
+                border-radius: 4px;
+                text-align: center;
+            }
+
+            .error-message {
+                background-color: #f8d7da;
+                color: #721c24;
+                border: 1px solid #f5c6cb;
+            }
+
+            .success-message {
+                background-color: #d4edda;
+                color: #155724;
+                border: 1px solid #c3e6cb;
+            }
         </style>
+
+        <script>
+            function confirmDelete(itemId) {
+                if (confirm("Are you sure you want to delete this item (" + itemId + ")? This action cannot be undone.")) {
+                    window.location.href = "DeleteItemServlet?itemId=" + itemId;
+                }
+            }
+        </script>
     </head>
     <body>
-        <%-- Some samples of item for demonstration --%>
-        <%!
-            ArrayList<Item> items = new ArrayList<>();
-            Item item1 = new Item("ITM001", "Temperature Sensor", 29.99, 50);
-            Item item2 = new Item("ITM002", "Motion Detector", 24.99, 30);
-            Item item3 = new Item("ITM003", "Smart Thermostat", 89.99, 15);
-            Item item4 = new Item("ITM004", "Humidity Sensor", 19.99, 40);
-            Item item5 = new Item("ITM005", "Smart Light Bulb", 15.99, 100);
-            Item item6 = new Item("ITM006", "Door/Window Sensor", 12.50, 75);
-            Item item7 = new Item("ITM007", "Smart Plug", 24.99, 60);
-            Item item8 = new Item("ITM008", "Water Leak Detector", 34.99, 25);
-        %>
+        <%  
+            // Get itemManager from session
+            ItemManager itemManager = (ItemManager) session.getAttribute("itemManager");
+            List<Item> items = null;
+            List<Item> energyTypeItems = new ArrayList<>();
+            List<Item> healthTypeItems = new ArrayList<>();
+            List<Item> homeAutomationTypeItems = new ArrayList<>();
+            List<Item> securityTypeItems = new ArrayList<>();
+            List<Item> sensorsTypeItems = new ArrayList<>();
+            int totalProductQuantity = 0;
+            int inStockItemsCount = 0;
+            int outOfStockItemsCount = 0;
 
-        <%
+            if (itemManager != null) {
+                try {
+                    items = itemManager.getAllItems();
+                } catch(SQLException e) {
+                    e.printStackTrace();
+                }
+                if (items != null) {
+                    for (Item item : items) {
+                        if (item.getType().equals("Home Automation")) {
+                            homeAutomationTypeItems.add(item);
+                        } else if (item.getType().equals("Health")) { 
+                            healthTypeItems.add(item);
+                        } else if (item.getType().equals("Energy")) {
+                            energyTypeItems.add(item);
+                        } else if (item.getType().equals("Sensors")) { 
+                            sensorsTypeItems.add(item);
+                        } else if (item.getType().equals("Security")) { 
+                            securityTypeItems.add(item);
+                        }  
+                        if (item.checkAvailability()) {
+                            inStockItemsCount++;
+                        } else {
+                            outOfStockItemsCount++;
+                        }
+                        totalProductQuantity += item.getQuantity();
+                    }                   
+                }
+            } else {
+                // Redirect to starting page index.jsp if itemManager value back to null (when session timeout occurred)
+                response.sendRedirect("index.jsp");
+                return;
+            }
+            
             // Get user from session
             User user = (User)session.getAttribute("user");
             boolean isStaff = false;
@@ -194,52 +408,25 @@
                 isStaff = (user instanceof Staff);
                 isLoggedIn = true;
             }
-
-            items.clear();
-            items.add(item1);
-            items.get(0).setDescription("Precision temperature sensor with digital output");
-            items.get(0).setCategory("Sensors");
-            items.get(0).setManufacturer("TechSense");
-            
-            items.add(item2);
-            items.get(1).setDescription("Infrared motion detection sensor for security systems");
-            items.get(1).setCategory("Sensors");
-            items.get(1).setManufacturer("SecureTech");
-            
-            items.add(item3);
-            items.get(2).setDescription("Wi-Fi connected thermostat for smart home integration");
-            items.get(2).setCategory("Home Automation");
-            items.get(2).setManufacturer("SmartHome");
-            
-            items.add(item4);
-            items.get(3).setDescription("Accurate humidity sensor for environmental monitoring");
-            items.get(3).setCategory("Sensors");
-            items.get(3).setManufacturer("TechSense");
-
-            items.add(item5);
-            items.get(4).setDescription("Wi-Fi enabled RGB smart bulb with app control");
-            items.get(4).setCategory("Lighting");
-            items.get(4).setManufacturer("SmartHome");
-            
-            items.add(item6);
-            items.get(5).setDescription("Magnetic sensor for doors and windows security");
-            items.get(5).setCategory("Security");
-            items.get(5).setManufacturer("SecureTech");
-
-            items.add(item7);
-            items.get(6).setDescription("Wi-Fi connected smart plug with energy monitoring");
-            items.get(6).setCategory("Home Automation");
-            items.get(6).setManufacturer("SmartHome");
-            
-            items.add(item8);
-            items.get(7).setDescription("Early warning system for water leaks and flooding");
-            items.get(7).setCategory("Safety");
-            items.get(7).setManufacturer("TechSense");
         %>
         
         <header>
             <div class="header-container">
                 <div class="logo"><a href="index.jsp">IoTBay</a></div>
+                
+                <form action="SearchItemServlet" method="get" class="search-container">
+                    <input type="text" name="searchQuery" placeholder="Search Products">
+                    <select name="typeQuery">
+                        <option value="All Types" selected>All Types</option>
+                        <option value="Energy">Energy Management</option>
+                        <option value="Health">Health & Wellness</option>
+                        <option value="Home Automation">Home Automation</option>
+                        <option value="Security">Security</option>
+                        <option value="Sensors">Sensors</option>
+                    </select>
+                    <button type="submit">Search</button>
+                </form>
+                
                 <div class="nav-links">
                     <% if (!isLoggedIn) { %>
                         <a href="login.jsp">Login</a>
@@ -267,11 +454,10 @@
                     <h2>Welcome <%= user.getName() %></h2>
                     <p>You are logged in as 
                     <% if (isStaff) { %>
-                        Staff
+                        Staff.</p>
                     <% } else { %>
-                        Customer
+                        Customer.</p>
                     <% } %>
-                    .</p>
                     <% if (!isStaff) { %>
                             <a href="edit_profile.jsp" class="btn">Edit Profile</a>
                     <% } %>
@@ -280,56 +466,366 @@
                     <p>You are browsing as a guest. <a href="login.jsp">Login</a> or <a href="register.jsp">Register</a> to access all features.</p>
                 <% } %>
             </div>
+
+            <!-- Add message display section here -->
+            <% 
+                // Display error message if any
+                String errorMessage = (String) session.getAttribute("errorMessage");
+                if (errorMessage != null && !errorMessage.isEmpty()) {
+            %>
+                <div class="message error-message">
+                    <%= errorMessage %>
+                </div>
+            <%
+                    session.removeAttribute("errorMessage");
+                }
+                
+                // Display success message if any
+                String successMessage = (String) session.getAttribute("successMessage");
+                if (successMessage != null && !successMessage.isEmpty()) {
+            %>
+                <div class="message success-message">
+                    <%= successMessage %>
+                </div>
+            <%
+                    session.removeAttribute("successMessage");
+                }
+            %>
             
             <% if (isStaff) { %>
-                <!-- Staff Dashboard -->
-                <h2 class="section-title">Staff Dashboard</h2>
+                <!-- IoT Device Management Dashboard -->
+                <h2 class="section-title">IoT Device Management Dashboard</h2>
                 <div class="dashboard">
                     <div class="dashboard-card">
                         <h3>Total Products</h3>
-                        <p>124</p>
+                        <p><%= items != null ? items.size() : 0 %></p>
                     </div>
                     <div class="dashboard-card">
-                        <h3>Pending Orders</h3>
-                        <p>12</p>
+                        <h3>Total Energy Type Products</h3>
+                        <p><%= !energyTypeItems.isEmpty() ? energyTypeItems.size() : 0 %></p>
                     </div>
                     <div class="dashboard-card">
-                        <h3>Registered Customers</h3>
-                        <p>45</p>
+                        <h3>Total Health Type Products</h3>
+                        <p><%= !healthTypeItems.isEmpty() ? healthTypeItems.size() : 0 %></p>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>Total Home Automation Type Products</h3>
+                        <p><%= !homeAutomationTypeItems.isEmpty() ? homeAutomationTypeItems.size() : 0 %></p>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>Total Security Type Products</h3>
+                        <p><%= !securityTypeItems.isEmpty() ? securityTypeItems.size() : 0 %></p>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>Total Sensors Type Products</h3>
+                        <p><%= !sensorsTypeItems.isEmpty() ? sensorsTypeItems.size() : 0 %></p>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>Total Product Quantity</h3>
+                        <p><%= totalProductQuantity %></p>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>In Stock Items</h3>
+                        <p><%= inStockItemsCount %></p>
                     </div>
                     <div class="dashboard-card">
                         <h3>Out of Stock Items</h3>
-                        <p>3</p>
+                        <p><%= outOfStockItemsCount %></p>
                     </div>
                 </div>
-                
-                <h2 class="section-title">Recent Orders</h2>
-                <p>This feature will be implemented in future releases.</p>
             <% } %>
             
-            <!-- Product Catalog for all users -->
-            <h2 class="section-title">Product Catalog</h2>
-            <div class="product-grid">
-                <% for (Item item : items) { %>
-                    <div class="product-card">
-                        <div class="product-image">
-                            <p>Product Image</p>
+            <% if (items == null || items.isEmpty()) { %>
+                <!-- When item table empty -->
+                <div class="empty-catalogue">
+                    <h3>No products available at the moment</h3>
+                    <p>Our inventory is currently being updated. Please check back later.</p>
+                    <% if (isStaff) { %>
+                        <div class="admin-actions">
+                            <a href="item_form.jsp" class="btn btn-primary">Add New Product</a>
                         </div>
-                        <div class="product-info">
-                            <div class="product-title"><%= item.getName() %></div>
-                            <div class="product-price">$<%= String.format("%.2f", item.getPrice()) %></div>
-                            <div class="product-description"><%= item.getDescription() %></div>
-                            <a href="#" class="btn">View Details</a>
-                            <% if (!isStaff) { %>
-                                <a href="#" class="btn" style="background-color: #28a745;">Add to Cart</a>
-                            <% } else { %>
-                                <a href="#" class="btn" style="background-color: #ffc107; color: #333;">Edit</a>
-                            <% } %>
-                        </div>
+                    <% } %>
+                </div>
+            <% } else { %>
+                <!-- Product Catalogue for all users -->
+                <h1>Product Catalogue</h1>
+                <% if (isStaff) { %>
+                    <div class="admin-actions">
+                        <a href="item_form.jsp" class="btn btn-primary">Add New Product</a>
                     </div>
                 <% } %>
-            </div>
-        </div>
+                <% if (!isStaff) { %>
+                    <h2 class="section-title">Featured Products</h2>
+                    <div class="product-grid">
+                        <% 
+                        Random random = new Random();
+                        // Show 8 random products (only for Customer view)
+                        for (int i = 0; i < 8; i++) { 
+                            int randomIndex = random.nextInt(items.size());
+                            Item item = items.get(randomIndex);
+                        %>
+                            <div class="product-card">
+                                <div class="product-image">
+                                    <% if (item.getType().equals("Home Automation")) { %>
+                                        <img src="images/Home Automation.png" alt="Home Automation"/>
+                                    <% } else if (item.getType().equals("Health")) { %>
+                                        <img src="images/Health.png" alt="Health & Wellness"/>
+                                    <% } else if (item.getType().equals("Energy")) { %>
+                                        <img src="images/Energy.png" alt="Energy Management"/>
+                                    <% } else if (item.getType().equals("Sensors")) { %>
+                                        <img src="images/Sensors.png" alt="Sensors"/>
+                                    <% } else if (item.getType().equals("Security")) { %>
+                                        <img src="images/Security.png" alt="Security"/>
+                                    <% } %>
+                                </div>
+                                <div class="product-info">
+                                    <div class="product-title"><%= item.getName() %></div>
+                                    <div class="product-price">$<%= String.format("%.2f", item.getPrice()) %></div>
+                                    <div class="product-description"><%= item.getDescription() %></div>
+                                    <div class="product-action">
+                                        <% if (item.checkAvailability()) { %>
+                                            <div class="in-stock">In Stock</div>
+                                        <% } else { %>
+                                            <div class="out-of-stock">Out of Stock</div>
+                                        <% } %>
+                                        <a href="item_details.jsp?itemId=<%= item.getItemId() %>" class="btn btn-primary">View Details</a>
+                                        <% if (!isStaff) { %>
+                                            <% if (item.checkAvailability()) { %>
+                                                <a href="#" class="btn btn-add-to-cart">Add to Cart</a>
+                                            <% } else { %>
+                                                <span class="btn btn-disabled">Add to Cart</span>
+                                            <% } %>
+                                        <% } else { %>
+                                            <a href="item_form.jsp?itemId=<%= item.getItemId() %>" class="btn btn-edit">Edit</a>
+                                        <% } %>
+                                    </div>
+                                </div>
+                            </div>
+                        <% } %>
+                    </div>
+                <% } %>
+
+                <h2 class="section-title">Energy Management Type</h2>
+                <% if (energyTypeItems.isEmpty()) { %>
+                    <div class="empty-catalogue">
+                        <h3>No products available with this type at the moment</h3>
+                        <p>Our inventory is currently being updated. Please check back later.</p>
+                    </div>
+                <% } else { %>
+                    <div class="product-grid">
+                        <% for (Item item : energyTypeItems) { %>
+                            <div class="product-card">
+                                <div class="product-image">
+                                    <img src="images/Energy.png" alt="Energy Management"/>
+                                </div>
+                                <div class="product-info">
+                                    <div class="product-title"><%= item.getName() %></div>
+                                    <% if (isStaff) { %>
+                                        <div class="product-item-id">ID: <%= item.getItemId() %></div>
+                                    <% } %>
+                                    <div class="product-price">$<%= String.format("%.2f", item.getPrice()) %></div>
+                                    <div class="product-description"><%= item.getDescription() %></div>
+                                    <div class="product-action">
+                                        <% if (item.checkAvailability()) { %>
+                                            <div class="in-stock">In Stock</div>
+                                        <% } else { %>
+                                            <div class="out-of-stock">Out of Stock</div>
+                                        <% } %>
+                                        <a href="item_details.jsp?itemId=<%= item.getItemId() %>" class="btn btn-primary">View Details</a>
+                                        <% if (!isStaff) { %>
+                                            <% if (item.checkAvailability()) { %>
+                                                <a href="#" class="btn btn-add-to-cart">Add to Cart</a>
+                                            <% } else { %>
+                                                <span class="btn btn-disabled">Add to Cart</span>
+                                            <% } %>
+                                        <% } else { %>
+                                            <a href="item_form.jsp?itemId=<%= item.getItemId() %>" class="btn btn-edit">Edit</a>
+                                            <a href="#" class="btn btn-delete" onclick="confirmDelete('<%= item.getItemId() %>')">Delete</a>
+                                        <% } %>
+                                    </div>
+                                </div>
+                            </div>
+                        <% } %>
+                    </div>
+                <% } %>
+                
+                <h2 class="section-title">Health & Wellness Type</h2>
+                <% if (healthTypeItems.isEmpty()) { %>
+                    <div class="empty-catalogue">
+                        <h3>No products available with this type at the moment</h3>
+                        <p>Our inventory is currently being updated. Please check back later.</p>
+                    </div>
+                <% } else { %>
+                    <div class="product-grid">
+                        <% for (Item item : healthTypeItems) { %>
+                            <div class="product-card">
+                                <div class="product-image">
+                                    <img src="images/Health.png" alt="Health & Wellness"/>
+                                </div>
+                                <div class="product-info">
+                                    <div class="product-title"><%= item.getName() %></div>
+                                    <% if (isStaff) { %>
+                                        <div class="product-item-id">ID: <%= item.getItemId() %></div>
+                                    <% } %>            
+                                    <div class="product-price">$<%= String.format("%.2f", item.getPrice()) %></div>
+                                    <div class="product-description"><%= item.getDescription() %></div>
+                                    <div class="product-action">
+                                        <% if (item.checkAvailability()) { %>
+                                            <div class="in-stock">In Stock</div>
+                                        <% } else { %>
+                                            <div class="out-of-stock">Out of Stock</div>
+                                        <% } %>
+                                        <a href="item_details.jsp?itemId=<%= item.getItemId() %>" class="btn btn-primary">View Details</a>
+                                        <% if (!isStaff) { %>
+                                            <% if (item.checkAvailability()) { %>
+                                                <a href="#" class="btn btn-add-to-cart">Add to Cart</a>
+                                            <% } else { %>
+                                                <span class="btn btn-disabled">Add to Cart</span>
+                                            <% } %>
+                                        <% } else { %>
+                                            <a href="item_form.jsp?itemId=<%= item.getItemId() %>" class="btn btn-edit">Edit</a>
+                                            <a href="#" class="btn btn-delete" onclick="confirmDelete('<%= item.getItemId() %>')">Delete</a>
+                                        <% } %>
+                                    </div>
+                                </div>
+                            </div>
+                        <% } %>
+                    </div>
+                <% } %>
+
+                <h2 class="section-title">Home Automation Type</h2>
+                <% if (homeAutomationTypeItems.isEmpty()) { %>
+                    <div class="empty-catalogue">
+                        <h3>No products available with this type at the moment</h3>
+                        <p>Our inventory is currently being updated. Please check back later.</p>
+                    </div>
+                <% } else { %>
+                    <div class="product-grid">
+                        <% for (Item item : homeAutomationTypeItems) { %>
+                            <div class="product-card">
+                                <div class="product-image">
+                                    <img src="images/Home Automation.png" alt="Home Automation"/>
+                                </div>
+                                <div class="product-info">
+                                    <div class="product-title"><%= item.getName() %></div>
+                                    <% if (isStaff) { %>
+                                        <div class="product-item-id">ID: <%= item.getItemId() %></div>
+                                    <% } %>
+                                    <div class="product-price">$<%= String.format("%.2f", item.getPrice()) %></div>
+                                    <div class="product-description"><%= item.getDescription() %></div>
+                                    <div class="product-action">
+                                        <% if (item.checkAvailability()) { %>
+                                            <div class="in-stock">In Stock</div>
+                                        <% } else { %>
+                                            <div class="out-of-stock">Out of Stock</div>
+                                        <% } %>
+                                        <a href="item_details.jsp?itemId=<%= item.getItemId() %>" class="btn btn-primary">View Details</a>
+                                        <% if (!isStaff) { %>
+                                            <% if (item.checkAvailability()) { %>
+                                                <a href="#" class="btn btn-add-to-cart">Add to Cart</a>
+                                            <% } else { %>
+                                                <span class="btn btn-disabled">Add to Cart</span>
+                                            <% } %>
+                                        <% } else { %>
+                                            <a href="item_form.jsp?itemId=<%= item.getItemId() %>" class="btn btn-edit">Edit</a>
+                                            <a href="#" class="btn btn-delete" onclick="confirmDelete('<%= item.getItemId() %>')">Delete</a>
+                                        <% } %>
+                                    </div>
+                                </div>
+                            </div>
+                        <% } %>
+                    </div>
+                <% } %>
+
+                <h2 class="section-title">Security Type</h2>
+                <% if (securityTypeItems.isEmpty()) { %>
+                    <div class="empty-catalogue">
+                        <h3>No products available with this type at the moment</h3>
+                        <p>Our inventory is currently being updated. Please check back later.</p>
+                    </div>
+                <% } else { %>
+                    <div class="product-grid">
+                        <% for (Item item : securityTypeItems) { %>
+                            <div class="product-card">
+                                <div class="product-image">
+                                    <img src="images/Security.png" alt="Security"/>
+                                </div>
+                                <div class="product-info">
+                                    <div class="product-title"><%= item.getName() %></div>
+                                    <% if (isStaff) { %>
+                                        <div class="product-item-id">ID: <%= item.getItemId() %></div>
+                                    <% } %>
+                                    <div class="product-price">$<%= String.format("%.2f", item.getPrice()) %></div>
+                                    <div class="product-description"><%= item.getDescription() %></div>
+                                    <div class="product-action">
+                                        <% if (item.checkAvailability()) { %>
+                                            <div class="in-stock">In Stock</div>
+                                        <% } else { %>
+                                            <div class="out-of-stock">Out of Stock</div>
+                                        <% } %>
+                                        <a href="item_details.jsp?itemId=<%= item.getItemId() %>" class="btn btn-primary">View Details</a>
+                                        <% if (!isStaff) { %>
+                                            <% if (item.checkAvailability()) { %>
+                                                <a href="#" class="btn btn-add-to-cart">Add to Cart</a>
+                                            <% } else { %>
+                                                <span class="btn btn-disabled">Add to Cart</span>
+                                            <% } %>
+                                        <% } else { %>
+                                            <a href="item_form.jsp?itemId=<%= item.getItemId() %>" class="btn btn-edit">Edit</a>
+                                            <a href="#" class="btn btn-delete" onclick="confirmDelete('<%= item.getItemId() %>')">Delete</a>
+                                        <% } %>
+                                    </div>
+                                </div>
+                            </div>
+                        <% } %>
+                    </div>
+                <% } %>
+
+                <h2 class="section-title">Sensors Type</h2>
+                <% if (sensorsTypeItems.isEmpty()) { %>
+                    <div class="empty-catalogue">
+                        <h3>No products available with this type at the moment</h3>
+                        <p>Our inventory is currently being updated. Please check back later.</p>
+                    </div>
+                <% } else { %>
+                    <div class="product-grid">
+                        <% for (Item item : sensorsTypeItems) { %>
+                            <div class="product-card">
+                                <div class="product-image">
+                                    <img src="images/Sensors.png" alt="Sensors"/>
+                                </div>
+                                <div class="product-info">
+                                    <div class="product-title"><%= item.getName() %></div>
+                                    <% if (isStaff) { %>
+                                        <div class="product-item-id">ID: <%= item.getItemId() %></div>
+                                    <% } %>
+                                    <div class="product-price">$<%= String.format("%.2f", item.getPrice()) %></div>
+                                    <div class="product-description"><%= item.getDescription() %></div>
+                                    <div class="product-action">
+                                        <% if (item.checkAvailability()) { %>
+                                            <div class="in-stock">In Stock</div>
+                                        <% } else { %>
+                                            <div class="out-of-stock">Out of Stock</div>
+                                        <% } %>
+                                        <a href="item_details.jsp?itemId=<%= item.getItemId() %>" class="btn btn-primary">View Details</a>
+                                        <% if (!isStaff) { %>
+                                            <% if (item.checkAvailability()) { %>
+                                                <a href="#" class="btn btn-add-to-cart">Add to Cart</a>
+                                            <% } else { %>
+                                                <span class="btn btn-disabled">Add to Cart</span>
+                                            <% } %>
+                                        <% } else { %>
+                                            <a href="item_form.jsp?itemId=<%= item.getItemId() %>" class="btn btn-edit">Edit</a>
+                                            <a href="#" class="btn btn-delete" onclick="confirmDelete('<%= item.getItemId() %>')">Delete</a>
+                                        <% } %>
+                                    </div>
+                                </div>
+                            </div>
+                        <% } %>
+                    </div>
+                <% } %> 
+            <% } %>    
+        </div>    
         
         <footer>
             <p>2025 IoTBay. wrk1-G5-06.</p>

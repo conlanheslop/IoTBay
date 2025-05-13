@@ -21,14 +21,14 @@ public class PaymentManager {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String addedDateStr = sdf.format(addedDate);
 
-        String query = "INSERT INTO payments (payment_id, user_id, added_date, payment_method, is_verified) VALUES ('" +
+        String query = "INSERT INTO Payment (payment_id, user_id, added_date, payment_method, is_verified) VALUES ('" +
                 paymentId + "','" + userId + "','" + addedDateStr + "','" + paymentMethod + "'," + isVerified + ")";
         st.executeUpdate(query);
     }
 
     // Find a payment record by paymentId
     public Payment findPayment(String paymentId) throws SQLException {
-        String query = "SELECT * FROM payments WHERE payment_id = '" + paymentId + "'";
+        String query = "SELECT * FROM Payment WHERE payment_id = '" + paymentId + "'";
         ResultSet rs = st.executeQuery(query);
 
         if (rs.next()) {
@@ -46,7 +46,7 @@ public class PaymentManager {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String addedDateStr = sdf.format(addedDate);
 
-        String query = "UPDATE payments SET user_id='" + userId + "', added_date='" + addedDateStr +
+        String query = "UPDATE Payment SET user_id='" + userId + "', added_date='" + addedDateStr +
                 "', payment_method='" + paymentMethod + "', is_verified=" + isVerified +
                 " WHERE payment_id='" + paymentId + "'";
         st.executeUpdate(query);
@@ -54,14 +54,14 @@ public class PaymentManager {
 
     // Delete a payment record
     public void deletePayment(String paymentId) throws SQLException {
-        String query = "DELETE FROM payments WHERE payment_id='" + paymentId + "'";
+        String query = "DELETE FROM Payment WHERE payment_id='" + paymentId + "'";
         st.executeUpdate(query);
     }
 
     // Fetch all payment records
     public List<Payment> fetchAllPayments() throws SQLException {
         List<Payment> payments = new ArrayList<>();
-        String query = "SELECT * FROM payments";
+        String query = "SELECT * FROM Payment";
         ResultSet rs = st.executeQuery(query);
 
         while (rs.next()) {

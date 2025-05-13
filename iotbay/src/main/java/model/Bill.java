@@ -12,19 +12,8 @@ public class Bill implements Serializable {
     private Date billDate;
     private String paymentId;
     private boolean isPaid;
-    private String cartId;
     
     // Constructor
-    public Bill(String billId, String orderId, double amount, Date billDate, String paymentId, boolean isPaid, String cartId) {
-        this.billId = billId;
-        this.orderId = orderId;
-        this.amount = amount;
-        this.billDate = billDate;
-        this.paymentId = paymentId;
-        this.isPaid = isPaid;
-        this.cartId = cartId;
-    }
-
     public Bill(String billId, String orderId, double amount, Date billDate, String paymentId, boolean isPaid) {
         this.billId = billId;
         this.orderId = orderId;
@@ -89,13 +78,5 @@ public class Bill implements Serializable {
 
     public void setIsPaid(boolean isPaid) {
         this.isPaid = isPaid;
-    }
-
-    public String getCartId() {
-        return cartId;
-    }
-    
-    public void setCartId(String cartId) {
-        this.cartId = cartId;
     }
 }

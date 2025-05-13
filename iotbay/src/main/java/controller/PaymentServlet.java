@@ -35,6 +35,7 @@ public class PaymentServlet extends HttpServlet {
     private CartItemManager cartItemManager;
     private CartManager cartManager;
     private OrderManager orderManager;
+    private UserManager userManager;
 
     @Override
     public void init() {
@@ -47,8 +48,31 @@ public class PaymentServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
-            request.getRequestDispatcher("/paymentManagement/billConfirm.jsp").forward(request, response);
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        conn = db.openConnection();
+        HttpSession session = request.getSession();
+        try {
+            userManager = new UserManager(conn);
+            orderManager = new OrderManager(conn);
+
+            User user = (User) session.getAttribute("user");
+            Order order = (Order) session.getAttribute("order");
+            //DEV ONLY
+            if (user == null) {
+                User defaultUser = userManager.findUser("U0000001");
+                session.setAttribute("user", defaultUser);
+            }
+            if (order == null) {
+                Order defaultOrder = orderManager.findOrder("O0000001");
+                session.setAttribute("order", defaultOrder);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(PaymentServlet.class.getName()).log(Level.SEVERE, null, ex);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage());
+        }
+        request.getRequestDispatcher("/paymentManagement/billConfirm.jsp").forward(request, response);
     }
 
     @Override
@@ -68,13 +92,13 @@ public class PaymentServlet extends HttpServlet {
             cartManager = new CartManager(conn);
             orderManager = new OrderManager(conn);
 
-            String cartId = request.getParameter("cartId");
-            if (cartId == null || cartId.isEmpty()) {
+            String orderId = request.getParameter("orderId");
+            if (orderId == null || orderId.isEmpty()) {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing cartId");
                 return;
             }
 
-            List<CartItem> items = cartItemManager.fetchItemsByCartId(cartId);
+            List<CartItem> items = cartItemManager.fetchItemsByCartId(orderId);
             double totalAmount = 0.0;
 
             for (CartItem item : items) {
@@ -90,6 +114,11 @@ public class PaymentServlet extends HttpServlet {
 
             // Get userId from session (assuming user is logged in and userId is stored in session)
             User user = (User) session.getAttribute("user");
+            //For Dev test only
+            if (user == null) {
+                User defaultUser = userManager.findUser("U0000001");
+                session.setAttribute("user", defaultUser);
+            }
             String userId = user.getId();
 
             // Create the payment method (combining cardholder name, card number, expiry date, and CVV)
@@ -110,29 +139,24 @@ public class PaymentServlet extends HttpServlet {
             String paymentAction = request.getParameter("paymentAction");
 
             if ("confirm".equals(paymentAction)) {
-                Cart cart = cartManager.findCart(cartId);
-                Order order = DatabaseUtils.mapCartToOrder(cart, userId, "Shipping", false, user.getEmail());
-
-                orderItemManager.addOrderItems(order.getOrderId(), order.getOrderItems());
-
+                Order order = orderManager.findOrder(orderId);
                 billManager.addBill(order.getOrderId(), totalAmount, billDate, payment.getPaymentId(), true);
-                orderManager.addOrder(order.getOrderId(), userId, Date.valueOf(LocalDate.now()), 
-                    totalAmount, "shipping", false, "");
                 
                 session.setAttribute("message", "Bill created successfully");
 
-                response.sendRedirect("/paymentManagement/billConfirm.jsp");
+                response.sendRedirect("/paymentManagement/billList.jsp");
             } else if ("save".equals(paymentAction)) {
-                billManager.addBill(null, totalAmount, billDate, payment.getPaymentId(), false, cartId);
+                billManager.addBill(orderId, totalAmount, billDate, payment.getPaymentId(), false);
                 session.setAttribute("message", "Bill saved");
 
-                response.sendRedirect("/paymentManagement/billConfirm.jsp");
+                response.sendRedirect("/paymentManagement/billList.jsp");
             }
 
             paymentManager.addPayment(payment.getPaymentId(), userId, currentDate, paymentMethod, true);
+
         } catch (SQLException ex) {
             Logger.getLogger(PaymentServlet.class.getName()).log(Level.SEVERE, null, ex);
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database error");
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage());
         }
     }
 

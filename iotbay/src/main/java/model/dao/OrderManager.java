@@ -80,5 +80,24 @@ public class OrderManager {
         }
         return orders;
     }
+
+    // Find orders by userId
+    public List<Order> findOrdersByUserId(String userId) throws SQLException {
+        List<Order> orders = new ArrayList<>();
+        String query = "SELECT * FROM Orders WHERE userId = '" + userId + "'";
+        ResultSet rs = st.executeQuery(query);
+
+        while (rs.next()) {
+            String orderId = rs.getString("orderId");
+            Timestamp orderDate = rs.getTimestamp("orderDate");
+            double totalAmount = rs.getDouble("totalAmount");
+            String status = rs.getString("status");
+            boolean isAnonymousOrder = rs.getBoolean("isAnonymousOrder");
+            String anonymousEmail = rs.getString("anonymousEmail");
+
+            orders.add(new Order(orderId, userId, orderDate, totalAmount, status, isAnonymousOrder, anonymousEmail));
+        }
+        return orders;
+    }
 }
 

@@ -1,7 +1,6 @@
 package model.dao;
 
 import model.Bill;
-import utils.DatabaseUtils;
 
 import java.sql.*;
 import java.text.SimpleDateFormat;
@@ -13,85 +12,101 @@ public class BillManager {
 
     private Statement st;
 
-    // Constructor - Initialize the Statement object
     public BillManager(Connection conn) throws SQLException {
         st = conn.createStatement();
     }
 
-    // Add a new bill record to the database
-    public void addBill(String orderId, double amount, Date billDate, String paymentId, boolean isPaid, String cartId) throws SQLException {
-        String billId = DatabaseUtils.generateUniqueId("Bill");
+    public void addBill(String orderId, double amount, Date billDate, String paymentId, boolean isPaid) throws SQLException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String billDateStr = sdf.format(billDate);
-    
-        String cartIdValue = (cartId == null) ? "NULL" : "'" + cartId + "'";
-        String orderIdValue = (orderId == null) ? "NULL" : "'" + orderId + "'";
-    
-        String query = "INSERT INTO bills (bill_id, order_id, amount, bill_date, payment_id, is_paid, cart_id) VALUES ('" +
-                billId + "','" + orderIdValue + "'," + amount + ",'" + billDateStr + "','" + paymentId + "'," + isPaid + "," + cartIdValue + ")";
+        String billId = generateBillId();
+
+        String query = "INSERT INTO Bill (billId, orderId, amount, billDate, paymentId, isPaid) VALUES ('" +
+                billId + "','" + orderId + "'," + amount + ",'" + billDateStr + "','" + paymentId + "'," + isPaid + ")";
         st.executeUpdate(query);
     }
-    
-    public void addBill(String orderId, double amount, Date billDate, String paymentId, boolean isPaid) throws SQLException {
-        addBill(orderId, amount, billDate, paymentId, isPaid, null);
-    }
 
-    // Find a bill record by billId
     public Bill findBill(String billId) throws SQLException {
-        String query = "SELECT * FROM bills WHERE bill_id = '" + billId + "'";
+        String query = "SELECT * FROM Bill WHERE billId = '" + billId + "'";
         ResultSet rs = st.executeQuery(query);
 
         if (rs.next()) {
-            String orderId = rs.getString("order_id");
-            double amount = rs.getDouble("amount");
-            Date billDate = rs.getTimestamp("bill_date");
-            String paymentId = rs.getString("payment_id");
-            boolean isPaid = rs.getBoolean("is_paid");
-            String cartId = rs.getString("cart_id");
-
-            Bill bill = new Bill(billId, orderId, amount, billDate, paymentId, isPaid, cartId);
-            bill.setCartId(cartId);
-            return bill;
+            return mapResultSetToBill(rs);
         }
         return null;
     }
 
-    // Update an existing bill record
-    public void updateBill(String billId, String orderId, double amount, Date billDate, String paymentId, boolean isPaid, String cartId) throws SQLException {
+    public void updateBill(String billId, String orderId, double amount, Date billDate, String paymentId, boolean isPaid) throws SQLException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String billDateStr = sdf.format(billDate);
 
-        String query = "UPDATE bills SET order_id='" + orderId + "', amount=" + amount +
-                ", bill_date='" + billDateStr + "', payment_id='" + paymentId + "', is_paid=" + isPaid +
-                ", cart_id='" + cartId + "' WHERE bill_id='" + billId + "'";
+        String query = "UPDATE Bill SET orderId='" + orderId + "', amount=" + amount +
+                ", billDate='" + billDateStr + "', paymentId='" + paymentId + "', isPaid=" + isPaid +
+                " WHERE billId='" + billId + "'";
         st.executeUpdate(query);
     }
 
-    // Delete a bill record
     public void deleteBill(String billId) throws SQLException {
-        String query = "DELETE FROM bills WHERE bill_id='" + billId + "'";
+        String query = "DELETE FROM Bill WHERE billId='" + billId + "'";
         st.executeUpdate(query);
     }
 
-    // Fetch all bills
     public List<Bill> fetchAllBills() throws SQLException {
         List<Bill> bills = new ArrayList<>();
-        String query = "SELECT * FROM bills";
+        String query = "SELECT * FROM Bill";
         ResultSet rs = st.executeQuery(query);
 
         while (rs.next()) {
-            String billId = rs.getString("bill_id");
-            String orderId = rs.getString("order_id");
-            double amount = rs.getDouble("amount");
-            Date billDate = rs.getTimestamp("bill_date");
-            String paymentId = rs.getString("payment_id");
-            boolean isPaid = rs.getBoolean("is_paid");
-            String cartId = rs.getString("cart_id");
-
-            Bill bill = new Bill(billId, orderId, amount, billDate, paymentId, isPaid, cartId);
-            bill.setCartId(cartId);
-            bills.add(bill);
+            bills.add(mapResultSetToBill(rs));
         }
         return bills;
+    }
+
+    // 🔍 Find bills by exact date (ignoring time)
+    public List<Bill> findBillsByDate(Date date) throws SQLException {
+        List<Bill> bills = new ArrayList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String dateStr = sdf.format(date);
+
+        String query = "SELECT * FROM Bill WHERE DATE(billDate) = '" + dateStr + "'";
+        ResultSet rs = st.executeQuery(query);
+
+        while (rs.next()) {
+            bills.add(mapResultSetToBill(rs));
+        }
+        return bills;
+    }
+
+    // Find a bill by orderId
+    public Bill findBillByOrderId(String orderId) throws SQLException {
+        String query = "SELECT * FROM Bill WHERE orderId = '" + orderId + "'";
+        ResultSet rs = st.executeQuery(query);
+
+        if (rs.next()) {
+            String billId = rs.getString("billId");
+            double amount = rs.getDouble("amount");
+            Date billDate = rs.getTimestamp("billDate");
+            String paymentId = rs.getString("paymentId");
+            boolean isPaid = rs.getBoolean("isPaid");
+
+            return new Bill(billId, orderId, amount, billDate, paymentId, isPaid);
+        }
+        return null;
+    }
+
+    private Bill mapResultSetToBill(ResultSet rs) throws SQLException {
+        String billId = rs.getString("billId");
+        String orderId = rs.getString("orderId");
+        double amount = rs.getDouble("amount");
+        Date billDate = rs.getTimestamp("billDate");
+        String paymentId = rs.getString("paymentId");
+        boolean isPaid = rs.getBoolean("isPaid");
+
+        return new Bill(billId, orderId, amount, billDate, paymentId, isPaid);
+    }
+
+    // ID generator
+    private String generateBillId() {
+        return "BILL" + System.currentTimeMillis();
     }
 }

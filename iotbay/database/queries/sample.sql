@@ -34,7 +34,7 @@ INSERT INTO Orders (orderId, userId, orderDate, totalAmount, status, isAnonymous
 VALUES 
 ('O0000001', 'U0000001', '2024-12-01 14:30:00', 199.99, 'shipped', FALSE, NULL),
 ('O0000002', 'U0000002', '2025-01-10 09:15:00', 59.50, 'pending', TRUE, 'anonuser@example.com'),
-('O0000003', 'U0000003', '2025-02-22 18:45:00', 350.75, 'completed', FALSE, NULL),
+('O0000003', 'U0000001', '2025-02-22 18:45:00', 350.75, 'completed', FALSE, NULL),
 ('O0000004', 'U0000001', '2025-03-05 13:00:00', 120.00, 'cancelled', FALSE, NULL);
 
 -- Sample Bill data

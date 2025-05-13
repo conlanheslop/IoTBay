@@ -1,14 +1,14 @@
-<%@ page import="model.Cart" %>
-<%@ page import="model.CartItem" %>
+<%@ page import="model.Order" %>
+<%@ page import="model.OrderItem" %>
 <%@ page import="java.util.*" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
-    Order cart;
+    Order order;
     order = (Order) session.getAttribute("order");
 
     double totalPrice = 0;
-    for (OrderItem item : cart.getOrderItems()) {
+    for (OrderItem item : order.getOrderItems()) {
         totalPrice += item.getQuantity() * item.getUnitPrice();
     }
 %>
@@ -146,7 +146,7 @@
 
     <div class="cart-items">
         <%
-            for (OrderItem item : order.getCartItems()) {
+            for (OrderItem item : order.getOrderItems()) {
         %>
             <p><strong>Item ID:</strong> <%= item.getItemId() %> |
                Quantity: <%= item.getQuantity() %> |

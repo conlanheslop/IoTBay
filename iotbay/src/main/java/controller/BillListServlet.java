@@ -48,7 +48,6 @@ public class BillListServlet extends HttpServlet{
             throws ServletException, IOException {
 
         response.setContentType("text/html;charset=UTF-8");
-        conn = db.openConnection();
         HttpSession session = request.getSession();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -63,8 +62,11 @@ public class BillListServlet extends HttpServlet{
         String billId = (String) request.getParameter("billId");
         String userId = (String) session.getAttribute("userId");
         try {
-            billManager = new BillManager(conn);
-            orderManager = new OrderManager(conn);
+            DBConnector connector = new DBConnector();
+            Connection localConnection = connector.openConnection();
+
+            billManager = new BillManager(localConnection);
+            orderManager = new OrderManager(localConnection);
 
             List<Order> orderList = orderManager.findOrdersByUserId(userId);
 
@@ -81,13 +83,12 @@ public class BillListServlet extends HttpServlet{
                 }
             }
             session.setAttribute("billList", billList);
-
-        } catch (SQLException ex) {
+            connector.closeConnection();
+            request.getRequestDispatcher("/paymentManagement/billList.jsp").forward(request, response);
+        } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(PaymentServlet.class.getName()).log(Level.SEVERE, null, ex);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database error");
         }
-
-        request.getRequestDispatcher("/paymentManagement/billList.jsp").forward(request, response);
     }
 
     @Override
@@ -95,15 +96,16 @@ public class BillListServlet extends HttpServlet{
             throws ServletException, IOException {
 
         response.setContentType("text/html;charset=UTF-8");
-        conn = db.openConnection();
         HttpSession session = request.getSession();
         
         Date queryDate = (Date) request.getAttribute("date");
         String billId = (String) request.getAttribute("billId");
         String userId = (String) session.getAttribute("userId");
         try  {
-            billManager = new BillManager(conn);
-            orderManager = new OrderManager(conn);
+            DBConnector connector = new DBConnector();
+            Connection localConnection = connector.openConnection();
+            billManager = new BillManager(localConnection);
+            orderManager = new OrderManager(localConnection);
 
             //DEV ONLY
             if (userId == null) {
@@ -130,8 +132,9 @@ public class BillListServlet extends HttpServlet{
             session.setAttribute("billList", billList);
 
             request.getRequestDispatcher("/paymentManagement/billList.jsp").forward(request, response);
+            connector.closeConnection();
             return;
-        } catch (SQLException ex) {
+        } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(PaymentServlet.class.getName()).log(Level.SEVERE, null, ex);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database error");
         }

@@ -45,13 +45,16 @@ public class DeleteBillServlet extends HttpServlet {
         }
 
         try {
-            billManager = new BillManager(conn);
+            DBConnector connector = new DBConnector();
+            Connection localConnection = connector.openConnection();
+
+            billManager = new BillManager(localConnection);
             billManager.deleteBill(billId);
 
             request.getSession().setAttribute("message", "Bill deleted successfully.");
             response.sendRedirect("BillListServlet");
-
-        } catch (SQLException ex) {
+            connector.closeConnection();
+        } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(DeleteBillServlet.class.getName()).log(Level.SEVERE, null, ex);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage());
         }

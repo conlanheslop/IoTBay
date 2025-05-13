@@ -75,7 +75,13 @@ public class UpdateBillServlet extends HttpServlet {
         HttpSession session = request.getSession();
 
         try {
-            paymentManager = new PaymentManager(conn);
+            DBConnector connector = new DBConnector();
+            Connection localConnection = connector.openConnection();
+
+            paymentManager = new PaymentManager(localConnection);
+            billManager = new BillManager(localConnection);
+
+            String billId = request.getParameter("billId");
 
             String paymentId = request.getParameter("paymentId");
             String cardholderName = request.getParameter("cardholderName");
@@ -100,11 +106,15 @@ public class UpdateBillServlet extends HttpServlet {
             Date updatedDate = Date.valueOf(LocalDate.now());
 
             paymentManager.updatePayment(paymentId, userId, updatedDate, paymentMethod, true);
+            Bill bill = billManager.findBill(billId);
+            billManager.updateBill(billId, bill.getOrderId(), bill.getAmount(), updatedDate, paymentId, true);
+
 
             session.setAttribute("message", "Payment updated successfully");
             response.sendRedirect("BillListServlet");
 
-        } catch (SQLException ex) {
+            connector.closeConnection();
+        } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(UpdateBillServlet.class.getName()).log(Level.SEVERE, null, ex);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage());
         }

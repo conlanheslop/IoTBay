@@ -10,6 +10,7 @@ import model.Bill;
 import model.Cart;
 import model.CartItem;
 import model.Order;
+import model.OrderItem;
 import model.Payment;
 import model.User;
 import model.dao.*;
@@ -53,8 +54,12 @@ public class PaymentServlet extends HttpServlet {
         conn = db.openConnection();
         HttpSession session = request.getSession();
         try {
-            userManager = new UserManager(conn);
-            orderManager = new OrderManager(conn);
+            DBConnector connector = new DBConnector();
+            Connection localConnection = connector.openConnection();
+
+            userManager = new UserManager(localConnection);
+            orderManager = new OrderManager(localConnection);
+            orderItemManager = new OrderItemManager(localConnection);
 
             User user = (User) session.getAttribute("user");
             Order order = (Order) session.getAttribute("order");
@@ -64,15 +69,17 @@ public class PaymentServlet extends HttpServlet {
                 session.setAttribute("user", defaultUser);
             }
             if (order == null) {
-                Order defaultOrder = orderManager.findOrder("O0000001");
+                Order defaultOrder = orderManager.findOrder("O0000003");
+                List<OrderItem> itemList = orderItemManager.getItemsByOrderId(defaultOrder.getOrderId());
+                defaultOrder.setOrderItems(itemList);
                 session.setAttribute("order", defaultOrder);
             }
-
-        } catch (SQLException ex) {
+            connector.closeConnection();
+            request.getRequestDispatcher("/paymentManagement/billConfirm.jsp").forward(request, response);
+        } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(PaymentServlet.class.getName()).log(Level.SEVERE, null, ex);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage());
         }
-        request.getRequestDispatcher("/paymentManagement/billConfirm.jsp").forward(request, response);
     }
 
     @Override
@@ -85,12 +92,15 @@ public class PaymentServlet extends HttpServlet {
         conn = db.openConnection();
 
         try {
-            billManager = new BillManager(conn);
-            orderItemManager = new OrderItemManager(conn);
-            paymentManager = new PaymentManager(conn);
-            cartItemManager = new CartItemManager(conn);
-            cartManager = new CartManager(conn);
-            orderManager = new OrderManager(conn);
+            DBConnector connector = new DBConnector();
+            Connection localConnection = connector.openConnection();
+
+            billManager = new BillManager(localConnection);
+            orderItemManager = new OrderItemManager(localConnection);
+            paymentManager = new PaymentManager(localConnection);
+            cartItemManager = new CartItemManager(localConnection);
+            cartManager = new CartManager(localConnection);
+            orderManager = new OrderManager(localConnection);
 
             String orderId = request.getParameter("orderId");
             if (orderId == null || orderId.isEmpty()) {
@@ -98,10 +108,10 @@ public class PaymentServlet extends HttpServlet {
                 return;
             }
 
-            List<CartItem> items = cartItemManager.fetchItemsByCartId(orderId);
+            List<OrderItem> items = orderItemManager.getItemsByOrderId(orderId);
             double totalAmount = 0.0;
 
-            for (CartItem item : items) {
+            for (OrderItem item : items) {
                 totalAmount += item.calculateSubtotal();
             }
             Date billDate = Date.valueOf(LocalDate.now());
@@ -144,17 +154,17 @@ public class PaymentServlet extends HttpServlet {
                 
                 session.setAttribute("message", "Bill created successfully");
 
-                response.sendRedirect("/paymentManagement/billList.jsp");
+                response.sendRedirect("BillListServlet");
             } else if ("save".equals(paymentAction)) {
                 billManager.addBill(orderId, totalAmount, billDate, payment.getPaymentId(), false);
                 session.setAttribute("message", "Bill saved");
 
-                response.sendRedirect("/paymentManagement/billList.jsp");
+                response.sendRedirect("BillListServlet");
             }
 
             paymentManager.addPayment(payment.getPaymentId(), userId, currentDate, paymentMethod, true);
-
-        } catch (SQLException ex) {
+            connector.closeConnection();
+        } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(PaymentServlet.class.getName()).log(Level.SEVERE, null, ex);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage());
         }

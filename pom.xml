@@ -40,6 +40,14 @@
         <version>6.1.0</version>
         <scope>provided</scope>
     </dependency>
+    
+<!-- Add this to your pom.xml file in the <dependencies> section -->
+    <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>javax.servlet-api</artifactId>
+        <version>4.0.1</version>
+        <scope>provided</scope>
+    </dependency>
   </dependencies>
 
 

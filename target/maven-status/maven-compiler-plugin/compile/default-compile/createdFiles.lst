@@ -22,6 +22,7 @@ model\Payment.class
 model\dao\DeliveryManager.class
 model\Order.class
 model\Delivery.class
+main\java\controller\DeliveryController.class
 model\OrderItem.class
 model\dao\CartItemManager.class
 model\dao\CartManager.class

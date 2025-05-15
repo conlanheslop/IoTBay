@@ -14,13 +14,13 @@ public class Bill implements Serializable {
     private boolean isPaid;
     
     // Constructor
-    public Bill(String billId, String orderId, double amount, Date billDate, String PaymentId, boolean IsPaid) {
+    public Bill(String billId, String orderId, double amount, Date billDate, String paymentId, boolean isPaid) {
         this.billId = billId;
         this.orderId = orderId;
         this.amount = amount;
         this.billDate = billDate;
-        this.paymentId = PaymentId;
-        this.isPaid = IsPaid;
+        this.paymentId = paymentId;
+        this.isPaid = isPaid;
     }
 
     public Bill(String billId, String orderId, double amount, Date billDate) {

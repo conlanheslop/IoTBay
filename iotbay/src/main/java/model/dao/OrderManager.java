@@ -15,7 +15,7 @@ public class OrderManager {
     }
 
     // Create (Add a new order)
-    public void addOrder(String orderId, String userId, Timestamp orderDate, double totalAmount, 
+    public void addOrder(String orderId, String userId, Date orderDate, double totalAmount, 
                          String status, boolean isAnonymousOrder, String anonymousEmail) throws SQLException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String orderDateStr = sdf.format(orderDate);
@@ -45,7 +45,7 @@ public class OrderManager {
     }
 
     // Update (Update an order's details)
-    public void updateOrder(String orderId, String userId, Timestamp orderDate, double totalAmount, 
+    public void updateOrder(String orderId, String userId, Date orderDate, double totalAmount, 
                             String status, boolean isAnonymousOrder, String anonymousEmail) throws SQLException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String orderDateStr = sdf.format(orderDate);
@@ -70,6 +70,25 @@ public class OrderManager {
         while (rs.next()) {
             String orderId = rs.getString("orderId");
             String userId = rs.getString("userId");
+            Timestamp orderDate = rs.getTimestamp("orderDate");
+            double totalAmount = rs.getDouble("totalAmount");
+            String status = rs.getString("status");
+            boolean isAnonymousOrder = rs.getBoolean("isAnonymousOrder");
+            String anonymousEmail = rs.getString("anonymousEmail");
+
+            orders.add(new Order(orderId, userId, orderDate, totalAmount, status, isAnonymousOrder, anonymousEmail));
+        }
+        return orders;
+    }
+
+    // Find orders by userId
+    public List<Order> findOrdersByUserId(String userId) throws SQLException {
+        List<Order> orders = new ArrayList<>();
+        String query = "SELECT * FROM Orders WHERE userId = '" + userId + "'";
+        ResultSet rs = st.executeQuery(query);
+
+        while (rs.next()) {
+            String orderId = rs.getString("orderId");
             Timestamp orderDate = rs.getTimestamp("orderDate");
             double totalAmount = rs.getDouble("totalAmount");
             String status = rs.getString("status");

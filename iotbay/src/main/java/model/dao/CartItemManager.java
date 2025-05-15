@@ -20,7 +20,6 @@ public class CartItemManager {
         st.executeUpdate(query);
     }
 
-    // READ
     public CartItem findCartItem(String cartId, String itemId) throws SQLException {
         String query = "SELECT * FROM CartItem WHERE cartId='" + cartId + "' AND itemId='" + itemId + "'";
         ResultSet rs = st.executeQuery(query);

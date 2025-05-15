@@ -23,13 +23,12 @@ DROP TABLE IF EXISTS Bill;
 
 CREATE TABLE Bill (
     billId VARCHAR(50) PRIMARY KEY,
-    orderId VARCHAR(50),
+    orderId VARCHAR(8),
     amount DECIMAL(10, 2),
     billDate DATETIME,
     paymentId VARCHAR(50),
     isPaid BOOLEAN,
-    cartId VARCHAR(50),
-    FOREIGN KEY (cartId) REFERENCES Cart(cart_id)
+    FOREIGN KEY (orderId) REFERENCES Cart(orderId)
 );
 
 

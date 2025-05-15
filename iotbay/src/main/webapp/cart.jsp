@@ -129,10 +129,14 @@
         <input type="submit" value="Submit Order" class="submit-btn" />
     </form>
 
+
 <% } else { %>
     <p style="text-align:center;">Your cart is empty.</p>
 <% } %>
 
+<div style="text-align: center;">
+    <a href="SavedOrdersServlet" class="submit-btn">View Saved Orders</a>
+</div>
 
 <%-- Order History Section --%>
 <div class="section">

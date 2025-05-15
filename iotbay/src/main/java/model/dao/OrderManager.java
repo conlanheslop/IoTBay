@@ -1,6 +1,7 @@
 package model.dao;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -14,9 +15,12 @@ import model.Order;
 public class OrderManager {
 
     private Statement st;
+    private Connection conn;
+
 
     public OrderManager(Connection conn) throws SQLException {
-        st = conn.createStatement();
+        this.conn = conn;            
+        this.st = conn.createStatement(); 
     }
 
     // Create (Add a new order)
@@ -87,4 +91,46 @@ public class OrderManager {
         String query = "DELETE FROM Orders WHERE orderId = '" + orderId + "'";
         st.executeUpdate(query);
     }
+
+    public List<Order> getSavedOrdersByDate(String userId, String searchDate) throws SQLException {
+    List<Order> orders = new ArrayList<>();
+    StringBuilder query = new StringBuilder("SELECT * FROM Orders WHERE status = 'Saved'");
+
+    if (userId != null) {
+        query.append(" AND userId = ?");
+    }
+
+    if (searchDate != null && !searchDate.isEmpty()) {
+        query.append(" AND DATE(orderDate) = ?");
+    }
+
+    PreparedStatement ps = conn.prepareStatement(query.toString());
+
+    int paramIndex = 1;
+    if (userId != null) {
+        ps.setString(paramIndex++, userId);
+    }
+
+    if (searchDate != null && !searchDate.isEmpty()) {
+        ps.setString(paramIndex, searchDate);
+    }
+
+    ResultSet rs = ps.executeQuery();
+    while (rs.next()) {
+        Order order = new Order();
+        order.setOrderId(rs.getString("orderId"));
+        order.setUserId(rs.getString("userId"));
+        order.setOrderDate(rs.getTimestamp("orderDate"));
+        order.setTotalAmount(rs.getDouble("totalAmount"));
+        order.setStatus(rs.getString("status"));
+        order.setIsAnonymousOrder(rs.getBoolean("isAnonymousOrder"));
+        order.setAnonymousEmail(rs.getString("anonymousEmail"));
+        orders.add(order);
+    }
+
+    rs.close();
+    ps.close();
+    return orders;
+}
+
 }

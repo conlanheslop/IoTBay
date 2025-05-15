@@ -1,20 +1,24 @@
 package model.dao;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.CartItem;
 import model.OrderItem;
 
 public class OrderItemManager {
 
+    private Connection conn;
     private Statement st;
 
     public OrderItemManager(Connection conn) throws SQLException {
-        st = conn.createStatement();
+        this.conn = conn;
+        this.st = conn.createStatement();
     }
 
     // Create (Add a new order item)
@@ -38,8 +42,6 @@ public class OrderItemManager {
         }
 
         String query = "INSERT INTO OrderItem (orderId, itemId, quantity, unitPrice) VALUES " + queryBuilder.toString();
-        
-        // Execute the batch insert using Statement
         st.executeUpdate(query);
     }
 
@@ -56,20 +58,20 @@ public class OrderItemManager {
         return null;
     }
 
-    // Update (Update quantity and unit price)
+    // Update
     public void updateOrderItem(String orderId, String itemId, int quantity, double unitPrice) throws SQLException {
         String query = "UPDATE OrderItem SET quantity = " + quantity + ", unitPrice = " + unitPrice
                      + " WHERE orderId = '" + orderId + "' AND itemId = '" + itemId + "'";
         st.executeUpdate(query);
     }
 
-    // Delete (Delete a specific order item)
+    // Delete
     public void deleteOrderItem(String orderId, String itemId) throws SQLException {
         String query = "DELETE FROM OrderItem WHERE orderId = '" + orderId + "' AND itemId = '" + itemId + "'";
         st.executeUpdate(query);
     }
 
-    // Get all items for a specific order
+    // Read (Get all OrderItem objects by orderId)
     public List<OrderItem> getItemsByOrderId(String orderId) throws SQLException {
         List<OrderItem> items = new ArrayList<>();
         String query = "SELECT * FROM OrderItem WHERE orderId = '" + orderId + "'";
@@ -81,6 +83,31 @@ public class OrderItemManager {
             double unitPrice = rs.getDouble("unitPrice");
             items.add(new OrderItem(orderId, itemId, quantity, unitPrice));
         }
+        rs.close();
+        return items;
+    }
+
+    // Read (Convert OrderItems to CartItems by orderId)
+    public List<CartItem> findItemsByOrderId(String orderId) throws SQLException {
+        List<CartItem> items = new ArrayList<>();
+
+        String query = "SELECT * FROM OrderItem WHERE orderId = ?";
+        PreparedStatement ps = conn.prepareStatement(query);
+        ps.setString(1, orderId);
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            String itemId = rs.getString("itemId");
+            int quantity = rs.getInt("quantity");
+            double unitPrice = rs.getDouble("unitPrice");
+
+            // Use null for cartId, since this is from an order not a cart
+            CartItem cartItem = new CartItem(null, itemId, quantity, unitPrice);
+            items.add(cartItem);
+        }
+
+        rs.close();
+        ps.close();
         return items;
     }
 }

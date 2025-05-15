@@ -77,7 +77,12 @@ public class CreateOrderServlet extends HttpServlet {
             session.setAttribute("cart", new Cart());
 
             // Redirect to confirmation page with status
-            response.sendRedirect("order_confirmation.jsp?status=" + status);
+            if (status.equals("Submitted")) {
+                response.sendRedirect("OrderDetailsServlet?orderId=" + orderId);
+            } else {
+                response.sendRedirect("order_confirmation.jsp?status=Saved");
+            }
+            
 
         } catch (Exception e) {
             e.printStackTrace();

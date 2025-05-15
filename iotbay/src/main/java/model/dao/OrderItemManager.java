@@ -1,9 +1,13 @@
 package model.dao;
 
-import model.OrderItem;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
+import model.OrderItem;
 
 public class OrderItemManager {
 
@@ -15,7 +19,7 @@ public class OrderItemManager {
 
     // Create (Add a new order item)
     public void addOrderItem(String orderId, String itemId, int quantity, double unitPrice) throws SQLException {
-        String query = "INSERT INTO OrderItems (orderId, itemId, quantity, unitPrice) VALUES ('"
+        String query = "INSERT INTO OrderItem (orderId, itemId, quantity, unitPrice) VALUES ('"
                 + orderId + "', '" + itemId + "', " + quantity + ", " + unitPrice + ")";
         st.executeUpdate(query);
     }
@@ -33,7 +37,7 @@ public class OrderItemManager {
                         .append(orderItem.getUnitPrice()).append(")");
         }
 
-        String query = "INSERT INTO OrderItems (orderId, itemId, quantity, unitPrice) VALUES " + queryBuilder.toString();
+        String query = "INSERT INTO OrderItem (orderId, itemId, quantity, unitPrice) VALUES " + queryBuilder.toString();
         
         // Execute the batch insert using Statement
         st.executeUpdate(query);
@@ -41,7 +45,7 @@ public class OrderItemManager {
 
     // Read (Find a specific order item)
     public OrderItem findOrderItem(String orderId, String itemId) throws SQLException {
-        String query = "SELECT * FROM OrderItems WHERE orderId = '" + orderId + "' AND itemId = '" + itemId + "'";
+        String query = "SELECT * FROM OrderItem WHERE orderId = '" + orderId + "' AND itemId = '" + itemId + "'";
         ResultSet rs = st.executeQuery(query);
 
         if (rs.next()) {
@@ -54,21 +58,21 @@ public class OrderItemManager {
 
     // Update (Update quantity and unit price)
     public void updateOrderItem(String orderId, String itemId, int quantity, double unitPrice) throws SQLException {
-        String query = "UPDATE OrderItems SET quantity = " + quantity + ", unitPrice = " + unitPrice
+        String query = "UPDATE OrderItem SET quantity = " + quantity + ", unitPrice = " + unitPrice
                      + " WHERE orderId = '" + orderId + "' AND itemId = '" + itemId + "'";
         st.executeUpdate(query);
     }
 
     // Delete (Delete a specific order item)
     public void deleteOrderItem(String orderId, String itemId) throws SQLException {
-        String query = "DELETE FROM OrderItems WHERE orderId = '" + orderId + "' AND itemId = '" + itemId + "'";
+        String query = "DELETE FROM OrderItem WHERE orderId = '" + orderId + "' AND itemId = '" + itemId + "'";
         st.executeUpdate(query);
     }
 
     // Get all items for a specific order
     public List<OrderItem> getItemsByOrderId(String orderId) throws SQLException {
         List<OrderItem> items = new ArrayList<>();
-        String query = "SELECT * FROM OrderItems WHERE orderId = '" + orderId + "'";
+        String query = "SELECT * FROM OrderItem WHERE orderId = '" + orderId + "'";
         ResultSet rs = st.executeQuery(query);
 
         while (rs.next()) {

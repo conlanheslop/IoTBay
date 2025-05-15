@@ -491,12 +491,17 @@
                         <% } else { %>
                             <div class="customer-actions">
                                 <% if (item.checkAvailability()) { %>
-                                    <a href="#" class="btn btn-add-to-cart">Add to Cart</a>
+                                    <form method="post" action="CartServlet" style="display:inline;">
+                                        <input type="hidden" name="action" value="add" />
+                                        <input type="hidden" name="itemId" value="<%= item.getItemId() %>" />
+                                        <input type="hidden" name="quantity" value="1" />
+                                        <input type="submit" value="Add to Cart" class="btn btn-add-to-cart" />
+                                    </form>
                                 <% } else { %>
                                     <span class="btn btn-disabled">Out of Stock</span>
                                 <% } %>
                             </div>
-                        <% } %>
+                                                    <% } %>
                         
                         <a href="main.jsp" class="btn btn-back">Back to Catalogue</a>
                     </div>

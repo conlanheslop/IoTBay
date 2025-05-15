@@ -13,6 +13,8 @@ import jakarta.servlet.http.HttpSession;
 import model.User;
 import model.Staff;
 import model.dao.ItemManager;
+import controller.ItemValidator;   // ✨ resolves “ItemValidator cannot be resolved”
+
 
 @WebServlet("/UpdateItemServlet")
 public class UpdateItemServlet extends HttpServlet {

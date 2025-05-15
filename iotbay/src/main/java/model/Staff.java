@@ -1,47 +1,29 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.List;
-
-// Staff class (Child of User class)
 public class Staff extends User {
-    
-    private String userId;
+    private String position;
 
-    // Constructor with basic fields
-    public Staff(String email, String name, String password) {
-        super(email, name, password);
-    }
-
-    // Full constructor
-    public Staff(String id, String name, String password, String email, String phone, String address) {
-        super(id, name, password, email, phone, address);
-        this.userId = id;
-    }
-    
-    // Getters and Setters
-    public String getUserId() {
-        return this.getId();
+    /** new user (no DB id yet) */
+    public Staff(String fullname,
+                 String email,
+                 String password,
+                 String phone,
+                 String position) {
+        super(fullname, email, password, phone);
+        this.position = position;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-        this.setId(userId);
+    /** existing user loaded from DB (with id) */
+    public Staff(int id,
+                 String fullname,
+                 String email,
+                 String password,
+                 String phone,
+                 String position) {
+        super(id, fullname, email, password, phone);
+        this.position = position;
     }
-    
-    public boolean manageInventory() {
-        return true;
-    }
-    
-    public boolean manageBills() {
-        return true;
-    }
-    
-    public boolean processOrders() {
-        return true;
-    }
-    
-    public List<Customer> viewCustomers() {
-        return new ArrayList<>();
-    }
+
+    public String getPosition()               { return position; }
+    public void   setPosition(String position){ this.position = position; }
 }

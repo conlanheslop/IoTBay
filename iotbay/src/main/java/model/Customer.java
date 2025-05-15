@@ -2,61 +2,75 @@ package model;
 
 import java.util.ArrayList;
 import java.util.List;
-
-// Customer class (Child of User class)
+/**
+ * Customer subclass aligned with the User model.
+ * The address field lives here (removed from the base class).
+ */
 public class Customer extends User {
-    
-    private String userId;
-    private boolean isRegistered;
-    
-    // Constructor for registered customer with basic fields
-    public Customer(String email, String name, String password) {
-        super(email, name, password);
-        this.isRegistered = true;
+
+    private String address;
+    private boolean registered;
+
+    // No-arg constructor for unregistered walk-ins
+    public Customer() {
+        super();
+        this.registered = false;
     }
 
-    // Full constructor
-    public Customer(String id, String name, String password, String email, String phone, String address, boolean isRegistered) {
-        super(id, name, password, email, phone, address);
-        this.userId = id;
-        this.isRegistered = isRegistered;
+    // Minimal constructor for registration; id set later
+    public Customer(String fullname, String email, String password) {
+        super(fullname, email, password, null);
+        this.registered = true;
     }
-    
-    // Getters and Setters
+
+    // Full constructor loaded from the database
+    public Customer(int id,
+                    String fullname,
+                    String email,
+                    String password,
+                    String phone,
+                    String address,
+                    boolean isRegistered) {
+        super(id, fullname, email, password, phone);
+        this.address = address;
+        this.registered = isRegistered;
+    }
+
+    // JSP legacy helper: userId as String
     public String getUserId() {
-        return this.getId();
+        return String.valueOf(getId());
     }
-
     public void setUserId(String userId) {
-        this.userId = userId;
-        this.setId(userId);
+        setId(Integer.parseInt(userId));
     }
 
-    public boolean getIsRegistered() {
-        return isRegistered;
+    public String getAddress() {
+        return address;
+    }
+    public void setAddress(String address) {
+        this.address = address;
     }
 
-    public void setIsRegistered(boolean isRegistered) {
-        this.isRegistered = isRegistered;
-    }
-    
-    // Legacy method for JSP compatibility
     public boolean isRegistered() {
-        return isRegistered;
+        return registered;
     }
-    
+    public void setRegistered(boolean registered) {
+        this.registered = registered;
+    }
+    /* ─────── Domain helpers (stubs) ─────────────────────────────────── */
+
     public Order placeOrder() {
         return new Order();
     }
-    
+
     public List<Order> viewOrders() {
         return new ArrayList<>();
     }
-    
+
     public boolean addToCart(Item item) {
         return true;
     }
-    
+
     public boolean checkout() {
         return true;
     }

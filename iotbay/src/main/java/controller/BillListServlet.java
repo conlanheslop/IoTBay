@@ -97,10 +97,22 @@ public class BillListServlet extends HttpServlet{
 
         response.setContentType("text/html;charset=UTF-8");
         HttpSession session = request.getSession();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         
-        Date queryDate = (Date) request.getAttribute("date");
-        String billId = (String) request.getAttribute("billId");
+        Date queryDate = null;
+        String billId = request.getParameter("billId");
+        String dateParameter = request.getParameter("billDate");
         String userId = (String) session.getAttribute("userId");
+        
+        try {
+            if (dateParameter != null) {
+                queryDate = sdf.parse(dateParameter);
+            }
+        } catch (ParseException e) {
+            Logger.getLogger(PaymentServlet.class.getName()).log(Level.SEVERE, null, e);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Parse Exception");
+        }
+
         try  {
             DBConnector connector = new DBConnector();
             Connection localConnection = connector.openConnection();

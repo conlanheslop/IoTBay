@@ -47,8 +47,11 @@ public class UpdateBillServlet extends HttpServlet {
         }
 
         try {
-            billManager = new BillManager(conn);
-            paymentManager = new PaymentManager(conn);
+            DBConnector connector = new DBConnector();
+            Connection localConnection = connector.openConnection();
+
+            billManager = new BillManager(localConnection);
+            paymentManager = new PaymentManager(localConnection);
 
             Bill bill = billManager.findBill(billId);
             if (bill == null) {
@@ -62,7 +65,9 @@ public class UpdateBillServlet extends HttpServlet {
             session.setAttribute("paymentToEdit", payment);
 
             request.getRequestDispatcher("/paymentManagement/billUpdate.jsp").forward(request, response);
-        } catch (SQLException ex) {
+
+            connector.closeConnection();
+        } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(UpdateBillServlet.class.getName()).log(Level.SEVERE, null, ex);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage());
         }
@@ -97,6 +102,8 @@ public class UpdateBillServlet extends HttpServlet {
                 return;
             }
 
+            Bill bill = billManager.findBill(billId);
+
             // Reconstruct payment method string
             String paymentMethod = "Cardholder: " + cardholderName +
                                    ", Card Number: " + cardNumber +
@@ -106,9 +113,7 @@ public class UpdateBillServlet extends HttpServlet {
             Date updatedDate = Date.valueOf(LocalDate.now());
 
             paymentManager.updatePayment(paymentId, userId, updatedDate, paymentMethod, true);
-            Bill bill = billManager.findBill(billId);
             billManager.updateBill(billId, bill.getOrderId(), bill.getAmount(), updatedDate, paymentId, true);
-
 
             session.setAttribute("message", "Payment updated successfully");
             response.sendRedirect("BillListServlet");

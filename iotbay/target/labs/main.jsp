@@ -549,6 +549,11 @@
             <% } else { %>
                 <!-- Product Catalogue for all users -->
                 <h1>Product Catalogue</h1>
+
+                <a href="cart.jsp" class="btn btn-primary">
+                    My Cart
+                </a>
+
                 <% if (isStaff) { %>
                     <div class="admin-actions">
                         <a href="item_form.jsp" class="btn btn-primary">Add New Product</a>

@@ -21,7 +21,7 @@ public class OrderItemManager {
         this.st = conn.createStatement();
     }
 
-    // Create (Add a new order item)
+    // Create a new order item
     public void addOrderItem(String orderId, String itemId, int quantity, double unitPrice) throws SQLException {
         String query = "INSERT INTO OrderItem (orderId, itemId, quantity, unitPrice) VALUES ('"
                 + orderId + "', '" + itemId + "', " + quantity + ", " + unitPrice + ")";
@@ -45,7 +45,7 @@ public class OrderItemManager {
         st.executeUpdate(query);
     }
 
-    // Read (Find a specific order item)
+    // Read find a specific order item
     public OrderItem findOrderItem(String orderId, String itemId) throws SQLException {
         String query = "SELECT * FROM OrderItem WHERE orderId = '" + orderId + "' AND itemId = '" + itemId + "'";
         ResultSet rs = st.executeQuery(query);
@@ -71,7 +71,7 @@ public class OrderItemManager {
         st.executeUpdate(query);
     }
 
-    // Read (Get all OrderItem objects by orderId)
+    // Read get all orderitem by orderid
     public List<OrderItem> getItemsByOrderId(String orderId) throws SQLException {
         List<OrderItem> items = new ArrayList<>();
         String query = "SELECT * FROM OrderItem WHERE orderId = '" + orderId + "'";
@@ -87,7 +87,7 @@ public class OrderItemManager {
         return items;
     }
 
-    // Read (Convert OrderItems to CartItems by orderId)
+    // Read convert orderitem to cartitem
     public List<CartItem> findItemsByOrderId(String orderId) throws SQLException {
         List<CartItem> items = new ArrayList<>();
 
@@ -101,7 +101,6 @@ public class OrderItemManager {
             int quantity = rs.getInt("quantity");
             double unitPrice = rs.getDouble("unitPrice");
 
-            // Use null for cartId, since this is from an order not a cart
             CartItem cartItem = new CartItem(null, itemId, quantity, unitPrice);
             items.add(cartItem);
         }

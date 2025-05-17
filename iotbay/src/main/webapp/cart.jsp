@@ -74,7 +74,7 @@
     </a>
 </div>
 
-<%-- Shopping Cart Section --%>
+<%-- Shopping Cart  --%>
 <h2>Your Cart</h2>
 <%
     List<CartItem> cartItems = (List<CartItem>) request.getAttribute("cartItems");
@@ -117,13 +117,13 @@
 
     <div class="total"><strong>Cart Total: $<%= total %></strong></div>
 
-    <%-- Save Order Button --%>
+    <%-- Save Order  --%>
     <form method="post" action="CreateOrderServlet">
         <input type="hidden" name="status" value="Saved" />
         <input type="submit" value="Save Order" class="submit-btn" />
     </form>
 
-    <%-- Submit Order Button --%>
+    <%-- Submit Order --%>
     <form method="post" action="CreateOrderServlet">
         <input type="hidden" name="status" value="Submitted" />
         <input type="submit" value="Submit Order" class="submit-btn" />
@@ -138,7 +138,7 @@
     <a href="SavedOrdersServlet" class="submit-btn">View Saved Orders</a>
 </div>
 
-<%-- Order History Section --%>
+<%-- Order History--%>
 <div class="section">
     <h2>Your Order History</h2>
 

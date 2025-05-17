@@ -23,7 +23,7 @@ public class OrderManager {
         this.st = conn.createStatement(); 
     }
 
-    // Create (Add a new order)
+    // Create a new order 
     public void addOrder(String orderId, String userId, Timestamp orderDate, double totalAmount, 
                          String status, boolean isAnonymousOrder, String anonymousEmail) throws SQLException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -35,7 +35,7 @@ public class OrderManager {
         st.executeUpdate(query);
     }
 
-    // Read (Fetch a single order by ID)
+    // Read by getting order from orderID
     public Order getOrderById(String orderId) throws SQLException {
         String query = "SELECT * FROM Orders WHERE orderId = '" + orderId + "'";
         ResultSet rs = st.executeQuery(query);
@@ -53,7 +53,7 @@ public class OrderManager {
         return null;
     }
 
-    // Read (Fetch orders by customer ID)
+    // Read order from getting cust id
     public List<Order> getOrdersByCustomer(String userId) throws SQLException {
         List<Order> orders = new ArrayList<>();
         String query = "SELECT * FROM Orders WHERE userId = '" + userId + "'";
@@ -72,7 +72,7 @@ public class OrderManager {
         return orders;
     }
 
-    // Update (Modify an order before submission)
+    // Update modify order
     public void updateOrder(Order order) throws SQLException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String orderDateStr = sdf.format(order.getOrderDate());
@@ -86,7 +86,7 @@ public class OrderManager {
         st.executeUpdate(query);
     }
 
-    // Delete (Cancel order before submission)
+    // Delete before submit
     public void deleteOrder(String orderId) throws SQLException {
         String query = "DELETE FROM Orders WHERE orderId = '" + orderId + "'";
         st.executeUpdate(query);

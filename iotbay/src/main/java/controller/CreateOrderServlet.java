@@ -36,7 +36,6 @@ public class CreateOrderServlet extends HttpServlet {
         }
 
         try {
-            // Ensure DBConnector is available
             DBConnector db = (DBConnector) session.getAttribute("db");
             if (db == null) {
                 db = new DBConnector();
@@ -47,7 +46,7 @@ public class CreateOrderServlet extends HttpServlet {
             OrderManager orderManager = new OrderManager(conn);
             OrderItemManager orderItemManager = new OrderItemManager(conn);
 
-            // Order setup
+            // Setup Order
             String orderId = UUID.randomUUID().toString();
             String userId = (user != null) ? user.getId() : null;
             boolean isAnonymous = (user == null);
@@ -56,16 +55,15 @@ public class CreateOrderServlet extends HttpServlet {
             Timestamp now = new Timestamp(new Date().getTime());
             double total = cart.calculateTotal();
 
-            // Use status from form
+
             String status = request.getParameter("status");
             if (status == null || status.isEmpty()) {
                 status = "Saved";
             }
 
-            // Save the order
             orderManager.addOrder(orderId, userId, now, total, status, isAnonymous, anonymousEmail);
 
-            // Save each cart item
+            // Save cart item
             for (CartItem cartItem : cart.getCartItems()) {
                 String itemId = cartItem.getItemId();
                 int quantity = cartItem.getQuantity();
@@ -76,7 +74,7 @@ public class CreateOrderServlet extends HttpServlet {
             // Clear cart
             session.setAttribute("cart", new Cart());
 
-            // Redirect to confirmation page with status
+            // Redirect to confirm page
             if (status.equals("Submitted")) {
                 response.sendRedirect("OrderDetailsServlet?orderId=" + orderId);
             } else {

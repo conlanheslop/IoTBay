@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.ArrayList"%>
 <%@ page import="model.Delivery"%>
-<%@ page import="java.time.format.DateTimeFormatter"%>
+<%@ page import="java.text.SimpleDateFormat" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -58,7 +58,7 @@
         <tbody>
             <% 
             ArrayList<Delivery> deliveries = (ArrayList<Delivery>) request.getAttribute("deliveries");
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
             
             if (deliveries != null && !deliveries.isEmpty()) {
                 for (Delivery delivery : deliveries) {
@@ -66,7 +66,7 @@
                 <tr>
                     <td><%= delivery.getDeliveryId() %></td>
                     <td><%= delivery.getOrderId() %></td>
-                    <td><%= delivery.getDeliveringDate().format(formatter) %></td>
+                    <td><%= formatter.format(delivery.getDeliveringDate()) %></td>
                     <td><%= delivery.getStatus() %></td>
                     <td><%= delivery.getTrackingNumber() %></td>
                     <td>

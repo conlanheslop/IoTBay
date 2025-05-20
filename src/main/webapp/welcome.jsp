@@ -129,7 +129,7 @@
                         } else {
                             // If not create a new customer object
                             user = new Customer(email, "Customer User", password);
-                            user.setId("CUST001");
+                            user.setId("U0000001");
                             message = "Customer login successful!";
                         }
                         

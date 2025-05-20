@@ -12,7 +12,6 @@ VALUES
 ('U0000002', 0),
 ('U0000003', 1);
 
--- Insert Carts
 INSERT INTO Cart (cartId, userId, dateCreated, lastUpdated)
 VALUES 
 ('CART001', 'U0000001', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),

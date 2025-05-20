@@ -1,84 +1,192 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <%@ page import="model.Delivery"%>
 <%@ page import="java.time.format.DateTimeFormatter"%>
+<%@ page import="model.User"%>
+<%@ page import="model.Staff"%>
+<%@ page import="model.Customer"%>
+<jsp:include page="/ConnServlet" flush="true" />
 <!DOCTYPE html>
 <html>
-<head>
-    <link rel="stylesheet" href="styles/delivery.css">
-    <meta charset="UTF-8">
+  <head>
+    <link rel="stylesheet" href="styles/delivery.css" />
+    <meta charset="UTF-8" />
     <title>Delivery Details</title>
-</head>
-<body>
-    <h1>Delivery Details</h1>
-    
-    <!-- Navigation Links -->
-    <div>
-        <a href="index.jsp">Home</a> | 
-        <a href="delivery">Back to Delivery List</a>
-    </div>
-    
-    <!-- Success Message -->
-    <% if (session.getAttribute("successMessage") != null) { %>
-        <div style="color: green;">
-            <%= session.getAttribute("successMessage") %>
+  </head>
+  <body>
+    <header>
+      <div class="header-container">
+        <div class="logo">
+          <a href="index.jsp">IoTBay</a>
         </div>
-        <% session.removeAttribute("successMessage"); %>
-    <% } %>
-    
-    <!-- Error Message -->
-    <% if (request.getAttribute("errorMessage") != null) { %>
-        <div style="color: red;">
-            <%= request.getAttribute("errorMessage") %>
-        </div>
-    <% } %>
-    
-    <% 
-    Delivery delivery = (Delivery) request.getAttribute("delivery");
+        <nav>
+          <div class="nav-links">
+            <%
+            User user = (User) session.getAttribute("user");
+            if (user == null) {
+            %>
+            <a href="main.jsp">Browse as Guest</a>
+            <% } else if (user instanceof Staff) { %>
+            <span>Welcome, <%= user.getName() %></span>
+            <a href="main.jsp">Dashboard</a>
+            <a href="logout.jsp">Logout</a>
+            <% } else { %>
+            <span>Welcome, <%= user.getName() %></span>
+            <a href="main.jsp">Shop</a>
+            <a href="logout.jsp">Logout</a>
+            <% } %>
+          </div>
+        </nav>
+      </div>
+    </header>
+    <main class="body-container">
+      <h1 class="page-title">Delivery Details</h1>
+
+      <!-- Success Message -->
+      <% if (session.getAttribute("successMessage") != null) { %>
+      <div class="message success-message">
+        <%= session.getAttribute("successMessage") %>
+      </div>
+      <% session.removeAttribute("successMessage"); %> <% } %>
+
+      <!-- Error Message -->
+      <% if (request.getAttribute("errorMessage") != null) { %>
+      <div class="message error-message">
+        <%= request.getAttribute("errorMessage") %>
+      </div>
+      <% } %> <% Delivery delivery = (Delivery) request.getAttribute("delivery");
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-    
-    if (delivery != null) {
-    %>
-        <div>
-            <h2>Delivery Information</h2>
-            <p><strong>Delivery ID:</strong> <%= delivery.getDeliveryId() %></p>
-            <p><strong>Order ID:</strong> <%= delivery.getOrderId() %></p>
-            <p><strong>Delivering Date:</strong> <%= delivery.getDeliveringDate().format(formatter) %></p>
-            <p><strong>Status:</strong> <%= delivery.getStatus() %></p>
-            <p><strong>Delivering Address:</strong> <%= delivery.getDeliveringAddress() %></p>
-            <p><strong>Name on Delivery:</strong> <%= delivery.getNameOnDelivery() %></p>
-            <p><strong>Tracking Number:</strong> <%= delivery.getTrackingNumber() %></p>
-        </div>
-        
-        <div>
-            <h3>Update Delivery Status</h3>
-            <form action="updateDeliveryStatus" method="post">
-                <input type="hidden" name="deliveryId" value="<%= delivery.getDeliveryId() %>">
-                <select name="status">
-                    <option value="Processing" <%= delivery.getStatus().equals("Processing") ? "selected" : "" %>>Processing</option>
-                    <option value="Packed" <%= delivery.getStatus().equals("Packed") ? "selected" : "" %>>Packed</option>
-                    <option value="Shipped" <%= delivery.getStatus().equals("Shipped") ? "selected" : "" %>>Shipped</option>
-                    <option value="In Transit" <%= delivery.getStatus().equals("In Transit") ? "selected" : "" %>>In Transit</option>
-                    <option value="Out for Delivery" <%= delivery.getStatus().equals("Out for Delivery") ? "selected" : "" %>>Out for Delivery</option>
-                    <option value="Delivered" <%= delivery.getStatus().equals("Delivered") ? "selected" : "" %>>Delivered</option>
-                    <option value="Failed Delivery" <%= delivery.getStatus().equals("Failed Delivery") ? "selected" : "" %>>Failed Delivery</option>
-                    <option value="Returned" <%= delivery.getStatus().equals("Returned") ? "selected" : "" %>>Returned</option>
-                </select>
-                <button type="submit">Update Status</button>
-            </form>
-        </div>
-        
-        <div>
-            <h3>Actions</h3>
-            <a href="delivery?action=update-form&deliveryId=<%= delivery.getDeliveryId() %>">Update Delivery</a> | 
-            <form action="delivery" method="post" style="display: inline;" 
-                  onsubmit="return confirm('Are you sure you want to delete this delivery?');">
-                <input type="hidden" name="action" value="delete">
-                <input type="hidden" name="deliveryId" value="<%= delivery.getDeliveryId() %>">
-                <button type="submit">Delete Delivery</button>
-            </form>
-        </div>
-    <% } else { %>
-        <p>No delivery information found.</p>
-    <% } %>
-</body>
+
+    if (delivery != null) { %>
+      <section class="delivery-info">
+        <h2 class="section-title">Delivery Information</h2>
+        <p>
+          <strong>Delivery ID:</strong>
+          <span class="delivery-data"><%= delivery.getDeliveryId() %></span>
+        </p>
+        <p>
+          <strong>Order ID:</strong>
+          <span class="delivery-data"><%= delivery.getOrderId() %></span>
+        </p>
+        <p>
+          <strong>Delivering Date:</strong>
+          <span class="delivery-data"
+            ><%= delivery.getDeliveringDate().format(formatter) %></span
+          >
+        </p>
+        <p>
+          <strong>Status:</strong>
+          <span class="delivery-data"><%= delivery.getStatus() %></span>
+        </p>
+        <p>
+          <strong>Delivering Address:</strong>
+          <span class="delivery-data"
+            ><%= delivery.getDeliveringAddress() %></span
+          >
+        </p>
+        <p>
+          <strong>Name on Delivery:</strong>
+          <span class="delivery-data"><%= delivery.getNameOnDelivery() %></span>
+        </p>
+        <p>
+          <strong>Tracking Number:</strong>
+          <span class="delivery-data"><%= delivery.getTrackingNumber() %></span>
+        </p>
+      </section>
+
+      <section class="update-status-section">
+        <h3 class="section-subtitle">Update Delivery Status</h3>
+        <form class="status-form" action="updateDeliveryStatus" method="post">
+          <input
+            type="hidden"
+            name="deliveryId"
+            value="<%= delivery.getDeliveryId() %>"
+          />
+          <select class="status-select" name="status">
+            <option
+              value="Processing"
+              <%= delivery.getStatus().equals("Processing") ? "selected" : "" %>
+            >
+              Processing
+            </option>
+            <option
+              value="Packed"
+              <%= delivery.getStatus().equals("Packed") ? "selected" : "" %>
+            >
+              Packed
+            </option>
+            <option
+              value="Shipped"
+              <%= delivery.getStatus().equals("Shipped") ? "selected" : "" %>
+            >
+              Shipped
+            </option>
+            <option
+              value="In Transit"
+              <%= delivery.getStatus().equals("In Transit") ? "selected" : "" %>
+            >
+              In Transit
+            </option>
+            <option
+              value="Out for Delivery"
+              <%= delivery.getStatus().equals("Out for Delivery") ? "selected"
+              : "" %>
+            >
+              Out for Delivery
+            </option>
+            <option
+              value="Delivered"
+              <%= delivery.getStatus().equals("Delivered") ? "selected" : "" %>
+            >
+              Delivered
+            </option>
+            <option
+              value="Failed Delivery"
+              <%= delivery.getStatus().equals("Failed Delivery") ? "selected"
+              : "" %>
+            >
+              Failed Delivery
+            </option>
+            <option
+              value="Returned"
+              <%= delivery.getStatus().equals("Returned") ? "selected" : "" %>
+            >
+              Returned
+            </option>
+          </select>
+          <button class="btn btn-primary" type="submit">Update Status</button>
+        </form>
+      </section>
+
+      <section class="actions-section">
+        <h3 class="section-subtitle">Actions</h3>
+        <a
+          class="action-link"
+          href="delivery?action=update-form&deliveryId=<%= delivery.getDeliveryId() %>"
+          >Update Delivery</a
+        >
+        |
+        <form
+          class="inline-form"
+          action="delivery"
+          method="post"
+          onsubmit="return confirm('Are you sure you want to delete this delivery?');"
+        >
+          <input type="hidden" name="action" value="delete" />
+          <input
+            type="hidden"
+            name="deliveryId"
+            value="<%= delivery.getDeliveryId() %>"
+          />
+          <button class="btn btn-danger" type="submit">Delete Delivery</button>
+        </form>
+      </section>
+      <% } else { %>
+      <p class="no-info-message">No delivery information found.</p>
+      <% } %>
+    </main>
+    <footer>
+      <p>&copy; 2025 IoTBay. wrk1-G5-06.</p>
+    </footer>
+  </body>
 </html>

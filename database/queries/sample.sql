@@ -67,6 +67,7 @@ VALUES
 ('O0000004', 'ITM00008', 1, 89.99);
 
 -- Insert Deliveries
+-- not added yet
 INSERT INTO Delivery (
     deliveryId, orderId, deliveringDate, status, deliveringAddress, nameOnDelivery, trackingNumber
 )

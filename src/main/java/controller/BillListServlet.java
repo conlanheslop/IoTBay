@@ -68,7 +68,7 @@ public class BillListServlet extends HttpServlet{
             billManager = new BillManager(localConnection);
             orderManager = new OrderManager(localConnection);
 
-            List<Order> orderList = orderManager.findOrdersByUserId(userId);
+            List<Order> orderList = orderManager.getOrdersByCustomer(userId);
 
             List<Bill> billList;
             if (queryDate != null) {
@@ -83,8 +83,9 @@ public class BillListServlet extends HttpServlet{
                 }
             }
             session.setAttribute("billList", billList);
-            connector.closeConnection();
+            
             request.getRequestDispatcher("/paymentManagement/billList.jsp").forward(request, response);
+            connector.closeConnection();
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(PaymentServlet.class.getName()).log(Level.SEVERE, null, ex);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database error");
@@ -110,7 +111,6 @@ public class BillListServlet extends HttpServlet{
             }
         } catch (ParseException e) {
             Logger.getLogger(PaymentServlet.class.getName()).log(Level.SEVERE, null, e);
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Parse Exception");
         }
 
         try  {
@@ -124,12 +124,12 @@ public class BillListServlet extends HttpServlet{
                 userId = "U0000001";
             }
 
-            List<Order> orderList = orderManager.findOrdersByUserId(userId);
+            List<Order> orderList = orderManager.getOrdersByCustomer(userId);
 
             List<Bill> billList;
             if (queryDate != null) {
                 billList = billManager.findBillsByDate(queryDate);
-            } else if (billId != null){
+            } else if (billId != null && !billId.trim().isEmpty()){
                 billList = new ArrayList<Bill>();
                 billList.add(billManager.findBill(billId));
             } else {

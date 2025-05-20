@@ -21,6 +21,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -61,15 +62,17 @@ public class PaymentServlet extends HttpServlet {
             orderManager = new OrderManager(localConnection);
             orderItemManager = new OrderItemManager(localConnection);
 
+            String orderId = request.getParameter("orderId");
             User user = (User) session.getAttribute("user");
-            Order order = (Order) session.getAttribute("order");
+            Order order = orderManager.getOrderById(orderId);
+
             //DEV ONLY
             if (user == null) {
                 User defaultUser = userManager.findUser("U0000001");
                 session.setAttribute("user", defaultUser);
             }
             if (order == null) {
-                Order defaultOrder = orderManager.findOrder("O0000003");
+                Order defaultOrder = orderManager.getOrderById("O0000003");
                 List<OrderItem> itemList = orderItemManager.getItemsByOrderId(defaultOrder.getOrderId());
                 defaultOrder.setOrderItems(itemList);
                 session.setAttribute("order", defaultOrder);
@@ -102,6 +105,8 @@ public class PaymentServlet extends HttpServlet {
             cartManager = new CartManager(localConnection);
             orderManager = new OrderManager(localConnection);
 
+            List<String> errors = new ArrayList<>();
+
             String orderId = request.getParameter("orderId");
             if (orderId == null || orderId.isEmpty()) {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing cartId");
@@ -122,6 +127,20 @@ public class PaymentServlet extends HttpServlet {
             String expiryDate = request.getParameter("expiryDate");
             String cvv = request.getParameter("cvv");
 
+            // Check for missing fields
+            if (cardholderName == null || cardholderName.trim().isEmpty()) {
+                errors.add("Cardholder name is required.");
+            }
+            if (cardNumber == null || cardNumber.trim().isEmpty()) {
+                errors.add("Card number is required.");
+            }
+            if (expiryDate == null || expiryDate.trim().isEmpty()) {
+                errors.add("Expiry date is required.");
+            }
+            if (cvv == null || cvv.trim().isEmpty()) {
+                errors.add("CVV is required.");
+            }
+
             // Get userId from session (assuming user is logged in and userId is stored in session)
             User user = (User) session.getAttribute("user");
             //For Dev test only
@@ -130,6 +149,13 @@ public class PaymentServlet extends HttpServlet {
                 session.setAttribute("user", defaultUser);
             }
             String userId = user.getId();
+
+            // If there are any errors, send them to the error page
+            if (!errors.isEmpty()) {
+                request.setAttribute("errorMessage", errors.toArray(new String[0]));
+                request.getRequestDispatcher("paymentManagement/paymentError.jsp").forward(request, response);
+                return; // Stop further processing
+            }
 
             // Create the payment method (combining cardholder name, card number, expiry date, and CVV)
             String paymentMethod = "Cardholder: " + cardholderName + ", Card Number: " + cardNumber +
@@ -149,7 +175,7 @@ public class PaymentServlet extends HttpServlet {
             String paymentAction = request.getParameter("paymentAction");
 
             if ("confirm".equals(paymentAction)) {
-                Order order = orderManager.findOrder(orderId);
+                Order order = orderManager.getOrderById(orderId);
                 billManager.addBill(order.getOrderId(), totalAmount, billDate, payment.getPaymentId(), true);
                 
                 session.setAttribute("message", "Bill created successfully");

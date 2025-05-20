@@ -62,11 +62,8 @@ public class BillListServlet extends HttpServlet{
         String billId = (String) request.getParameter("billId");
         String userId = (String) session.getAttribute("userId");
         try {
-            DBConnector connector = new DBConnector();
-            Connection localConnection = connector.openConnection();
-
-            billManager = new BillManager(localConnection);
-            orderManager = new OrderManager(localConnection);
+            billManager = (BillManager) session.getAttribute("billManager");
+            orderManager = (OrderManager) session.getAttribute("orderManager");
 
             List<Order> orderList = orderManager.getOrdersByCustomer(userId);
 
@@ -85,8 +82,7 @@ public class BillListServlet extends HttpServlet{
             session.setAttribute("billList", billList);
             
             request.getRequestDispatcher("/paymentManagement/billList.jsp").forward(request, response);
-            connector.closeConnection();
-        } catch (ClassNotFoundException | SQLException ex) {
+        } catch (SQLException ex) {
             Logger.getLogger(PaymentServlet.class.getName()).log(Level.SEVERE, null, ex);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database error");
         }
@@ -114,10 +110,8 @@ public class BillListServlet extends HttpServlet{
         }
 
         try  {
-            DBConnector connector = new DBConnector();
-            Connection localConnection = connector.openConnection();
-            billManager = new BillManager(localConnection);
-            orderManager = new OrderManager(localConnection);
+            billManager = (BillManager) session.getAttribute("billManager");
+            orderManager = (OrderManager) session.getAttribute("orderManager");
 
             //DEV ONLY
             if (userId == null) {
@@ -144,9 +138,8 @@ public class BillListServlet extends HttpServlet{
             session.setAttribute("billList", billList);
 
             request.getRequestDispatcher("/paymentManagement/billList.jsp").forward(request, response);
-            connector.closeConnection();
             return;
-        } catch (ClassNotFoundException | SQLException ex) {
+        } catch (SQLException ex) {
             Logger.getLogger(PaymentServlet.class.getName()).log(Level.SEVERE, null, ex);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database error");
         }

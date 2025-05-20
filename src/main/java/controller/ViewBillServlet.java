@@ -56,13 +56,11 @@ public class ViewBillServlet extends HttpServlet {
         }
 
         try {
-            DBConnector connector = new DBConnector();
-            Connection localConnection = connector.openConnection();
 
-            billManager = new BillManager(localConnection);
-            orderManager = new OrderManager(localConnection);
-            orderItemManager = new OrderItemManager(localConnection);
-            paymentManager = new PaymentManager(localConnection);
+            orderItemManager = (OrderItemManager) session.getAttribute("orderItemManager");
+            orderManager = (OrderManager) session.getAttribute("orderManager");
+            billManager = (BillManager) session.getAttribute("billManager");
+            paymentManager = (PaymentManager) session.getAttribute("paymentManager");
 
             Bill bill = billManager.findBill(billId);
 
@@ -72,7 +70,6 @@ public class ViewBillServlet extends HttpServlet {
             }
 
             Order order = orderManager.getOrderById(bill.getOrderId());
-            
 
             if (order != null) {
                 List<OrderItem> itemList = orderItemManager.getItemsByOrderId(order.getOrderId());
@@ -87,9 +84,7 @@ public class ViewBillServlet extends HttpServlet {
             session.setAttribute("order", order);
 
             request.getRequestDispatcher("/paymentManagement/viewBill.jsp").forward(request, response);
-
-            connector.closeConnection();
-        } catch (ClassNotFoundException | SQLException ex) {
+        } catch (SQLException ex) {
             Logger.getLogger(ViewBillServlet.class.getName()).log(Level.SEVERE, null, ex);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database error");
         }

@@ -88,12 +88,13 @@ public class BillManagerTest {
     @Test
     public void test5_FetchAllBills() throws Exception {
         billManager.addBill(testOrderId, amount, now, paymentId, false);
+        Bill orderBill = billManager.findBillByOrderId(testOrderId);
 
         List<Bill> bills = billManager.fetchAllBills();
         assertNotNull("fetchAllBills should return a list", bills);
         assertTrue("There should be at least one bill", bills.size() > 0);
 
-        billManager.deleteBill(testBillId);
+        billManager.deleteBill(orderBill.getBillId());
     }
 
     @Test
@@ -106,7 +107,7 @@ public class BillManagerTest {
         assertTrue("Should return at least one bill with today's date", bills.stream()
             .anyMatch(b -> b.getBillId().equals(orderBill.getBillId())));
 
-        billManager.deleteBill(testBillId);
+        billManager.deleteBill(orderBill.getBillId());
     }
 
     @Test

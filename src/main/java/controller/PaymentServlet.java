@@ -58,25 +58,32 @@ public class PaymentServlet extends HttpServlet {
             DBConnector connector = new DBConnector();
             Connection localConnection = connector.openConnection();
 
-            userManager = new UserManager(localConnection);
-            orderManager = new OrderManager(localConnection);
-            orderItemManager = new OrderItemManager(localConnection);
+            userManager = (UserManager) session.getAttribute("userManager");
+            orderManager = (OrderManager) session.getAttribute("orderManager");
+            orderItemManager = (OrderItemManager) session.getAttribute("orderItemManager");
 
             String orderId = request.getParameter("orderId");
             User user = (User) session.getAttribute("user");
-            Order order = orderManager.getOrderById(orderId);
+            List<OrderItem> itemList = new ArrayList<>();
 
             //DEV ONLY
             if (user == null) {
                 User defaultUser = userManager.findUser("U0000001");
                 session.setAttribute("user", defaultUser);
             }
-            if (order == null) {
+            if (orderId == null) {
                 Order defaultOrder = orderManager.getOrderById("O0000003");
-                List<OrderItem> itemList = orderItemManager.getItemsByOrderId(defaultOrder.getOrderId());
+                itemList = orderItemManager.getItemsByOrderId(defaultOrder.getOrderId());
                 defaultOrder.setOrderItems(itemList);
                 session.setAttribute("order", defaultOrder);
+            }else {
+                Order order = orderManager.getOrderById(orderId);
+                itemList = orderItemManager.getItemsByOrderId(order.getOrderId());
+                order.setOrderItems(itemList);
+                session.setAttribute("order", order);
             }
+
+
             connector.closeConnection();
             request.getRequestDispatcher("/paymentManagement/billConfirm.jsp").forward(request, response);
         } catch (ClassNotFoundException | SQLException ex) {
@@ -95,16 +102,13 @@ public class PaymentServlet extends HttpServlet {
         conn = db.openConnection();
 
         try {
-            DBConnector connector = new DBConnector();
-            Connection localConnection = connector.openConnection();
 
-            billManager = new BillManager(localConnection);
-            orderItemManager = new OrderItemManager(localConnection);
-            paymentManager = new PaymentManager(localConnection);
-            cartItemManager = new CartItemManager(localConnection);
-            cartManager = new CartManager(localConnection);
-            orderManager = new OrderManager(localConnection);
-
+            orderItemManager = (OrderItemManager) session.getAttribute("orderItemManager");
+            orderManager = (OrderManager) session.getAttribute("orderManager");
+            paymentManager = (PaymentManager) session.getAttribute("paymentManager");
+            cartItemManager = (CartItemManager) session.getAttribute("cartItemManager");
+            billManager = (BillManager) session.getAttribute("billManager");
+            
             List<String> errors = new ArrayList<>();
 
             String orderId = request.getParameter("orderId");
@@ -189,8 +193,7 @@ public class PaymentServlet extends HttpServlet {
             }
 
             paymentManager.addPayment(payment.getPaymentId(), userId, currentDate, paymentMethod, true);
-            connector.closeConnection();
-        } catch (ClassNotFoundException | SQLException ex) {
+        } catch (SQLException ex) {
             Logger.getLogger(PaymentServlet.class.getName()).log(Level.SEVERE, null, ex);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage());
         }

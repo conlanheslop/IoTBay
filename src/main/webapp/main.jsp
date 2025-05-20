@@ -438,10 +438,11 @@
                             <a href="#">Orders</a>
                             <a href="#">Customers</a>
                         <% } else { %>
-                            <a href="#">My Orders</a>
+                            <a href="saved_orders.jsp">My Orders</a>
                             <a href="edit_profile.jsp">My Profile</a>
-                            <a href="#">Cart</a>
+                            <a href="cart.jsp">Cart</a>
                             <a href="BillListServlet">Payment</a>
+                            <a href="delivery_list.jsp">Delivery</a>
                         <% } %>
                         <a href="logout.jsp">Logout</a>
                     <% } %>

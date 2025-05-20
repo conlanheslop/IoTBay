@@ -23,13 +23,8 @@ public class OrderManager {
         this.st = conn.createStatement(); 
     }
 
-<<<<<<< HEAD:src/main/java/model/dao/OrderManager.java
-    // Create (Add a new order)
-    public void addOrder(String orderId, String userId, Date orderDate, double totalAmount, 
-=======
     // Create a new order 
     public void addOrder(String orderId, String userId, Timestamp orderDate, double totalAmount, 
->>>>>>> c111ee4d2693d147602e1f9901b06d930193c873:iotbay/src/main/java/model/dao/OrderManager.java
                          String status, boolean isAnonymousOrder, String anonymousEmail) throws SQLException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String orderDateStr = sdf.format(orderDate);
@@ -58,11 +53,6 @@ public class OrderManager {
         return null;
     }
 
-<<<<<<< HEAD:src/main/java/model/dao/OrderManager.java
-    // Update (Update an order's details)
-    public void updateOrder(String orderId, String userId, Date orderDate, double totalAmount, 
-                            String status, boolean isAnonymousOrder, String anonymousEmail) throws SQLException {
-=======
     // Read order from getting cust id
     public List<Order> getOrdersByCustomer(String userId) throws SQLException {
         List<Order> orders = new ArrayList<>();
@@ -84,7 +74,6 @@ public class OrderManager {
 
     // Update modify order
     public void updateOrder(Order order) throws SQLException {
->>>>>>> c111ee4d2693d147602e1f9901b06d930193c873:iotbay/src/main/java/model/dao/OrderManager.java
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String orderDateStr = sdf.format(order.getOrderDate());
         String query = "UPDATE Orders SET userId = '" + order.getUserId() + 
@@ -111,26 +100,6 @@ public class OrderManager {
         query.append(" AND userId = ?");
     }
 
-<<<<<<< HEAD:src/main/java/model/dao/OrderManager.java
-    // Find orders by userId
-    public List<Order> findOrdersByUserId(String userId) throws SQLException {
-        List<Order> orders = new ArrayList<>();
-        String query = "SELECT * FROM Orders WHERE userId = '" + userId + "'";
-        ResultSet rs = st.executeQuery(query);
-
-        while (rs.next()) {
-            String orderId = rs.getString("orderId");
-            Timestamp orderDate = rs.getTimestamp("orderDate");
-            double totalAmount = rs.getDouble("totalAmount");
-            String status = rs.getString("status");
-            boolean isAnonymousOrder = rs.getBoolean("isAnonymousOrder");
-            String anonymousEmail = rs.getString("anonymousEmail");
-
-            orders.add(new Order(orderId, userId, orderDate, totalAmount, status, isAnonymousOrder, anonymousEmail));
-        }
-        return orders;
-    }
-=======
     if (searchDate != null && !searchDate.isEmpty()) {
         query.append(" AND DATE(orderDate) = ?");
     }
@@ -162,7 +131,6 @@ public class OrderManager {
     rs.close();
     ps.close();
     return orders;
->>>>>>> c111ee4d2693d147602e1f9901b06d930193c873:iotbay/src/main/java/model/dao/OrderManager.java
 }
 
 }

@@ -68,7 +68,7 @@
     <% } %>
 </table>
 
-<form method="post" action="PayNowServlet">
+<form method="post" action="PaymentServlet">
     <input type="hidden" name="orderId" value="<%= order.getOrderId() %>" />
     <input type="submit" value="Pay Now" class="pay-btn" />
 </form>

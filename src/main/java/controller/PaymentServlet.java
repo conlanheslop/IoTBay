@@ -62,15 +62,17 @@ public class PaymentServlet extends HttpServlet {
             orderManager = new OrderManager(localConnection);
             orderItemManager = new OrderItemManager(localConnection);
 
+            String orderId = request.getParameter("orderId");
             User user = (User) session.getAttribute("user");
-            Order order = (Order) session.getAttribute("order");
+            Order order = orderManager.getOrderById(orderId);
+
             //DEV ONLY
             if (user == null) {
                 User defaultUser = userManager.findUser("U0000001");
                 session.setAttribute("user", defaultUser);
             }
             if (order == null) {
-                Order defaultOrder = orderManager.findOrder("O0000003");
+                Order defaultOrder = orderManager.getOrderById("O0000003");
                 List<OrderItem> itemList = orderItemManager.getItemsByOrderId(defaultOrder.getOrderId());
                 defaultOrder.setOrderItems(itemList);
                 session.setAttribute("order", defaultOrder);
@@ -173,7 +175,7 @@ public class PaymentServlet extends HttpServlet {
             String paymentAction = request.getParameter("paymentAction");
 
             if ("confirm".equals(paymentAction)) {
-                Order order = orderManager.findOrder(orderId);
+                Order order = orderManager.getOrderById(orderId);
                 billManager.addBill(order.getOrderId(), totalAmount, billDate, payment.getPaymentId(), true);
                 
                 session.setAttribute("message", "Bill created successfully");

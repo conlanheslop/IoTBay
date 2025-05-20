@@ -71,7 +71,7 @@ public class ViewBillServlet extends HttpServlet {
                 return;
             }
 
-            Order order = orderManager.findOrder(bill.getOrderId());
+            Order order = orderManager.getOrderById(bill.getOrderId());
             
 
             if (order != null) {

@@ -68,7 +68,7 @@ public class BillListServlet extends HttpServlet{
             billManager = new BillManager(localConnection);
             orderManager = new OrderManager(localConnection);
 
-            List<Order> orderList = orderManager.findOrdersByUserId(userId);
+            List<Order> orderList = orderManager.getOrdersByCustomer(userId);
 
             List<Bill> billList;
             if (queryDate != null) {
@@ -124,7 +124,7 @@ public class BillListServlet extends HttpServlet{
                 userId = "U0000001";
             }
 
-            List<Order> orderList = orderManager.findOrdersByUserId(userId);
+            List<Order> orderList = orderManager.getOrdersByCustomer(userId);
 
             List<Bill> billList;
             if (queryDate != null) {

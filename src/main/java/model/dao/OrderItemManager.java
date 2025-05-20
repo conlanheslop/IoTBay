@@ -86,8 +86,6 @@ public class OrderItemManager {
         rs.close();
         return items;
     }
-<<<<<<< HEAD:src/main/java/model/dao/OrderItemManager.java
-=======
 
     // Read convert orderitem to cartitem
     public List<CartItem> findItemsByOrderId(String orderId) throws SQLException {
@@ -111,5 +109,4 @@ public class OrderItemManager {
         ps.close();
         return items;
     }
->>>>>>> c111ee4d2693d147602e1f9901b06d930193c873:iotbay/src/main/java/model/dao/OrderItemManager.java
 }

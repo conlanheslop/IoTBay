@@ -550,6 +550,11 @@
             <% } else { %>
                 <!-- Product Catalogue for all users -->
                 <h1>Product Catalogue</h1>
+
+                <a href="cart.jsp" class="btn btn-primary">
+                    My Cart
+                </a>
+
                 <% if (isStaff) { %>
                     <div class="admin-actions">
                         <a href="item_form.jsp" class="btn btn-primary">Add New Product</a>
@@ -592,7 +597,13 @@
                                         <a href="item_details.jsp?itemId=<%= item.getItemId() %>" class="btn btn-primary">View Details</a>
                                         <% if (!isStaff) { %>
                                             <% if (item.checkAvailability()) { %>
-                                                <a href="#" class="btn btn-add-to-cart">Add to Cart</a>
+                                                <form method="post" action="CartServlet" style="display:inline;">
+                                                    <input type="hidden" name="action" value="add" />
+                                                    <input type="hidden" name="itemId" value="<%= item.getItemId() %>" />
+                                                    <input type="hidden" name="quantity" value="1" />
+                                                    <input type="submit" class="btn btn-add-to-cart" value="Add to Cart" />
+                                                </form>
+
                                             <% } else { %>
                                                 <span class="btn btn-disabled">Add to Cart</span>
                                             <% } %>
@@ -635,7 +646,12 @@
                                         <a href="item_details.jsp?itemId=<%= item.getItemId() %>" class="btn btn-primary">View Details</a>
                                         <% if (!isStaff) { %>
                                             <% if (item.checkAvailability()) { %>
-                                                <a href="#" class="btn btn-add-to-cart">Add to Cart</a>
+                                                <form method="post" action="CartServlet" style="display:inline;">
+                                                    <input type="hidden" name="action" value="add" />
+                                                    <input type="hidden" name="itemId" value="<%= item.getItemId() %>" />
+                                                    <input type="hidden" name="quantity" value="1" />
+                                                    <input type="submit" class="btn btn-add-to-cart" value="Add to Cart" />
+                                                </form>
                                             <% } else { %>
                                                 <span class="btn btn-disabled">Add to Cart</span>
                                             <% } %>
@@ -679,7 +695,12 @@
                                         <a href="item_details.jsp?itemId=<%= item.getItemId() %>" class="btn btn-primary">View Details</a>
                                         <% if (!isStaff) { %>
                                             <% if (item.checkAvailability()) { %>
-                                                <a href="#" class="btn btn-add-to-cart">Add to Cart</a>
+                                                <form method="post" action="CartServlet" style="display:inline;">
+                                                    <input type="hidden" name="action" value="add" />
+                                                    <input type="hidden" name="itemId" value="<%= item.getItemId() %>" />
+                                                    <input type="hidden" name="quantity" value="1" />
+                                                    <input type="submit" class="btn btn-add-to-cart" value="Add to Cart" />
+                                                </form>
                                             <% } else { %>
                                                 <span class="btn btn-disabled">Add to Cart</span>
                                             <% } %>
@@ -723,7 +744,12 @@
                                         <a href="item_details.jsp?itemId=<%= item.getItemId() %>" class="btn btn-primary">View Details</a>
                                         <% if (!isStaff) { %>
                                             <% if (item.checkAvailability()) { %>
-                                                <a href="#" class="btn btn-add-to-cart">Add to Cart</a>
+                                                <form method="post" action="CartServlet" style="display:inline;">
+                                                    <input type="hidden" name="action" value="add" />
+                                                    <input type="hidden" name="itemId" value="<%= item.getItemId() %>" />
+                                                    <input type="hidden" name="quantity" value="1" />
+                                                    <input type="submit" class="btn btn-add-to-cart" value="Add to Cart" />
+                                                </form>
                                             <% } else { %>
                                                 <span class="btn btn-disabled">Add to Cart</span>
                                             <% } %>
@@ -767,7 +793,12 @@
                                         <a href="item_details.jsp?itemId=<%= item.getItemId() %>" class="btn btn-primary">View Details</a>
                                         <% if (!isStaff) { %>
                                             <% if (item.checkAvailability()) { %>
-                                                <a href="#" class="btn btn-add-to-cart">Add to Cart</a>
+                                                <form method="post" action="CartServlet" style="display:inline;">
+                                                    <input type="hidden" name="action" value="add" />
+                                                    <input type="hidden" name="itemId" value="<%= item.getItemId() %>" />
+                                                    <input type="hidden" name="quantity" value="1" />
+                                                    <input type="submit" class="btn btn-add-to-cart" value="Add to Cart" />
+                                                </form>
                                             <% } else { %>
                                                 <span class="btn btn-disabled">Add to Cart</span>
                                             <% } %>
@@ -811,7 +842,12 @@
                                         <a href="item_details.jsp?itemId=<%= item.getItemId() %>" class="btn btn-primary">View Details</a>
                                         <% if (!isStaff) { %>
                                             <% if (item.checkAvailability()) { %>
-                                                <a href="#" class="btn btn-add-to-cart">Add to Cart</a>
+                                                <form method="post" action="CartServlet" style="display:inline;">
+                                                    <input type="hidden" name="action" value="add" />
+                                                    <input type="hidden" name="itemId" value="<%= item.getItemId() %>" />
+                                                    <input type="hidden" name="quantity" value="1" />
+                                                    <input type="submit" class="btn btn-add-to-cart" value="Add to Cart" />
+                                                </form>
                                             <% } else { %>
                                                 <span class="btn btn-disabled">Add to Cart</span>
                                             <% } %>

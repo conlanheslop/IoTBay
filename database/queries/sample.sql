@@ -10,13 +10,6 @@ VALUES
 ('U0000002', 0),
 ('U0000003', 1);
 
-INSERT INTO Item (itemId, name, quantity, description, price, category, manufacturer, imageURL, dateAdded, lastRestocked, lastModifiedDate)
-VALUES 
-('ITEM001', 'Gaming Laptop', 10, 'High-performance laptop for gaming', 1599.99, 'Electronics', 'Asus', 'images/laptop1.jpg', DateTime('Now'), DateTime('Now'), DateTime('Now')),
-('ITEM002', 'Wireless Mouse', 50, 'Ergonomic wireless mouse', 29.99, 'Accessories', 'Logitech', 'images/mouse1.jpg', DateTime('Now'), DateTime('Now'), DateTime('Now')),
-('ITEM003', 'Mechanical Keyboard', 30, 'RGB mechanical keyboard with blue switches', 89.99, 'Accessories', 'Corsair', 'images/keyboard1.jpg', DateTime('Now'), DateTime('Now'), DateTime('Now'));
-
-
 INSERT INTO Cart (cartId, userId, dateCreated, lastUpdated)
 VALUES 
 ('CART001', 'U0000001', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),

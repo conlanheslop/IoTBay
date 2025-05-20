@@ -5,6 +5,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import model.dao.BillManager;
 import model.dao.DBConnector;
 
@@ -22,20 +23,10 @@ public class DeleteBillServlet extends HttpServlet {
     private BillManager billManager;
 
     @Override
-    public void init() {
-        try {
-            db = new DBConnector();
-        } catch (ClassNotFoundException | SQLException ex) {
-            Logger.getLogger(DeleteBillServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        conn = db.openConnection();
         response.setContentType("text/html;charset=UTF-8");
+        HttpSession session = request.getSession();
 
         String billId = request.getParameter("billId");
 
@@ -45,16 +36,12 @@ public class DeleteBillServlet extends HttpServlet {
         }
 
         try {
-            DBConnector connector = new DBConnector();
-            Connection localConnection = connector.openConnection();
-
-            billManager = new BillManager(localConnection);
+            billManager = (BillManager) session.getAttribute("billManager");
             billManager.deleteBill(billId);
 
             request.getSession().setAttribute("message", "Bill deleted successfully.");
             response.sendRedirect("BillListServlet");
-            connector.closeConnection();
-        } catch (ClassNotFoundException | SQLException ex) {
+        } catch (SQLException ex) {
             Logger.getLogger(DeleteBillServlet.class.getName()).log(Level.SEVERE, null, ex);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage());
         }

@@ -81,7 +81,7 @@ public class CreateOrderServlet extends HttpServlet {
                 response.sendRedirect("order_confirmation.jsp?status=Saved");
             }
             
-
+            
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("errorMessage", e.getMessage());

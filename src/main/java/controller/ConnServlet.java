@@ -29,6 +29,13 @@ import model.dao.*;
 public class ConnServlet extends HttpServlet {
     private DBConnector db;
     private ItemManager itemManager;
+    private BillManager billManager;
+    private OrderItemManager orderItemManager;
+    private PaymentManager paymentManager;
+    private CartItemManager cartItemManager;
+    private CartManager cartManager;
+    private OrderManager orderManager;
+    private UserManager userManager;
     private Connection conn;
 
     @Override //Create and instance of DBConnector for the deployment session
@@ -64,7 +71,12 @@ public class ConnServlet extends HttpServlet {
         try {
 
             itemManager = new ItemManager(conn);
-
+            billManager = new BillManager(conn);
+            orderItemManager = new OrderItemManager(conn);
+            paymentManager = new PaymentManager(conn);
+            cartItemManager = new CartItemManager(conn);
+            cartManager = new CartManager(conn);
+            orderManager = new OrderManager(conn);
         } catch (SQLException ex) {
 
             Logger.getLogger(ConnServlet.class.getName()).log(Level.SEVERE, null, ex);
@@ -72,9 +84,14 @@ public class ConnServlet extends HttpServlet {
         }
 
         //export the DB manager to the view-session (JSPs)
-
+        session.setAttribute("db", db);
         session.setAttribute("itemManager", itemManager);           
-
+        session.setAttribute("billManager", billManager);
+        session.setAttribute("orderItemManager", orderItemManager);
+        session.setAttribute("orderManager", orderManager);
+        session.setAttribute("paymentManager", paymentManager);
+        session.setAttribute("cartItemManager", cartItemManager);
+        session.setAttribute("cartManager", cartManager);
     }   
 
      

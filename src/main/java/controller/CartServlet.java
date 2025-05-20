@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import model.Cart;
 import model.CartItem;
 import model.Item;
 import model.User;
+import model.dao.DBConnector;
 import model.dao.ItemManager;
 
 @WebServlet("/CartServlet")

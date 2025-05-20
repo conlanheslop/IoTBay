@@ -49,11 +49,8 @@ public class UpdateBillServlet extends HttpServlet {
         }
 
         try {
-            DBConnector connector = new DBConnector();
-            Connection localConnection = connector.openConnection();
-
-            billManager = new BillManager(localConnection);
-            paymentManager = new PaymentManager(localConnection);
+            billManager = (BillManager) session.getAttribute("billManager");
+            paymentManager = (PaymentManager) session.getAttribute("paymentManager");
 
             Bill bill = billManager.findBill(billId);
             if (bill == null) {
@@ -67,9 +64,7 @@ public class UpdateBillServlet extends HttpServlet {
             session.setAttribute("paymentToEdit", payment);
 
             request.getRequestDispatcher("/paymentManagement/billUpdate.jsp").forward(request, response);
-
-            connector.closeConnection();
-        } catch (ClassNotFoundException | SQLException ex) {
+        } catch (SQLException ex) {
             Logger.getLogger(UpdateBillServlet.class.getName()).log(Level.SEVERE, null, ex);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage());
         }
@@ -85,8 +80,8 @@ public class UpdateBillServlet extends HttpServlet {
             DBConnector connector = new DBConnector();
             Connection localConnection = connector.openConnection();
 
-            paymentManager = new PaymentManager(localConnection);
-            billManager = new BillManager(localConnection);
+            billManager = (BillManager) session.getAttribute("billManager");
+            paymentManager = (PaymentManager) session.getAttribute("paymentManager");
 
             List<String> errors = new ArrayList<>();
 

@@ -14,6 +14,8 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -86,8 +88,9 @@ public class UpdateBillServlet extends HttpServlet {
             paymentManager = new PaymentManager(localConnection);
             billManager = new BillManager(localConnection);
 
-            String billId = request.getParameter("billId");
+            List<String> errors = new ArrayList<>();
 
+            String billId = request.getParameter("billId");
             String paymentId = request.getParameter("paymentId");
             String cardholderName = request.getParameter("cardholderName");
             String cardNumber = request.getParameter("cardNumber");
@@ -103,6 +106,27 @@ public class UpdateBillServlet extends HttpServlet {
             }
 
             Bill bill = billManager.findBill(billId);
+
+            // Check for missing fields
+            if (cardholderName == null || cardholderName.trim().isEmpty()) {
+                errors.add("Cardholder name is required.");
+            }
+            if (cardNumber == null || cardNumber.trim().isEmpty()) {
+                errors.add("Card number is required.");
+            }
+            if (expiryDate == null || expiryDate.trim().isEmpty()) {
+                errors.add("Expiry date is required.");
+            }
+            if (cvv == null || cvv.trim().isEmpty()) {
+                errors.add("CVV is required.");
+            }
+
+            // If there are any errors, send them to the error page
+            if (!errors.isEmpty()) {
+                request.setAttribute("errorMessage", errors.toArray(new String[0]));
+                request.getRequestDispatcher("paymentManagement/paymentError.jsp").forward(request, response);
+                return; // Stop further processing
+            }
 
             // Reconstruct payment method string
             String paymentMethod = "Cardholder: " + cardholderName +

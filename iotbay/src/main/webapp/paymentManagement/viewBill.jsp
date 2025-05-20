@@ -2,6 +2,7 @@
 <%@ page import="model.OrderItem" %>
 <%@ page import="model.Bill" %>
 <%@ page import="model.Payment" %>
+<%@ page import="model.Shipment" %>
 <%@ page import="java.util.*" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
@@ -9,6 +10,7 @@
     Bill bill = (Bill) session.getAttribute("bill");
     Order order = (Order) session.getAttribute("order");
     Payment payment = (Payment) session.getAttribute("payment");
+    Shipment shipment = (Shipment) request.getAttribute("shipment");
 
     if(bill == null || order == null){
         request.getRequestDispatcher("BillListServlet").forward(request, response);
@@ -154,6 +156,15 @@
         <div class="total-price">
             Total Price: $<%= String.format("%.2f", totalPrice) %>
         </div>
+        <% if (shipment == null) { %>
+        <form action="CreateShipmentServlet" method="post" style="margin-top: 20px;">
+            <input type="hidden" name="orderId" value="<%= order.getOrderId() %>">
+            <button type="submit" style="
+                background-color: #28a745; color: white; border: none;
+                padding: 10px 20px; border-radius: 5px; cursor: pointer;
+            ">Make Shipment</button>
+        </form>
+    <% } %>
     </div>
 </div>
 

@@ -1,5 +1,5 @@
-<%@ page import="model.User" %>
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page import="model.User" session="true" contentType="text/html;charset=UTF-8" %>
 <html>
     <head>
         <title>IoTBay - Edit Profile</title>
@@ -149,21 +149,21 @@
                 return;
             }
             
-            // Check if form was submitted
+            // Check if form was submitted (from main branch logic)
             String submitted = request.getParameter("submitted");
             String successMessage = "";
             
             if (submitted != null && submitted.equals("true")) {
-                // Update user details
-                String name = request.getParameter("name");
+                // Update user details based on main branch logic, with a slight adjustment for 'fullname'
+                String name = request.getParameter("fullname"); // Changed to 'fullname' for consistency with feature-1 form field
                 String email = request.getParameter("email");
                 String phone = request.getParameter("phone");
-                String address = request.getParameter("address");
+                String address = request.getParameter("address"); // 'address' field removed in feature-1, but kept for main branch compatibility if it's still intended for User model
                 String password = request.getParameter("password");
                 
                 // Update user object
                 if (name != null && !name.isEmpty()) {
-                    user.setName(name);
+                    user.setName(name); // Assuming User.setName() is updated to handle 'fullname'
                 }
                 
                 if (email != null && !email.isEmpty()) {
@@ -174,7 +174,7 @@
                     user.setPhone(phone);
                 }
                 
-                if (address != null) {
+                if (address != null) { // Keep this if 'address' is still a user property
                     user.setAddress(address);
                 }
                 
@@ -193,10 +193,10 @@
         
         <header>
             <div class="header-container">
-                <div class="logo"><a href="index.jsp">IoTBay</a></div>
+                <div class="logo"><a href="index.jsp">IoTBay</a></div> <%-- Changed to index.jsp as per original main branch --%>
                 <div class="nav-links">
-                    <a href="main.jsp">Back to Dashboard</a>
-                    <a href="logout.jsp">Logout</a>
+                    <a href="main.jsp">Back to Dashboard</a> <%-- Retained main.jsp link --%>
+                    <a href="LogoutServlet">Logout</a> <%-- Changed to LogoutServlet as per feature-1 --%>
                 </div>
             </div>
         </header>
@@ -210,38 +210,41 @@
                 </div>
             <% } %>
             
-            <form action="edit_profile.jsp" method="post">
+            <form action="ProfileServlet" method="post"> <%-- Changed to ProfileServlet as per feature-1 --%>
                 <div class="form-group">
-                    <label for="name">Full Name</label>
-                    <input type="text" id="name" name="name" value="<%= user.getName() %>">
+                    <label for="fullname">Full Name</label> <%-- Changed to 'fullname' --%>
+                    <input type="text" id="fullname" name="fullname" 
+                            value="<%= user.getName() %>" required> <%-- Changed to getName() for consistency --%>
                 </div>
                 
                 <div class="form-group">
                     <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" value="<%= user.getEmail() %>">
+                    <input type="email" id="email" name="email" 
+                            value="<%= user.getEmail() %>" required>
                 </div>
                 
                 <div class="form-row">
                     <div class="form-group">
                         <label for="phone">Phone Number</label>
-                        <input type="tel" id="phone" name="phone" value="<%= user.getPhone() != null ? user.getPhone() : "" %>">
+                        <input type="tel" id="phone" name="phone" 
+                               value="<%= user.getPhone() != null ? user.getPhone() : "" %>"> <%-- Retained null check from main --%>
                     </div>
                     
-                    <div class="form-group">
+                    <div class="form-group"> <%-- Retained address field from main for data consistency if applicable --%>
                         <label for="address">Address</label>
                         <input type="text" id="address" name="address" value="<%= user.getAddress() != null ? user.getAddress() : "" %>">
                     </div>
                 </div>
                 
                 <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" placeholder="Enter new password">
+                    <label for="password">New Password</label> <%-- Changed label for clarity --%>
+                    <input type="password" id="password" name="password" placeholder="Leave blank to keep current">
                 </div>
                 
-                <input type="hidden" name="submitted" value="true">
+                <input type="hidden" name="submitted" value="true"> <%-- Retained for main branch's processing logic --%>
                 
                 <div class="btn-container">
-                    <a href="main.jsp" class="btn cancel">Cancel</a>
+                    <a href="main.jsp" class="btn cancel">Cancel</a> <%-- Retained main.jsp link --%>
                     <button type="submit" class="btn">Save Changes</button>
                 </div>
             </form>

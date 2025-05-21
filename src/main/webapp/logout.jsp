@@ -87,7 +87,8 @@
         <%
             // Get user before invalidating session
             User user = (User)session.getAttribute("user");
-            String userName = user != null ? user.getName() : "Guest";
+            // Assuming User.getName() returns the correct field (e.g., 'name' or 'fullname')
+            String userName = user != null ? user.getName() : "Guest"; 
             
             // Invalidate the session
             session.invalidate();

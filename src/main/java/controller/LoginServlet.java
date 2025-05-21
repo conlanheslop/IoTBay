@@ -45,7 +45,7 @@ public class LoginServlet extends HttpServlet {
 
             Staff staff = new Staff(
                     "STAFF-ADMIN",           // id
-                    "System Administrator",  // name
+                    "Staff",  // name
                     STAFF_PASS,
                     STAFF_EMAIL,
                     null,                    // phone

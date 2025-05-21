@@ -9,49 +9,61 @@ import java.util.List;
 
 public class UserManager {
 
-    private Statement st;
+    private final Statement st; // Using 'final' from feature-1
 
     public UserManager(Connection conn) throws SQLException {
-        st = conn.createStatement();
+        this.st = conn.createStatement(); // Using 'this.st' from feature-1
     }
 
     // CREATE
-    public void addUser(String id, String name, String password, String email, String phone, String address,
-                        Date lastLoginDate, Date createdDate, Date lastModifiedDate) throws SQLException {
+    public void addUser(String id,
+                        String name, // Standardized to 'name' (from main, and aligns with DB column)
+                        String password,
+                        String email,
+                        String phone,
+                        String address,
+                        Date lastLoginDate,
+                        Date createdDate,
+                        Date lastModifiedDate) throws SQLException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        // Adopting null-safe date formatting from feature-1 for all dates
         String loginStr = (lastLoginDate != null) ? "'" + sdf.format(lastLoginDate) + "'" : "NULL";
-        String createdStr = "'" + sdf.format(createdDate) + "'";
-        String modifiedStr = "'" + sdf.format(lastModifiedDate) + "'";
+        String createdStr = (createdDate != null) ? "'" + sdf.format(createdDate) + "'" : "NULL";
+        String modifiedStr = (lastModifiedDate != null) ? "'" + sdf.format(lastModifiedDate) + "'" : "NULL";
 
+        // Using main branch's SQL concatenation style for readability, with 'name' column
         String query = "INSERT INTO USER (id, name, password, email, phone, address, lastLoginDate, createdDate, lastModifiedDate) VALUES (" +
-                "'" + id + "'," +
-                "'" + name + "'," +
-                "'" + password + "'," +
-                "'" + email + "'," +
-                "'" + phone + "'," +
-                "'" + address + "'," +
-                loginStr + "," +
-                createdStr + "," +
-                modifiedStr + ")";
+                       "'" + id + "'," +
+                       "'" + name + "'," +
+                       "'" + password + "'," +
+                       "'" + email + "'," +
+                       "'" + phone + "'," +
+                       "'" + address + "'," +
+                       loginStr + "," +
+                       createdStr + "," +
+                       modifiedStr + ")";
         st.executeUpdate(query);
     }
 
     // READ
     public User findUser(String id) throws SQLException {
-        String query = "SELECT * FROM USER WHERE id = '" + id + "'";
+        String query = "SELECT * FROM USER WHERE id='" + id + "'";
         ResultSet rs = st.executeQuery(query);
 
         if (rs.next()) {
+            // Ensuring String id is used for User object, consistent with main and the requirement
+            String userIdFromDb = rs.getString("id"); // id from DB
             String name = rs.getString("name");
             String password = rs.getString("password");
             String email = rs.getString("email");
             String phone = rs.getString("phone");
-            String address = rs.getString("address");
-            Date lastLoginDate = rs.getTimestamp("lastLoginDate");
-            Date createdDate = rs.getTimestamp("createdDate");
-            Date lastModifiedDate = rs.getTimestamp("lastModifiedDate");
+            String address = rs.getString("address"); // Preserving field from main
+            Date lastLoginDate = rs.getTimestamp("lastLoginDate"); // Preserving field from main
+            Date createdDate = rs.getTimestamp("createdDate"); // Preserving field from main
+            Date lastModifiedDate = rs.getTimestamp("lastModifiedDate"); // Preserving field from main
 
-            User user = new User(id, name, password, email, phone, address);
+            // Using main's User instantiation and setters, which handles more fields and String ID
+            User user = new User(userIdFromDb, name, password, email, phone, address);
             user.setLastLoginDate(lastLoginDate);
             user.setCreatedDate(createdDate);
             user.setLastModifiedDate(lastModifiedDate);
@@ -61,26 +73,34 @@ public class UserManager {
     }
 
     // UPDATE
-    public void updateUser(String id, String name, String password, String email, String phone, String address,
-                           Date lastLoginDate, Date lastModifiedDate) throws SQLException {
+    public void updateUser(String id,
+                           String name, // Standardized to 'name'
+                           String password,
+                           String email,
+                           String phone,
+                           String address,
+                           Date lastLoginDate,
+                           Date lastModifiedDate) throws SQLException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        // Adopting null-safe date formatting from feature-1
         String loginStr = (lastLoginDate != null) ? "'" + sdf.format(lastLoginDate) + "'" : "NULL";
-        String modifiedStr = "'" + sdf.format(lastModifiedDate) + "'";
+        String modifiedStr = (lastModifiedDate != null) ? "'" + sdf.format(lastModifiedDate) + "'" : "NULL";
 
         String query = "UPDATE USER SET " +
-                "name='" + name + "', " +
-                "password='" + password + "', " +
-                "email='" + email + "', " +
-                "phone='" + phone + "', " +
-                "address='" + address + "', " +
-                "lastLoginDate=" + loginStr + ", " +
-                "lastModifiedDate=" + modifiedStr + " " +
-                "WHERE id='" + id + "'";
+                       "name='" + name + "', " +
+                       "password='" + password + "', " +
+                       "email='" + email + "', " +
+                       "phone='" + phone + "', " +
+                       "address='" + address + "', " +
+                       "lastLoginDate=" + loginStr + ", " +
+                       "lastModifiedDate=" + modifiedStr +
+                       " WHERE id='" + id + "'";
         st.executeUpdate(query);
     }
 
     // DELETE
     public void deleteUser(String id) throws SQLException {
+        // This method was identical in both branches
         String query = "DELETE FROM USER WHERE id='" + id + "'";
         st.executeUpdate(query);
     }
@@ -92,17 +112,19 @@ public class UserManager {
         ResultSet rs = st.executeQuery(query);
 
         while (rs.next()) {
-            String id = rs.getString("id");
+            // Ensuring String id is used for User object, consistent with main and the requirement
+            String userId = rs.getString("id");
             String name = rs.getString("name");
             String password = rs.getString("password");
             String email = rs.getString("email");
             String phone = rs.getString("phone");
-            String address = rs.getString("address");
-            Date lastLoginDate = rs.getTimestamp("lastLoginDate");
-            Date createdDate = rs.getTimestamp("createdDate");
-            Date lastModifiedDate = rs.getTimestamp("lastModifiedDate");
+            String address = rs.getString("address"); // Preserving field from main
+            Date lastLoginDate = rs.getTimestamp("lastLoginDate"); // Preserving field from main
+            Date createdDate = rs.getTimestamp("createdDate"); // Preserving field from main
+            Date lastModifiedDate = rs.getTimestamp("lastModifiedDate"); // Preserving field from main
 
-            User user = new User(id, name, password, email, phone, address);
+            // Using main's User instantiation and setters
+            User user = new User(userId, name, password, email, phone, address);
             user.setLastLoginDate(lastLoginDate);
             user.setCreatedDate(createdDate);
             user.setLastModifiedDate(lastModifiedDate);

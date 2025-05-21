@@ -1,225 +1,227 @@
-<%@ page import="model.User"%>
-<%@ page import="model.Staff"%>
-<%@ page import="model.Customer"%>
-<%@ page import="java.util.Date"%>
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page import="model.User" %>
+<%@ page import="model.Staff" %>  <%-- Added from main for instanceof check --%>
+<%@ page import="model.Customer" %> <%-- Added from main for instanceof check (though User might suffice) --%>
+<%@ page import="java.text.SimpleDateFormat" %> <%-- For formatting date --%>
+<%@ page session="true" %>
+<%
+    User u = (User) session.getAttribute("user");
+    if (u == null) {
+        // If no user in session, redirect to login page with a message
+        response.sendRedirect("login.jsp?error=session_expired");
+        return;
+    }
+    // Define a date formatter
+    SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy, HH:mm:ss");
+%>
 <html>
-    <head>
-        <title>IoTBay - Welcome</title>
-        <style>
-            * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-                font-family: Arial, sans-serif;
-            }
-            
-            body {
-                background-color: #f4f4f4;
-            }
-            
-            header {
-                background-color: #333;
-                color: white;
-                padding: 1rem;
-            }
-            
-            .header-container {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                max-width: 1200px;
-                margin: 0 auto;
-            }
-            
-            .logo {
-                font-size: 1.5rem;
-                font-weight: bold;
-            }
-            
-            .logo a {
-                color: white;
-                text-decoration: none;
-            }
-            
-            .welcome-container {
-                max-width: 800px;
-                margin: 50px auto;
-                background-color: white;
-                padding: 30px;
-                border-radius: 5px;
-                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-                text-align: center;
-            }
-            
-            .welcome-container h1 {
-                color: #007BFF;
-                margin-bottom: 20px;
-            }
-            
-            .welcome-info {
-                margin-bottom: 30px;
-                text-align: left;
-                padding: 20px;
-                background-color: #f9f9f9;
-                border-radius: 5px;
-            }
-            
-            .welcome-info p {
-                margin-bottom: 10px;
-            }
-            
-            .btn-container {
-                margin-top: 30px;
-            }
-            
-            .btn {
-                display: inline-block;
-                background-color: #007BFF;
-                color: white;
-                padding: 10px 20px;
-                border: none;
-                border-radius: 5px;
-                cursor: pointer;
-                text-decoration: none;
-                font-weight: bold;
-                margin: 0 10px;
-            }
-            
-            .btn:hover {
-                background-color: #0056b3;
-            }
-            
-            footer {
-                background-color: #333;
-                color: white;
-                text-align: center;
-                padding: 1rem;
-                margin-top: 2rem;
-                position: fixed;
-                bottom: 0;
-                width: 100%;
-            }
-        </style>
-    </head>
-    <body>
-        <%
-            // Process form data
-            String action = request.getParameter("action");
-            String name = request.getParameter("name");
-            String email = request.getParameter("email");
-            String password = request.getParameter("password");
-            String phone = request.getParameter("phone");
-            String address = request.getParameter("address");
-            String tos = request.getParameter("tos");
-            
-            User user = null;
-            String message = "";
-            
-            // Process login or registration
-            if (action != null) {
-                if (action.equals("login")) {
-                    // Handle login
-                    if (email != null && password != null) {
-                        // Check if it's the staff account
-                        if (email.equals("Staff@admin.com") && password.equals("123")) {
-                            user = new Staff(email, "Staff", password);
-                            user.setId("STAFF001");
-                            message = "Staff login successful!";
-                        } else {
-                            // If not create a new customer object
-                            user = new Customer(email, "Customer User", password);
-                            user.setId("U0000001");
-                            message = "Customer login successful!";
-                        }
-                        
-                        // Set last login date
-                        user.setLastLoginDate(new Date());
-                        
-                        // Store user in session
-                        session.setAttribute("user", user);
-                    }
-                } else if (action.equals("register")) {
-                    // Handle registration
-                    if (email != null && name != null && password != null && tos != null) {
-                        // In a real app, we should check if email already exists in the database
-                        // For demo purposes, we'll just create a new Customer
-                        Customer customer = new Customer(email, name, password);
-                        customer.setId("CUST001");
-                        
-                        if (phone != null && !phone.isEmpty()) {
-                            customer.setPhone(phone);
-                        }
-                        
-                        if (address != null && !address.isEmpty()) {
-                            customer.setAddress(address);
-                        }
-                        
-                        customer.setIsRegistered(true);
-                        message = "Registration successful!";
-                        
-                        // Store user in session
-                        session.setAttribute("user", customer);
-                        user = customer;
-                    } else {
-                        // Registration failed (redirect back to register page)
-                        response.sendRedirect("register.jsp?error=validation");
-                        return;
-                    }
-                }
-            }
-            
-            // If user is still null, something went wrong
-            if (user == null) {
-                // Login or registration failed (redirect back)
-                if (action != null && action.equals("login")) {
-                    response.sendRedirect("login.jsp?error=true");
-                } else {
-                    response.sendRedirect("register.jsp?error=validation");
-                }
-                return;
-            }
-        %>
+<head>
+    <title>IoTBay - Welcome</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f4f4f4;
+            padding-bottom: 60px; /* Add padding to prevent footer overlap */
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            padding: 1rem;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .logo a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .welcome-container {
+            max-width: 800px;
+            margin: 50px auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .welcome-container h1 {
+            color: #007BFF;
+            margin-bottom: 20px;
+        }
+
+        .success-message { /* From feature-1 */
+            background-color: #d4edda;
+            color: #155724;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            text-align: center;
+        }
         
-        <header>
-            <div class="header-container">
-                <div class="logo"><a href="index.jsp">IoTBay</a></div>
+        .info-message-custom { /* For general messages, like login success */
+            background-color: #d1ecf1;
+            color: #0c5460;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .welcome-info {
+            margin-bottom: 30px;
+            text-align: left;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+
+        .welcome-info p {
+            margin-bottom: 10px;
+        }
+
+        .btn-container {
+            margin-top: 30px;
+        }
+        .btn-container form {
+            margin: 5px 0; /* Spacing for multiple buttons/forms */
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 5px; /* Added margin for better spacing */
+        }
+        .btn.btn-danger { /* For delete/cancel buttons */
+            background-color: #dc3545;
+        }
+        .btn.btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            margin-top: 2rem; 
+            position: fixed; /* Or 'absolute' if fixed causes issues with long content */
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo"><a href="index.jsp">IoTBay</a></div>
+            <div>
+                <span style="color:white; margin-right: 15px;">Hello, <%= u.getName() %></span>
+                <a href="LogoutServlet" class="btn" style="background-color: #6c757d;">Logout</a>
             </div>
-        </header>
-        
-        <div class="welcome-container">
-            <h1>Welcome to IoTBay!</h1>
-            
-            <p><%= message %></p>
-            
-            <div class="welcome-info">
-                <p><strong>Name:</strong> <%= user.getName() %></p>
-                <p><strong>Email:</strong> <%= user.getEmail() %></p>
-                <p><strong>Account Type:</strong> 
-                <% if (user instanceof Staff) { %>
+        </div>
+    </header>
+
+    <div class="welcome-container">
+        <h1>Welcome, <%= u.getName() %>!</h1> <%-- Changed from getFullname --%>
+
+        <c:if test="${param.updated == 'true'}">
+            <div class="success-message">
+                Your profile was updated successfully.
+            </div>
+        </c:if>
+        <c:if test="${param.loginSuccess == 'true'}">
+            <div class="info-message-custom">
+                You have successfully logged in.
+            </div>
+        </c:if>
+        <%-- Message from main branch logic --%>
+        <% String message = (String) request.getAttribute("message");
+           if (message != null) { %>
+             <div class="info-message-custom"><%= message %></div>
+        <% } %>
+
+
+        <div class="welcome-info">
+            <p><strong>User ID:</strong> <%= u.getId() %></p> <%-- Assuming ID is String --%>
+            <p><strong>Name:</strong> <%= u.getName() %></p>
+            <p><strong>Email:</strong> <%= u.getEmail() %></p>
+            <p><strong>Phone:</strong> <%= (u.getPhone() != null && !u.getPhone().isEmpty() ? u.getPhone() : "Not Provided") %></p>
+            <p><strong>Address:</strong> <%= (u.getAddress() != null && !u.getAddress().isEmpty() ? u.getAddress() : "Not Provided") %></p>
+            <p><strong>Account Type:</strong> 
+                <% if (u instanceof Staff) { %>
                     Staff
-                <% } else { %>
+                <% } else if (u instanceof Customer) { %>
                     Customer
+                <% } else { %>
+                    User
                 <% } %>
-                </p>
-                <p><strong>Login Time:</strong> <%= user.getLastLoginDate() %></p>
-            </div>
-            
-            <p>You have been successfully logged in. You can now access your account and start shopping for IoT devices.</p>
-            
-            <div class="btn-container">
-                <a href="main.jsp" class="btn">Continue to 
-                <% if (user instanceof Staff) { %>
+            </p>
+            <p><strong>Last Login:</strong> 
+                <%= (u.getLastLoginDate() != null ? sdf.format(u.getLastLoginDate()) : "N/A") %>
+            </p>
+             <p><strong>Member Since:</strong> 
+                <%= (u.getCreatedDate() != null ? sdf.format(u.getCreatedDate()) : "N/A") %>
+            </p>
+        </div>
+        
+        <p>You can now manage your account and explore IoTBay.</p>
+
+        <div class="btn-container">
+            <%-- "Continue to" button from main branch --%>
+            <a href="main.jsp" class="btn">Continue to 
+                <% if (u instanceof Staff) { %>
                     Dashboard
                 <% } else { %>
                     Shop
                 <% } %>
-                </a>
-            </div>
+            </a>
+            <a href="ProfileServlet" class="btn">Edit Profile</a>
+            <a href="ViewLogsServlet" class="btn">View Access Logs</a>
+             <%-- Only show cancel registration if user is not staff (or based on other logic) --%>
+            <% if (!(u instanceof Staff)) { %>
+            <form action="DeleteAccountServlet" method="post" style="display:inline" onsubmit="return confirm('Are you sure you want to delete your account? This action cannot be undone.');">
+                <input type="hidden" name="userId" value="<%= u.getId() %>">
+                <button type="submit" class="btn btn-danger">Delete My Account</button>
+            </form>
+            <% } %>
+            <%-- Logout button moved to header for better UX, but can be kept here too if desired --%>
+            <%-- <a href="LogoutServlet" class="btn">Logout</a> --%>
         </div>
-        
-        <footer>
-            <p>2025 IoTBay. wrk1-G5-06.</p>
-        </footer>
-    </body>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 IoTBay. wrk1-G5-06.</p>
+    </footer>
+</body>
 </html>

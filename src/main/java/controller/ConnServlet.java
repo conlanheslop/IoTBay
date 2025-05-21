@@ -77,6 +77,7 @@ public class ConnServlet extends HttpServlet {
             cartItemManager = new CartItemManager(conn);
             cartManager = new CartManager(conn);
             orderManager = new OrderManager(conn);
+            userManager = new UserManager(conn);
         } catch (SQLException ex) {
 
             Logger.getLogger(ConnServlet.class.getName()).log(Level.SEVERE, null, ex);
@@ -92,6 +93,7 @@ public class ConnServlet extends HttpServlet {
         session.setAttribute("paymentManager", paymentManager);
         session.setAttribute("cartItemManager", cartItemManager);
         session.setAttribute("cartManager", cartManager);
+        session.setAttribute("userManager", userManager);
     }   
 
      

@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+pageEncoding="UTF-8"%>
 <%@ page import="java.time.LocalDateTime"%>
 <%@ page import="java.time.format.DateTimeFormatter"%>
 <%@ page import="model.User"%>
@@ -49,18 +49,10 @@
       </div>
       <% } %>
 
-      <form class="delivery-form" action="delivery" method="post">
+      <form class="delivery-form" action="delivery?action=create" method="post">
         <input type="hidden" name="action" value="create" />
-
-        <div>
-          <label for="orderId">Order ID:</label>
-          <input
-            type="text"
-            id="orderId"
-            name="orderId"
-            required
-          />
-        </div>
+                <%-- Hidden input field for orderId --%>
+        <input type="hidden" name="orderId" value="<%= request.getParameter("orderId") %>" />
 
         <div>
           <label for="deliveringDate">Delivering Date:</label>

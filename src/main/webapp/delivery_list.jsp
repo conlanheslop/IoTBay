@@ -26,15 +26,13 @@
             User user = (User) session.getAttribute("user");
             if (user == null) {
             %>
-            <a href="main.jsp">Browse as Guest</a>
+              <a href="main.jsp">Browse as Guest</a>
             <% } else if (user instanceof Staff) { %>
-            <span>Welcome, <%= user.getName() %></span>
-            <a href="main.jsp">Dashboard</a>
-            <a href="logout.jsp">Logout</a>
+              <a href="main.jsp">Dashboard</a>
+              <a href="logout.jsp">Logout</a>
             <% } else { %>
-            <span>Welcome, <%= user.getName() %></span>
-            <a href="main.jsp">Shop</a>
-            <a href="logout.jsp">Logout</a>
+              <a href="main.jsp">Back to Dashboard</a>
+              <a href="logout.jsp">Logout</a>
             <% } %>
           </div>
         </nav>

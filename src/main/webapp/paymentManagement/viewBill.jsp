@@ -156,7 +156,7 @@
         <div class="total-price">
             Total Price: $<%= String.format("%.2f", totalPrice) %>
         </div>
-        <% if (shipment == null) { %>
+        <% if (delivery == null) { %>
         <form action="CreateShipmentServlet" method="post" style="margin-top: 20px;">
             <input type="hidden" name="orderId" value="<%= order.getOrderId() %>">
             <button type="submit" style="

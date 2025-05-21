@@ -99,7 +99,8 @@ public class BillListServlet extends HttpServlet{
         Date queryDate = null;
         String billId = request.getParameter("billId");
         String dateParameter = request.getParameter("billDate");
-        String userId = (String) session.getAttribute("userId");
+        User user = (User) session.getAttribute("user");
+        String userId;
         
         try {
             if (dateParameter != null) {
@@ -114,8 +115,10 @@ public class BillListServlet extends HttpServlet{
             orderManager = (OrderManager) session.getAttribute("orderManager");
 
             //DEV ONLY
-            if (userId == null) {
+            if (user == null) {
                 userId = "U0000001";
+            }else {
+                userId = user.getId();
             }
 
             List<Order> orderList = orderManager.getOrdersByCustomer(userId);

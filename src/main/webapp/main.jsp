@@ -342,6 +342,11 @@
                 color: #155724;
                 border: 1px solid #c3e6cb;
             }
+
+            input[type="submit"].btn-add-to-cart {
+                border: none;
+                outline: none;
+            }
         </style>
 
         <script>
@@ -552,9 +557,12 @@
                 <!-- Product Catalogue for all users -->
                 <h1>Product Catalogue</h1>
 
-                <a href="cart.jsp" class="btn btn-primary">
-                    My Cart
-                </a>
+                <% if (!isStaff) { %>
+                    <!-- This button only for Customer User -->
+                    <a href="cart.jsp" class="btn btn-primary">
+                        My Cart
+                    </a>
+                <% } %>
 
                 <% if (isStaff) { %>
                     <div class="admin-actions">

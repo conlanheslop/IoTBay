@@ -368,6 +368,7 @@
                         <% } else { %>
                             <a href="#">My Orders</a>
                             <a href="edit_profile.jsp">My Profile</a>
+                            <a href="BillListServlet">Payment</a>
                             <a href="#">Cart</a>
                         <% } %>
                         <a href="logout.jsp">Logout</a>

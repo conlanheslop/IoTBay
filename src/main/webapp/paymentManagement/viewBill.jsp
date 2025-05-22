@@ -157,14 +157,14 @@
             Total Price: $<%= String.format("%.2f", totalPrice) %>
         </div>
         <% if (delivery == null) { %>
-        <form action="CreateShipmentServlet" method="post" style="margin-top: 20px;">
-            <input type="hidden" name="orderId" value="<%= order.getOrderId() %>">
-            <button type="submit" style="
-                background-color: #28a745; color: white; border: none;
-                padding: 10px 20px; border-radius: 5px; cursor: pointer;
-            ">Make Shipment</button>
-        </form>
-    <% } %>
+            <form action="delivery?action=create-form" method="get" style="margin-top: 20px;">
+                <input type="hidden" name="orderId" value="<%= order.getOrderId() %>">
+                <button type="submit" style="
+                    background-color: #28a745; color: white; border: none;
+                    padding: 10px 20px; border-radius: 5px; cursor: pointer;
+                ">Make Delivery</button>
+            </form>
+        <% } %>
     </div>
 </div>
 

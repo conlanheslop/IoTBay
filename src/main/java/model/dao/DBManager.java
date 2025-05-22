@@ -15,7 +15,7 @@ import java.util.UUID;
  * Tables:
  *   USER(id, name, email, password, phone, address, createdDate,
  *        lastModifiedDate, lastLoginDate)
- *   AccessLog(id, userId, loginDate, logoutDate)
+ *   AccessLog(id, userId, loginDate, logoutTime)
  */
 public class DBManager {
 
@@ -29,16 +29,10 @@ public class DBManager {
 
     /* ───────────────────────────── USER CRUD ────────────────────────────── */
 
-    /**
-     * Insert a user and return the generated UUID primary-key.
-     */
     public String addUser(User u) throws SQLException {
-        /* 1. Generate a primary-key immediately (TEXT PK, so SQLite
-              will *not* make one for us).                                   */
         String id = UUID.randomUUID().toString();
         u.setId(id);
 
-        /* 2. Insert the row — include the id column explicitly              */
         String sql = "INSERT INTO " + USER_TBL +
                      "(id, name, email, password, phone, address, " +
                      " createdDate, lastModifiedDate) " +
@@ -55,7 +49,7 @@ public class DBManager {
             ps.setTimestamp(8, new Timestamp(u.getLastModifiedDate().getTime()));
             ps.executeUpdate();
         }
-        return id;                // always non-null
+        return id;
     }
 
     public User getUserByEmail(String email) throws SQLException {
@@ -146,8 +140,9 @@ public class DBManager {
     public void updateAccessLogLogout(int logId, Timestamp logoutTs)
             throws SQLException {
 
+        // Changed: logoutDate ➔ logoutTime
         String sql = "UPDATE " + ACCESS_LOG_TBL +
-                     " SET logoutDate = ? WHERE id = ?";
+                     " SET logoutTime = ? WHERE id = ?";
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setTimestamp(1, logoutTs);
@@ -157,8 +152,9 @@ public class DBManager {
     }
 
     public List<AccessLog> getAccessLogs(String userId) throws SQLException {
+        // Changed: logoutDate AS logoutTime ➔ logoutTime
         String sql = "SELECT id, userId, loginDate AS loginTime, " +
-                     "       logoutDate AS logoutTime " +
+                     "       logoutTime " +
                      "FROM " + ACCESS_LOG_TBL +
                      " WHERE userId = ? ORDER BY loginDate DESC";
 
@@ -178,8 +174,9 @@ public class DBManager {
         Timestamp start = Timestamp.valueOf(day.atStartOfDay());
         Timestamp end   = Timestamp.valueOf(day.plusDays(1).atStartOfDay());
 
+        // Changed: logoutDate AS logoutTime ➔ logoutTime
         String sql = "SELECT id, userId, loginDate AS loginTime, " +
-                     "       logoutDate AS logoutTime " +
+                     "       logoutTime " +
                      "FROM " + ACCESS_LOG_TBL +
                      " WHERE userId = ? AND loginDate >= ? AND loginDate < ? " +
                      "ORDER BY loginDate DESC";

@@ -65,6 +65,18 @@ CREATE TABLE Customer (
     FOREIGN KEY (userId) REFERENCES USER(id)
 );
 
+-- Drop the table if it exists
+DROP TABLE IF EXISTS AccessLog;
+
+-- Create the access_log table
+CREATE TABLE AccessLog (
+    id INT PRIMARY KEY,
+    userId VARCHAR(8) NOT NULL,
+    loginDate TIMESTAMP,
+    logoutTime TIMESTAMP,
+    FOREIGN KEY (userId) REFERENCES USER(id)
+);
+
 
 DROP TABLE IF EXISTS Staff;
 

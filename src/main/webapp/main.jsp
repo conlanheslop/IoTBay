@@ -439,7 +439,6 @@
                     <% } else { %>
                         <span>Welcome, <%= user.getName() %></span>
                         <% if (isStaff) { %>
-                            <a href="#">Inventory</a>
                             <a href="#">Orders</a>
                             <a href="#">Customers</a>
                         <% } else { %>

@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -100,7 +101,7 @@ public class DeliveryServlet extends HttpServlet {
   )
     throws ServletException, IOException {
     RequestDispatcher dispatcher = request.getRequestDispatcher(
-      "createDelivery.jsp"
+      "delivery_form.jsp"  // CORRECTED: This should be delivery_form.jsp (your create form)
     );
     dispatcher.forward(request, response);
   }
@@ -118,7 +119,7 @@ public class DeliveryServlet extends HttpServlet {
       if (delivery != null) {
         request.setAttribute("delivery", delivery);
         RequestDispatcher dispatcher = request.getRequestDispatcher(
-          "deliveryDetails.jsp"
+          "delivery_details.jsp"  // CORRECTED: This should be delivery_details.jsp
         );
         dispatcher.forward(request, response);
       } else {
@@ -150,7 +151,7 @@ public class DeliveryServlet extends HttpServlet {
       if (delivery != null) {
         request.setAttribute("delivery", delivery);
         RequestDispatcher dispatcher = request.getRequestDispatcher(
-          "updateDelivery.jsp"
+          "delivery_update.jsp"  // CORRECTED: This should be delivery_update.jsp
         );
         dispatcher.forward(request, response);
       } else {
@@ -179,7 +180,7 @@ public class DeliveryServlet extends HttpServlet {
       List<Delivery> deliveries = deliveryManager.fetchAllDeliveries();
       request.setAttribute("deliveries", deliveries);
       RequestDispatcher dispatcher = request.getRequestDispatcher(
-        "delivery_form.jsp"
+        "delivery_list.jsp"  // CORRECTED: This should be delivery_list.jsp
       );
       dispatcher.forward(request, response);
     } catch (Exception e) {
@@ -188,7 +189,7 @@ public class DeliveryServlet extends HttpServlet {
         "Error retrieving deliveries: " + e.getMessage()
       );
       RequestDispatcher dispatcher = request.getRequestDispatcher(
-        "delivery_form.jsp"
+        "delivery_list.jsp"  // CORRECTED: This should be delivery_list.jsp
       );
       dispatcher.forward(request, response);
     }
@@ -202,7 +203,9 @@ public class DeliveryServlet extends HttpServlet {
   )
     throws ServletException, IOException {
     try {
-      String deliveryId = request.getParameter("deliveryId");
+      // Generate a unique delivery ID
+      String deliveryId = "DEL" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+      
       String orderId = request.getParameter("orderId");
       String deliveringDateStr = request.getParameter("deliveringDate");
       String status = request.getParameter("status");
@@ -278,7 +281,7 @@ public class DeliveryServlet extends HttpServlet {
       );
     } catch (ParseException e) {
       request.setAttribute("errorMessage", "Invalid date format: " + e.getMessage());
-      response.sendRedirect("delivery?action=list");
+      showUpdateForm(request, response, deliveryManager);
     } catch (SQLException e) {
       request.setAttribute(
         "errorMessage",
@@ -346,8 +349,9 @@ public class DeliveryServlet extends HttpServlet {
       }
 
       request.setAttribute("deliveries", deliveries);
+      request.setAttribute("searchTerm", searchTerm);
       RequestDispatcher dispatcher = request.getRequestDispatcher(
-        "deliveryManagement.jsp"
+        "delivery_list.jsp"  // CORRECTED: This should be delivery_list.jsp
       );
       dispatcher.forward(request, response);
     } catch (Exception e) {

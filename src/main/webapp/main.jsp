@@ -446,7 +446,7 @@
                             <a href="edit_profile.jsp">My Profile</a>
                             <a href="cart.jsp">Cart</a>
                             <a href="BillListServlet">Payment</a>
-                            <a href="delivery_list.jsp">Delivery</a>
+                            <a href="delivery?action=list">Delivery</a> 
                         <% } %>
                         <a href="logout.jsp">Logout</a>
                     <% } %>

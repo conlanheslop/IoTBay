@@ -1,88 +1,50 @@
 package model.dao;
 
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 import model.Staff;
+
+import java.sql.*;
 
 public class StaffManager {
 
-    private Statement st;
+    private static final String STAFF_TBL = "\"Staff\"";
+    private static final String USER_TBL  = "\"USER\"";
+    private final Connection conn;
 
-    public StaffManager(Connection conn) throws SQLException {
-        st = conn.createStatement();
+    public StaffManager(Connection conn) {
+        this.conn = conn;
     }
 
-    // Add a staff member with position (from feature-1)
-    public void addStaff(String userId, String position) throws SQLException {
-        String sql = "INSERT INTO Staff(userId, position) VALUES('"
-                   + userId + "', '"
-                   + position.replace("'", "''") + "')";
-        st.executeUpdate(sql);
-    }
-
-    // Preserve main's addStaff without position (assuming position can be nullable)
+    // Add a staff record for a given userId
     public void addStaff(String userId) throws SQLException {
-        addStaff(userId, ""); // Default empty position or handle as needed
-    }
-
-    // Fetch all staff with position mapped to address (merged from both branches)
-    public List<Staff> fetchAllStaff() throws SQLException {
-        String query = ""
-            + "SELECT u.id, u.name, u.email, u.password, u.phone, u.address, s.position "
-            + "FROM users u "
-            + "JOIN Staff s ON u.id = s.userId";
-        ResultSet rs = st.executeQuery(query);
-
-        List<Staff> staffList = new ArrayList<>();
-        while (rs.next()) {
-            String id = rs.getString("id");
-            String name = rs.getString("name");
-            String email = rs.getString("email");
-            String password = rs.getString("password");
-            String phone = rs.getString("phone");
-            String address = rs.getString("address");
-            String position = rs.getString("position");
-
-            // Map position to address to maintain compatibility
-            staffList.add(new Staff(id, name, password, email, phone, position));
+        String sql = "INSERT INTO " + STAFF_TBL + " (userId) VALUES (?)";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, userId);
+            ps.executeUpdate();
         }
-        return staffList;
     }
 
-    // Find staff by userId including position (merged approach)
+    // Find staff by userId; returns a Staff object or null
     public Staff findStaff(String userId) throws SQLException {
-        String query = ""
-            + "SELECT u.id, u.name, u.email, u.password, u.phone, u.address, s.position "
-            + "FROM users u "
-            + "JOIN Staff s ON u.id = s.userId "
-            + "WHERE u.id = '" + userId + "'";
-        ResultSet rs = st.executeQuery(query);
-
-        if (rs.next()) {
-            String id = rs.getString("id");
-            String name = rs.getString("name");
-            String email = rs.getString("email");
-            String password = rs.getString("password");
-            String phone = rs.getString("phone");
-            String position = rs.getString("position");
-
-            return new Staff(id, name, password, email, phone, position);
+        String sql = "SELECT u.id, u.name, u.email, u.password, u.phone, u.address, s.position " +
+                     "FROM " + USER_TBL + " u " +
+                     "JOIN " + STAFF_TBL + " s ON u.id = s.userId " +
+                     "WHERE u.id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, userId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Staff s = new Staff(
+                        rs.getString("id"),
+                        rs.getString("name"),
+                        rs.getString("password"),
+                        rs.getString("email"),
+                        rs.getString("phone"),
+                        rs.getString("address")
+                    );
+                    return s;
+                }
+            }
         }
         return null;
-    }
-
-    // Update position from feature-1
-    public void updateStaff(String userId, String newPosition) throws SQLException {
-        String sql = "UPDATE Staff SET position = '"
-                   + newPosition.replace("'", "''") + "'"
-                   + " WHERE userId = '" + userId + "'";
-        st.executeUpdate(sql);
-    }
-
-    // Delete staff (compatible with both branches)
-    public void deleteStaff(String userId) throws SQLException {
-        String sql = "DELETE FROM Staff WHERE userId = '" + userId + "'";
-        st.executeUpdate(sql);
     }
 }

@@ -1,8 +1,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page import="model.User" %>
-<%@ page import="model.Staff" %>  <%-- Added from main for instanceof check --%>
-<%@ page import="model.Customer" %> <%-- Added from main for instanceof check (though User might suffice) --%>
-<%@ page import="java.text.SimpleDateFormat" %> <%-- For formatting date --%>
+<%@ page import="model.Staff" %>  
+<%@ page import="model.Customer" %> 
+<%@ page import="java.text.SimpleDateFormat" %> 
 <%@ page session="true" %>
 <%
     User u = (User) session.getAttribute("user");
@@ -146,82 +146,64 @@
         <div class="header-container">
             <div class="logo"><a href="index.jsp">IoTBay</a></div>
             <div>
-                <span style="color:white; margin-right: 15px;">Hello, <%= u.getName() %></span>
-                <a href="LogoutServlet" class="btn" style="background-color: #6c757d;">Logout</a>
+                <span style="margin-right:15px;">Hello, <%= u.getName() %></span>
+                <a href="LogoutServlet" class="btn" style="background-color:#6c757d;">Logout</a>
             </div>
         </div>
     </header>
 
     <div class="welcome-container">
-        <h1>Welcome, <%= u.getName() %>!</h1> <%-- Changed from getFullname --%>
+        <h1>Welcome, <%= u.getName() %>!</h1>
 
         <c:if test="${param.updated == 'true'}">
-            <div class="success-message">
-                Your profile was updated successfully.
-            </div>
+            <div class="success-message">Your profile was updated successfully.</div>
         </c:if>
         <c:if test="${param.loginSuccess == 'true'}">
-            <div class="info-message-custom">
-                You have successfully logged in.
-            </div>
+            <div class="info-message-custom">You have successfully logged in.</div>
         </c:if>
-        <%-- Message from main branch logic --%>
         <% String message = (String) request.getAttribute("message");
            if (message != null) { %>
-             <div class="info-message-custom"><%= message %></div>
+            <div class="info-message-custom"><%= message %></div>
         <% } %>
 
-
         <div class="welcome-info">
-            <p><strong>User ID:</strong> <%= u.getId() %></p> <%-- Assuming ID is String --%>
+            <p><strong>User ID:</strong> <%= u.getId() %></p>
             <p><strong>Name:</strong> <%= u.getName() %></p>
             <p><strong>Email:</strong> <%= u.getEmail() %></p>
-            <p><strong>Phone:</strong> <%= (u.getPhone() != null && !u.getPhone().isEmpty() ? u.getPhone() : "Not Provided") %></p>
-            <p><strong>Address:</strong> <%= (u.getAddress() != null && !u.getAddress().isEmpty() ? u.getAddress() : "Not Provided") %></p>
-            <p><strong>Account Type:</strong> 
-                <% if (u instanceof Staff) { %>
-                    Staff
-                <% } else if (u instanceof Customer) { %>
-                    Customer
-                <% } else { %>
-                    User
-                <% } %>
+            <p><strong>Phone:</strong> <%= (u.getPhone() != null && !u.getPhone().isEmpty()) ? u.getPhone() : "Not Provided" %></p>
+            <p><strong>Address:</strong> <%= (u.getAddress() != null && !u.getAddress().isEmpty()) ? u.getAddress() : "Not Provided" %></p>
+            <p><strong>Account Type:</strong>
+                <% if (u instanceof Staff) { %>Staff<% }
+                   else if (u instanceof Customer) { %>Customer<% }
+                   else { %>User<% } %>
             </p>
-            <p><strong>Last Login:</strong> 
+            <p><strong>Last Login:</strong>
                 <%= (u.getLastLoginDate() != null ? sdf.format(u.getLastLoginDate()) : "N/A") %>
             </p>
-             <p><strong>Member Since:</strong> 
+            <p><strong>Member Since:</strong>
                 <%= (u.getCreatedDate() != null ? sdf.format(u.getCreatedDate()) : "N/A") %>
             </p>
         </div>
-        
-        <p>You can now manage your account and explore IoTBay.</p>
 
         <div class="btn-container">
-            <%-- "Continue to" button from main branch --%>
-            <a href="main.jsp" class="btn">Continue to 
-                <% if (u instanceof Staff) { %>
-                    Dashboard
-                <% } else { %>
-                    Shop
-                <% } %>
+            <a href="main.jsp" class="btn">
+                Continue to
+                <% if (u instanceof Staff) { %>Dashboard<% } else { %>Shop<% } %>
             </a>
             <a href="ProfileServlet" class="btn">Edit Profile</a>
             <a href="ViewLogsServlet" class="btn">View Access Logs</a>
-             <%-- Only show cancel registration if user is not staff (or based on other logic) --%>
-            <% if (!(u instanceof Staff)) { %>
-            <form action="DeleteAccountServlet" method="post" style="display:inline" onsubmit="return confirm('Are you sure you want to delete your account? This action cannot be undone.');">
-                <input type="hidden" name="userId" value="<%= u.getId() %>">
+
+            <!-- Delete Account available to both Staff and Customers -->
+            <form action="DeleteAccountServlet" method="post"
+                  onsubmit="return confirm('Are you sure you want to delete your account? This action cannot be undone.');"
+                  style="display:inline;">
                 <button type="submit" class="btn btn-danger">Delete My Account</button>
             </form>
-            <% } %>
-            <%-- Logout button moved to header for better UX, but can be kept here too if desired --%>
-            <%-- <a href="LogoutServlet" class="btn">Logout</a> --%>
         </div>
     </div>
 
     <footer>
-        <p>&copy; 2025 IoTBay. wrk1-G5-06.</p>
+        &copy; 2025 IoTBay. wrk1-G5-06.
     </footer>
 </body>
 </html>

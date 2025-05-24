@@ -156,29 +156,20 @@
     <div class="form-container">
         <h2>Create an Account</h2>
 
-        <%-- Messages --%>
-        <% 
-            // Success message
-            if ("true".equals(request.getParameter("registered"))) { 
+        <%
+            // Determine which message (if any) to show
+            String registered = request.getParameter("registered");
+            String error      = (String) request.getAttribute("error");
+            List<String> validationErrors = (List<String>) request.getAttribute("validationErrors");
+
+            if ("true".equals(registered)) {
         %>
             <div class="success-message">
                 Registration successful! <a href="login.jsp">Login here</a>.
             </div>
-        <% } %>
-
-        <%
-            // Error messages
-            String error = (String) request.getAttribute("error");
-            List<String> validationErrors = (List<String>) request.getAttribute("validationErrors");
-            
-            if (error != null) {
-        %>
+        <% } else if (error != null) { %>
             <div class="error-message"><%= error %></div>
-        <% } %>
-
-        <% 
-            if (validationErrors != null && !validationErrors.isEmpty()) { 
-        %>
+        <% } else if (validationErrors != null && !validationErrors.isEmpty()) { %>
             <div class="error-message">
                 Please correct the following errors:<br/>
                 <% for (String e : validationErrors) { %>
@@ -190,18 +181,20 @@
         <form action="RegisterServlet" method="post">
             <div class="form-group">
                 <label for="fullname">Full Name *</label>
-                <input type="text" id="fullname" name="fullname" 
-                       value="<%= request.getParameter("fullname") != null ? 
-                               request.getParameter("fullname") : "" %>" 
-                       required>
+                <input 
+                  type="text" id="fullname" name="fullname"
+                  pattern="[A-Za-z ]+" required
+                  title="Only letters and spaces allowed"
+                  value="<%= request.getParameter("fullname") != null 
+                            ? request.getParameter("fullname") : "" %>">
             </div>
 
             <div class="form-group">
                 <label for="email">Email *</label>
-                <input type="email" id="email" name="email" 
-                       value="<%= request.getParameter("email") != null ? 
-                               request.getParameter("email") : "" %>" 
-                       required>
+                <input 
+                  type="email" id="email" name="email" required
+                  value="<%= request.getParameter("email") != null 
+                            ? request.getParameter("email") : "" %>">
             </div>
 
             <div class="form-group">
@@ -215,30 +208,52 @@
             </div>
 
             <div class="form-group">
-                <label for="phone">Phone</label>
-                <input type="tel" id="phone" name="phone" 
-                       value="<%= request.getParameter("phone") != null ? 
-                               request.getParameter("phone") : "" %>">
+                <label for="phone">Phone *</label>
+                <input 
+                  type="tel" id="phone" name="phone"
+                  pattern="\d+" required
+                  title="Only numbers allowed"
+                  value="<%= request.getParameter("phone") != null 
+                            ? request.getParameter("phone") : "" %>">
             </div>
 
             <div class="form-group">
                 <label for="address">Address</label>
-                <input type="text" id="address" name="address" 
-                       value="<%= request.getParameter("address") != null ? 
-                               request.getParameter("address") : "" %>">
+                <input 
+                  type="text" id="address" name="address"
+                  value="<%= request.getParameter("address") != null 
+                            ? request.getParameter("address") : "" %>">
+            </div>
+
+            <div class="form-group">
+                <label>Account Type *</label><br/>
+                <label>
+                  <input type="radio" name="accountType" value="customer"
+                    <%= !"staff".equals(request.getParameter("accountType")) 
+                          ? "checked" : "" %> >
+                  Customer
+                </label>
+                <label>
+                  <input type="radio" name="accountType" value="staff"
+                    <%= "staff".equals(request.getParameter("accountType")) 
+                          ? "checked" : "" %> >
+                  Staff
+                </label>
             </div>
             
             <div class="tos-group">
-                <input type="checkbox" id="tos" name="tos" required
-                    <% if ("on".equals(request.getParameter("tos"))) { %>
-                        checked
-                    <% } %>>
+                <input 
+                  type="checkbox" id="tos" name="tos" required
+                  <%= "on".equals(request.getParameter("tos")) 
+                        ? "checked" : "" %> >
                 <label for="tos">I agree to the Terms of Service *</label>
             </div>
 
             <div class="form-actions">
                 <button type="submit" class="btn">Register</button>
-                <a href="index.jsp" class="btn" style="background-color: #6c757d;">Cancel</a>
+                <a href="index.jsp" class="btn" style="background-color:#6c757d;">
+                    Cancel
+                </a>
             </div>
         </form>
 

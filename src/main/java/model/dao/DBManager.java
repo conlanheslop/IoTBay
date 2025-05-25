@@ -10,13 +10,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-/**
- * All CRUD for USER and AccessLog records.
- * Tables:
- *   "USER"(id, name, email, password, phone, address, createdDate,
- *          lastModifiedDate, lastLoginDate)
- *   "AccessLog"(id, userId, userName, userEmail, loginDate, logoutTime)
- */
+
+// Below are the details on what each table collects.
+// Tables:
+//   "USER"(id, name, email, password, phone, address, createdDate,
+//          lastModifiedDate, lastLoginDate)
+//   "AccessLog"(id, userId, userName, userEmail, loginDate, logoutTime)
+
 public class DBManager {
 
     private static final String USER_TBL       = "\"USER\"";
@@ -28,8 +28,7 @@ public class DBManager {
         this.conn = conn;
     }
 
-    // ──────────────── USER CRUD ──────────────────
-
+    //USER CRUD 
     public String addUser(User u) throws SQLException {
         String id = UUID.randomUUID().toString();
         u.setId(id);
@@ -107,12 +106,9 @@ public class DBManager {
         }
     }
 
-    // ─────────── ACCESS-LOG CRUD ────────────────
+    //AccessLog part of CRUD
+    //Inserts a new login record, capturing userId + snapshot of name/email.
 
-    /**
-     * Inserts a new login record, capturing userId + snapshot of name/email.
-     * @return generated AccessLog.id
-     */
     public int addAccessLog(String userId,
                             String userName,
                             String userEmail,
@@ -182,7 +178,7 @@ public class DBManager {
         return list;
     }
 
-    // ────────────── Row mappers ───────────────────
+    //Row mappers
 
     private User mapUser(ResultSet rs) throws SQLException {
         User u = new User(

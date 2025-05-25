@@ -1,3 +1,4 @@
+<%-- Everything that says retained was kept the same or slightly eddited when moving from my branch to main branch  --%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page import="model.User" session="true" contentType="text/html;charset=UTF-8" %>
 <html>
@@ -195,7 +196,7 @@
             <div class="header-container">
                 <div class="logo"><a href="index.jsp">IoTBay</a></div> <%-- Changed to index.jsp as per original main branch --%>
                 <div class="nav-links">
-                    <a href="main.jsp">Back to Dashboard</a> <%-- Retained main.jsp link --%>
+                    <a href="main.jsp">Back to Dashboard</a>
                     <a href="LogoutServlet">Logout</a> <%-- Changed to LogoutServlet as per feature-1 --%>
                 </div>
             </div>
@@ -214,7 +215,7 @@
                 <div class="form-group">
                     <label for="fullname">Full Name</label> <%-- Changed to 'fullname' --%>
                     <input type="text" id="fullname" name="fullname" 
-                            value="<%= user.getName() %>" required> <%-- Changed to getName() for consistency --%>
+                            value="<%= user.getName() %>" required> <%-- Changed to getName() --%>
                 </div>
                 
                 <div class="form-group">
@@ -230,7 +231,7 @@
                                value="<%= user.getPhone() != null ? user.getPhone() : "" %>"> <%-- Retained null check from main --%>
                     </div>
                     
-                    <div class="form-group"> <%-- Retained address field from main for data consistency if applicable --%>
+                    <div class="form-group"> <%-- Retained address field as its needed --%>
                         <label for="address">Address</label>
                         <input type="text" id="address" name="address" value="<%= user.getAddress() != null ? user.getAddress() : "" %>">
                     </div>

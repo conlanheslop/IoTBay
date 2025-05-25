@@ -59,7 +59,7 @@ public class LoginServlet extends HttpServlet {
             User u = db.getUserByEmail(email);
 
             if (u != null && u.getPassword().equals(pass)) {
-                // record login with snapshot of name & email
+                // record login  snapshot of id name and email
                 int logId = db.addAccessLog(
                     u.getId(),
                     u.getName(),
@@ -68,7 +68,7 @@ public class LoginServlet extends HttpServlet {
                 );
                 db.updateUserLastLogin(u.getId(), new Date());
 
-                // determine staff vs customer
+                // determine if staff or customer
                 StaffManager sm = new StaffManager(conn);
                 Staff s = sm.findStaff(u.getId());
 

@@ -179,6 +179,7 @@
         <% } %>
 
         <form action="RegisterServlet" method="post">
+            <!-- Name cannot be left blank only lettters and spaces are allowed -->
             <div class="form-group">
                 <label for="fullname">Full Name *</label>
                 <input 
@@ -188,7 +189,7 @@
                   value="<%= request.getParameter("fullname") != null 
                             ? request.getParameter("fullname") : "" %>">
             </div>
-
+            <!-- Email cannot be left blank -->
             <div class="form-group">
                 <label for="email">Email *</label>
                 <input 
@@ -196,27 +197,27 @@
                   value="<%= request.getParameter("email") != null 
                             ? request.getParameter("email") : "" %>">
             </div>
-
+            <!-- Password cannot be left blank -->
             <div class="form-group">
                 <label for="password">Password *</label>
                 <input type="password" id="password" name="password" required>
             </div>
-            
+            <!-- User must confirm password (good practice) -->
             <div class="form-group">
                 <label for="confirmPassword">Confirm Password *</label>
                 <input type="password" id="confirmPassword" name="confirmPassword" required>
             </div>
-
+            <!-- User has to enter 10 digit number otherwise they get a error popup -->
             <div class="form-group">
                 <label for="phone">Phone *</label>
                 <input 
                   type="tel" id="phone" name="phone"
-                  pattern="\d+" required
+                  pattern="\d{10}" required
                   title="Please enter 10 digit phone number"
                   value="<%= request.getParameter("phone") != null 
                             ? request.getParameter("phone") : "" %>">
             </div>
-
+            <!-- Address can be left blank during sign up -->
             <div class="form-group">
                 <label for="address">Address</label>
                 <input 
@@ -224,7 +225,7 @@
                   value="<%= request.getParameter("address") != null 
                             ? request.getParameter("address") : "" %>">
             </div>
-
+            <!-- User selects account type either customer or staff -->
             <div class="form-group">
                 <label>Account Type *</label><br/>
                 <label>
@@ -240,7 +241,7 @@
                   Staff
                 </label>
             </div>
-            
+            <!-- User has to select checkbox -->
             <div class="tos-group">
                 <input 
                   type="checkbox" id="tos" name="tos" required

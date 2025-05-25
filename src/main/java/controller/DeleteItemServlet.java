@@ -22,7 +22,7 @@ public class DeleteItemServlet extends HttpServlet {
         
         HttpSession session = request.getSession();
         
-        // Check if user is logged in and is staff (this is optional, just in case if not staff user directly access this servlet page, so I added this access page restriction rule)
+        // Check if user is logged in and is staff
         User user = (User) session.getAttribute("user");
         if (user == null || !(user instanceof Staff)) {
             // User is not staff, redirect to main page
@@ -60,7 +60,7 @@ public class DeleteItemServlet extends HttpServlet {
                 session.setAttribute("errorMessage", "Failed to delete item. Database error occurred.");
             }
         } else {
-            // Redirect to starting page index.jsp if itemManager value back to null (when session timeout occurred)
+            // Redirect to starting page index.jsp if itemManager value back to null 
             response.sendRedirect("index.jsp");
             return;
         }

@@ -27,7 +27,7 @@
 
         body {
             background-color: #f4f4f4;
-            padding-bottom: 60px; /* Add padding to prevent footer overlap */
+            padding-bottom: 60px; 
         }
 
         header {
@@ -69,7 +69,7 @@
             margin-bottom: 20px;
         }
 
-        .success-message { /* From feature-1 */
+        .success-message { /* For messages, like login success */
             background-color: #d4edda;
             color: #155724;
             padding: 10px;
@@ -118,7 +118,7 @@
             font-weight: bold;
             margin: 5px; /* Added margin for better spacing */
         }
-        .btn.btn-danger { /* For delete/cancel buttons */
+        .btn.btn-danger { /* For delete account button red was chosen for danger*/
             background-color: #dc3545;
         }
         .btn.btn-danger:hover {
@@ -135,7 +135,7 @@
             text-align: center;
             padding: 1rem;
             margin-top: 2rem; 
-            position: fixed; /* Or 'absolute' if fixed causes issues with long content */
+            position: fixed; 
             bottom: 0;
             width: 100%;
         }

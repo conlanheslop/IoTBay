@@ -241,7 +241,7 @@
                 color: #dc3545;
             }
 
-            /* Buttons for Edit Profile and View Details (blue colour) */
+            
             .btn-primary {
                 background-color: #007BFF;
             }
@@ -250,7 +250,7 @@
                 background-color: #0056b3;
             }
 
-            /* Button for Add to Cart (green colour) */
+            
             .btn-add-to-cart {
                 background-color: #28a745;
             }
@@ -258,7 +258,7 @@
                 background-color: rgb(17, 192, 14);
             }
 
-            /* Button for Edit (yellow colour) */
+            
             .btn-edit {
                 background-color: #ffc107;
                 color: #333;
@@ -267,7 +267,7 @@
                 background-color: rgb(228, 162, 18);
             }
 
-            /* Disabled button for Add to Cart */
+            
             .btn-disabled {
                 background-color: #888;
                 cursor: not-allowed;
@@ -443,7 +443,7 @@
                             <a href="#">Customers</a>
                         <% } else { %>
                             <a href="saved_orders.jsp">My Orders</a>
-                            <a href="edit_profile.jsp">My Profile</a>
+                            <a href="welcome.jsp">My Profile</a>
                             <a href="cart.jsp">Cart</a>
                             <a href="BillListServlet">Payment</a>
                             <a href="delivery?action=list">Delivery</a> 

@@ -147,7 +147,7 @@
     <div class="form-container">
         <h2>Login to Your Account</h2>
 
-        <%-- Message handling without JSTL --%>
+        <%-- Message handling without JSTL to keep it simple--%>
         <% 
             String loggedOut = request.getParameter("loggedOut");
             if (loggedOut != null && loggedOut.equals("true")) {

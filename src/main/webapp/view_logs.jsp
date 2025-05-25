@@ -1,3 +1,4 @@
+<!-- Logouttime was fixed recently -->
 <%@ page import="java.util.List, model.AccessLog, java.text.SimpleDateFormat" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%

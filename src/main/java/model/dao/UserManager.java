@@ -17,7 +17,7 @@ public class UserManager {
 
     // CREATE
     public void addUser(String id,
-                        String name, // Standardized to 'name' (from main, and aligns with DB column)
+                        String name, // Standardized to 'name' was changed from fullname
                         String password,
                         String email,
                         String phone,
@@ -26,12 +26,12 @@ public class UserManager {
                         Date createdDate,
                         Date lastModifiedDate) throws SQLException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        // Adopting null-safe date formatting from feature-1 for all dates
+        // Adopting null-safe date formatting from feature-1 branch for all dates
         String loginStr = (lastLoginDate != null) ? "'" + sdf.format(lastLoginDate) + "'" : "NULL";
         String createdStr = (createdDate != null) ? "'" + sdf.format(createdDate) + "'" : "NULL";
         String modifiedStr = (lastModifiedDate != null) ? "'" + sdf.format(lastModifiedDate) + "'" : "NULL";
 
-        // Using main branch's SQL concatenation style for readability, with 'name' column
+        
         String query = "INSERT INTO USER (id, name, password, email, phone, address, lastLoginDate, createdDate, lastModifiedDate) VALUES (" +
                        "'" + id + "'," +
                        "'" + name + "'," +
@@ -57,10 +57,10 @@ public class UserManager {
             String password = rs.getString("password");
             String email = rs.getString("email");
             String phone = rs.getString("phone");
-            String address = rs.getString("address"); // Preserving field from main
-            Date lastLoginDate = rs.getTimestamp("lastLoginDate"); // Preserving field from main
-            Date createdDate = rs.getTimestamp("createdDate"); // Preserving field from main
-            Date lastModifiedDate = rs.getTimestamp("lastModifiedDate"); // Preserving field from main
+            String address = rs.getString("address"); 
+            Date lastLoginDate = rs.getTimestamp("lastLoginDate"); 
+            Date createdDate = rs.getTimestamp("createdDate"); 
+            Date lastModifiedDate = rs.getTimestamp("lastModifiedDate"); 
 
             // Using main's User instantiation and setters, which handles more fields and String ID
             User user = new User(userIdFromDb, name, password, email, phone, address);
@@ -74,7 +74,7 @@ public class UserManager {
 
     // UPDATE
     public void updateUser(String id,
-                           String name, // Standardized to 'name'
+                           String name, // switched from fullname to name
                            String password,
                            String email,
                            String phone,
@@ -82,7 +82,7 @@ public class UserManager {
                            Date lastLoginDate,
                            Date lastModifiedDate) throws SQLException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        // Adopting null-safe date formatting from feature-1
+        // Adopting null-safe date formatting from my feature-1 branch 
         String loginStr = (lastLoginDate != null) ? "'" + sdf.format(lastLoginDate) + "'" : "NULL";
         String modifiedStr = (lastModifiedDate != null) ? "'" + sdf.format(lastModifiedDate) + "'" : "NULL";
 
@@ -118,12 +118,12 @@ public class UserManager {
             String password = rs.getString("password");
             String email = rs.getString("email");
             String phone = rs.getString("phone");
-            String address = rs.getString("address"); // Preserving field from main
-            Date lastLoginDate = rs.getTimestamp("lastLoginDate"); // Preserving field from main
-            Date createdDate = rs.getTimestamp("createdDate"); // Preserving field from main
-            Date lastModifiedDate = rs.getTimestamp("lastModifiedDate"); // Preserving field from main
+            String address = rs.getString("address"); 
+            Date lastLoginDate = rs.getTimestamp("lastLoginDate"); 
+            Date createdDate = rs.getTimestamp("createdDate"); 
+            Date lastModifiedDate = rs.getTimestamp("lastModifiedDate"); 
 
-            // Using main's User instantiation and setters
+            // Using main's User instantiation and setters was different in my branch
             User user = new User(userId, name, password, email, phone, address);
             user.setLastLoginDate(lastLoginDate);
             user.setCreatedDate(createdDate);

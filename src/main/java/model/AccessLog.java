@@ -2,10 +2,7 @@ package model;
 
 import java.sql.Timestamp;
 
-/**
- * Represents one login/logout entry, including a snapshot
- * of the user’s name and email at login time.
- */
+
 public class AccessLog {
     private int       id;
     private String    userId;     // UUID of the user
@@ -14,12 +11,12 @@ public class AccessLog {
     private Timestamp loginTime;  // When they logged in
     private Timestamp logoutTime; // When they logged out (nullable)
 
-    /** No-arg constructor (for frameworks/tools that require it) */
+    // No-arg constructor (for frameworks/tools that require it) 
     public AccessLog() { }
 
-    /**
-     * Full constructor matching DBManager.mapLog(...)
-     */
+
+    //Full constructor matching DBManager.mapLog(...)
+     
     public AccessLog(int id,
                      String userId,
                      String userName,
@@ -34,7 +31,7 @@ public class AccessLog {
         this.logoutTime = logoutTime;
     }
 
-    // ─── Getters & Setters ───────────────────────────────────────────
+    // Getters & Setters
 
     public int getId() {
         return id;

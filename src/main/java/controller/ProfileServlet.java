@@ -10,7 +10,7 @@ import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Date; // Import for setting lastModifiedDate
+import java.util.Date; // Import for setting lastModifiedDate 
 
 @WebServlet("/ProfileServlet")
 public class ProfileServlet extends HttpServlet {
@@ -39,10 +39,10 @@ public class ProfileServlet extends HttpServlet {
 
         // Update user fields from request parameters
         // Ensure User class has these setters
-        u.setName(req.getParameter("fullname")); // Changed from setFullname to setName
+        u.setName(req.getParameter("fullname"));
         u.setEmail(req.getParameter("email"));
         
-        // Handle password update carefully. Only update if a new password is provided.
+        // Only updates password when a new one is provided.
         String newPassword = req.getParameter("password");
         if (newPassword != null && !newPassword.isEmpty()) {
             u.setPassword(newPassword); // Assuming User has setPassword
@@ -72,13 +72,13 @@ public class ProfileServlet extends HttpServlet {
             // Optionally, set an error message and forward back to the edit page
             req.setAttribute("error", "Profile update failed due to a database error.");
             req.getRequestDispatcher("/edit_profile.jsp").forward(req, resp);
-            // throw new ServletException("DB error updating profile", e); // Or throw
+            // throw new ServletException("DB error updating profile", e);
         } finally {
             if (dbc != null) {
                 try {
                     dbc.closeConnection();
                 } catch (SQLException e) {
-                    e.printStackTrace(); // Log this error
+                    e.printStackTrace(); // Logs error
                 }
             }
         }

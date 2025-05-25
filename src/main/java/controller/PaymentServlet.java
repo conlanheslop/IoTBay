@@ -48,6 +48,30 @@ public class PaymentServlet extends HttpServlet {
         }
     }
 
+    protected Order findOrderInSession(HttpSession session, String orderId){
+        List<Order> anonymousOrderList = (List<Order>) session.getAttribute("anonymousOrderList");
+        if (anonymousOrderList == null) {
+            return null;
+        }
+        for (Order order : anonymousOrderList) {
+            if(order.getOrderId().equals(orderId)){
+                return order;
+            }
+        }
+        return null;
+    }
+    
+    public static void saveOrderToSession(HttpSession session, Order order) {
+        List<Order> anonymousOrderList = (List<Order>) session.getAttribute("anonymousOrderList");
+
+        if (anonymousOrderList == null) {
+            anonymousOrderList = new ArrayList<>();
+        }
+
+        anonymousOrderList.add(order);
+        session.setAttribute("anonymousOrderList", anonymousOrderList);
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -66,21 +90,27 @@ public class PaymentServlet extends HttpServlet {
             User user = (User) session.getAttribute("user");
             List<OrderItem> itemList = new ArrayList<>();
 
-            //DEV ONLY
-            if (user == null) {
-                User defaultUser = userManager.findUser("U0000001");
-                session.setAttribute("user", defaultUser);
-            }
+
             if (orderId == null) {
-                Order defaultOrder = orderManager.getOrderById("O0000003");
-                itemList = orderItemManager.getItemsByOrderId(defaultOrder.getOrderId());
-                defaultOrder.setOrderItems(itemList);
-                session.setAttribute("order", defaultOrder);
+                
             }else {
                 Order order = orderManager.getOrderById(orderId);
-                itemList = orderItemManager.getItemsByOrderId(order.getOrderId());
-                order.setOrderItems(itemList);
-                session.setAttribute("order", order);
+                if (user == null) {
+                    order = findOrderInSession(session, orderId);
+                    //for testing
+                    if (order == null) {
+                        Order defaultOrder = orderManager.getOrderById("O0000001");
+                        saveOrderToSession(session, defaultOrder);
+                        order = findOrderInSession(session, orderId);
+                    }
+
+                    session.setAttribute("order", order);
+                    
+                }else{
+                    itemList = orderItemManager.getItemsByOrderId(order.getOrderId());
+                    order.setOrderItems(itemList);
+                    session.setAttribute("order", order);
+                }
             }
 
 
@@ -147,12 +177,11 @@ public class PaymentServlet extends HttpServlet {
 
             // Get userId from session (assuming user is logged in and userId is stored in session)
             User user = (User) session.getAttribute("user");
-            //For Dev test only
-            if (user == null) {
-                User defaultUser = userManager.findUser("U0000001");
-                session.setAttribute("user", defaultUser);
+            String userId = null;
+            if (user != null) {
+                userId = user.getId();
             }
-            String userId = user.getId();
+             
 
             // If there are any errors, send them to the error page
             if (!errors.isEmpty()) {
@@ -169,7 +198,7 @@ public class PaymentServlet extends HttpServlet {
             Date currentDate = Date.valueOf(LocalDate.now()); // Current date as addedDate
             Payment payment = new Payment(
                     DatabaseUtils.generateUniqueId("Pay"),  // You could implement a method to generate a unique paymentId
-                    userId,
+                    null,
                     currentDate,
                     paymentMethod,
                     true  // Set isVerified to true
@@ -178,6 +207,52 @@ public class PaymentServlet extends HttpServlet {
             // Get the action (confirm or save)
             String paymentAction = request.getParameter("paymentAction");
 
+            if (user == null) {
+                //Handle anonymous
+                if ("confirm".equals(paymentAction)) {
+                    Order order = findOrderInSession(session, orderId);
+                    Bill anonymousBill = new Bill(DatabaseUtils.generateUniqueId("Bill"), orderId, totalAmount, billDate);
+                    anonymousBill.setIsPaid(true);
+                    List<Bill> anonymousBillList = (List<Bill>) session.getAttribute("anonymousBillList");
+
+                    if (anonymousBillList == null) {
+                        anonymousBillList = new ArrayList<>();
+                        anonymousBillList.add(anonymousBill);
+                    }else{
+                        anonymousBillList.add(anonymousBill);
+                    }
+                    session.setAttribute("message", "Bill created successfully");
+
+                    response.sendRedirect("BillListServlet");
+                } else if ("save".equals(paymentAction)) {
+                    Order order = findOrderInSession(session, orderId);
+                    Bill anonymousBill = new Bill(DatabaseUtils.generateUniqueId("Bill"), orderId, totalAmount, billDate);
+                    anonymousBill.setIsPaid(false);
+                    List<Bill> anonymousBillList = (List<Bill>) session.getAttribute("anonymousBillList");
+
+                    if (anonymousBillList == null) {
+                        anonymousBillList = new ArrayList<>();
+                        anonymousBillList.add(anonymousBill);
+                    }else{
+                        anonymousBillList.add(anonymousBill);
+                    }
+                    session.setAttribute("message", "Bill created successfully");
+
+                    response.sendRedirect("BillListServlet");
+                }
+                List<Payment> anonymousPaymentList = (List<Payment>) session.getAttribute("anonymousPaymentList");
+
+                if (anonymousPaymentList == null) {
+                    anonymousPaymentList = new ArrayList<>();
+                    anonymousPaymentList.add(payment);
+                }else{
+                    anonymousPaymentList.add(payment);
+                }
+                return;
+            }
+
+            
+            payment.setUserId(userId);
             if ("confirm".equals(paymentAction)) {
                 Order order = orderManager.getOrderById(orderId);
                 billManager.addBill(order.getOrderId(), totalAmount, billDate, payment.getPaymentId(), true);

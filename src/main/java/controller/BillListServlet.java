@@ -114,10 +114,12 @@ public class BillListServlet extends HttpServlet{
             billManager = (BillManager) session.getAttribute("billManager");
             orderManager = (OrderManager) session.getAttribute("orderManager");
 
-            //DEV ONLY
             if (user == null) {
-                userId = "U0000001";
-            }else {
+                List<Bill> billList = (List<Bill>) session.getAttribute("anonymousBillList");
+                session.setAttribute("billList", billList);
+                request.getRequestDispatcher("/paymentManagement/billList.jsp").forward(request, response);
+                return;
+            } else {
                 userId = user.getId();
             }
 

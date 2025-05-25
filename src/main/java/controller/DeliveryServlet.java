@@ -246,6 +246,11 @@ public class DeliveryServlet extends HttpServlet {
     }
   }
 
+
+  // ##############
+  // ### UPDATE ###
+  // ##############
+
   private void updateDelivery(
     HttpServletRequest request,
     HttpServletResponse response,
@@ -276,9 +281,7 @@ public class DeliveryServlet extends HttpServlet {
       );
 
       session.setAttribute("successMessage", "Delivery updated successfully!");
-      response.sendRedirect(
-        "delivery?action=view-single&deliveryId=" + deliveryId
-      );
+      response.sendRedirect("delivery?action=list");
     } catch (ParseException e) {
       request.setAttribute("errorMessage", "Invalid date format: " + e.getMessage());
       showUpdateForm(request, response, deliveryManager);

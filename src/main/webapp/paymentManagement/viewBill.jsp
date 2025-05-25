@@ -157,8 +157,9 @@
             Total Price: $<%= String.format("%.2f", totalPrice) %>
         </div>
         <% if (delivery == null) { %>
-            <form action="delivery?action=create-form" method="get" style="margin-top: 20px;">
-                <input type="hidden" name="orderId" value="<%= order.getOrderId() %>">
+            <form action="delivery" method="get" style="margin-top: 20px;">
+                <input type="hidden" name="action" value="create-form">
+                <input type="hidden" name="orderId" value="<%= bill.getOrderId() %>">
                 <button type="submit" style="
                     background-color: #28a745; color: white; border: none;
                     padding: 10px 20px; border-radius: 5px; cursor: pointer;

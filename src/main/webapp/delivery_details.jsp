@@ -93,43 +93,32 @@
         </p>
       </section>
 
-      <section class="update-status-section">
-        <h3 class="section-subtitle">Update Delivery Status</h3>
-        <form class="status-form" action="delivery" method="post">
-          <input type="hidden" name="action" value="update" />
-          <input type="hidden" name="deliveryId" value="<%= delivery.getDeliveryId() %>" />
-          <input type="hidden" name="orderId" value="<%= delivery.getOrderId() %>" />
-          <input type="hidden" name="deliveringDate" value="<%= new SimpleDateFormat("yyyy-MM-dd'T'HH:mm").format(delivery.getDeliveringDate()) %>" />
-          <input type="hidden" name="deliveringAddress" value="<%= delivery.getDeliveringAddress() %>" />
-          <input type="hidden" name="nameOnDelivery" value="<%= delivery.getNameOnDelivery() %>" />
-          <input type="hidden" name="trackingNumber" value="<%= delivery.getTrackingNumber() %>" />
-          
-          <select class="status-select" name="status">
-            <option value="Processing" <%= delivery.getStatus().equals("Processing") ? "selected" : "" %>>Processing</option>
-            <option value="Packed" <%= delivery.getStatus().equals("Packed") ? "selected" : "" %>>Packed</option>
-            <option value="Shipped" <%= delivery.getStatus().equals("Shipped") ? "selected" : "" %>>Shipped</option>
-            <option value="In Transit" <%= delivery.getStatus().equals("In Transit") ? "selected" : "" %>>In Transit</option>
-            <option value="Out for Delivery" <%= delivery.getStatus().equals("Out for Delivery") ? "selected" : "" %>>Out for Delivery</option>
-            <option value="Delivered" <%= delivery.getStatus().equals("Delivered") ? "selected" : "" %>>Delivered</option>
-            <option value="Failed Delivery" <%= delivery.getStatus().equals("Failed Delivery") ? "selected" : "" %>>Failed Delivery</option>
-            <option value="Returned" <%= delivery.getStatus().equals("Returned") ? "selected" : "" %>>Returned</option>
-          </select>
-          <button class="btn btn-primary" type="submit">Update Status</button>
-        </form>
-      </section>
-
-      <section class="actions-section">
-        <h3 class="section-subtitle">Actions</h3>
-        <a class="action-link" href="delivery?action=update-form&deliveryId=<%= delivery.getDeliveryId() %>">Update Delivery</a>
-        |
-        <a class="action-link" href="delivery?action=list">Back to List</a>
-        |
-        <form class="inline-form" action="delivery" method="post" onsubmit="return confirm('Are you sure you want to delete this delivery?');">
+      <!-- Simple Action Buttons -->
+      <div style="margin-top: 30px; text-align: center;">
+        <a href="delivery?action=list" style="
+          background-color: #007bff; 
+          color: white; 
+          text-decoration: none; 
+          padding: 10px 20px; 
+          border-radius: 5px; 
+          margin-right: 15px;
+          display: inline-block;
+        ">Back to List</a>
+        
+        <form style="display: inline-block;" action="delivery" method="post" onsubmit="return confirm('Are you sure you want to delete this delivery?');">
           <input type="hidden" name="action" value="delete" />
           <input type="hidden" name="deliveryId" value="<%= delivery.getDeliveryId() %>" />
-          <button class="btn btn-danger" type="submit">Delete Delivery</button>
+          <button type="submit" style="
+            background-color: #dc3545; 
+            color: white; 
+            border: none; 
+            padding: 10px 20px; 
+            border-radius: 5px; 
+            cursor: pointer;
+          ">Delete Delivery</button>
         </form>
-      </section>
+      </div>
+      
       <% } else { %>
       <p class="no-info-message">No delivery information found.</p>
       <% } %>

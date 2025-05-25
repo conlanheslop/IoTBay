@@ -98,33 +98,22 @@
               <td class="table-data-cell"><%= delivery.getStatus() %></td>
               <td class="table-data-cell"><%= delivery.getTrackingNumber() %></td>
               <td class="table-data-cell actions-cell">
-                <a
-                  class="action-link"
-                  href="delivery?action=view-single&deliveryId=<%= delivery.getDeliveryId() %>"
-                  >Details</a
-                >
-                |
-                <a
-                  class="action-link"
-                  href="delivery?action=update-form&deliveryId=<%= delivery.getDeliveryId() %>"
-                  >Update</a
-                >
-                |
-                <form
-                  class="inline-form"
-                  action="delivery"
-                  method="post"
-                  onsubmit="return confirm('Are you sure you want to delete this delivery?');"
-                >
+                <form class="inline-form" method="get" action="delivery" style="display:inline-block;">
+                  <input type="hidden" name="action" value="view-single">
+                  <input type="hidden" name="deliveryId" value="<%= delivery.getDeliveryId() %>">
+                  <button class="btn btn-primary" type="submit">Details</button>
+                </form>
+
+                <form class="inline-form" method="get" action="delivery" style="display:inline-block; margin-left: 5px;">
+                  <input type="hidden" name="action" value="update-form">
+                  <input type="hidden" name="deliveryId" value="<%= delivery.getDeliveryId() %>">
+                  <button class="btn btn-primary" type="submit">Update</button>
+                </form>
+
+                <form class="inline-form" action="delivery" method="post" onsubmit="return confirm('Are you sure you want to delete this delivery?');">
                   <input type="hidden" name="action" value="delete" />
-                  <input
-                    type="hidden"
-                    name="deliveryId"
-                    value="<%= delivery.getDeliveryId() %>"
-                  />
-                  <button class="btn btn-danger" type="submit">
-                    Delete
-                  </button>
+                  <input type="hidden" name="deliveryId" value="<%= delivery.getDeliveryId() %>"/>
+                  <button class="btn btn-danger" type="submit">Delete</button>
                 </form>
               </td>
             </tr>

@@ -212,7 +212,7 @@
                 <input 
                   type="tel" id="phone" name="phone"
                   pattern="\d+" required
-                  title="Only numbers allowed"
+                  title="Please enter 10 digit phone number"
                   value="<%= request.getParameter("phone") != null 
                             ? request.getParameter("phone") : "" %>">
             </div>

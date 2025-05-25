@@ -102,8 +102,7 @@ public class DeliveryServlet extends HttpServlet {
   )
     throws ServletException, IOException {
     RequestDispatcher dispatcher = request.getRequestDispatcher(
-      "delivery_form.jsp" // CORRECTED: This should be delivery_form.jsp
-      // (your create form)
+      "delivery_form.jsp"
     );
     dispatcher.forward(request, response);
   }
@@ -121,7 +120,7 @@ public class DeliveryServlet extends HttpServlet {
       if (delivery != null) {
         request.setAttribute("delivery", delivery);
         RequestDispatcher dispatcher = request.getRequestDispatcher(
-          "delivery_details.jsp" // CORRECTED: This should be delivery_details.jsp
+          "delivery_details.jsp"
         );
         dispatcher.forward(request, response);
       } else {
@@ -153,7 +152,7 @@ public class DeliveryServlet extends HttpServlet {
       if (delivery != null) {
         request.setAttribute("delivery", delivery);
         RequestDispatcher dispatcher = request.getRequestDispatcher(
-          "delivery_update.jsp" // CORRECTED: This should be delivery_update.jsp
+          "delivery_update.jsp"
         );
         dispatcher.forward(request, response);
       } else {
@@ -182,7 +181,7 @@ public class DeliveryServlet extends HttpServlet {
       List<Delivery> deliveries = deliveryManager.fetchAllDeliveries();
       request.setAttribute("deliveries", deliveries);
       RequestDispatcher dispatcher = request.getRequestDispatcher(
-        "delivery_list.jsp" // CORRECTED: This should be delivery_list.jsp
+        "delivery_list.jsp"
       );
       dispatcher.forward(request, response);
     } catch (Exception e) {
@@ -191,7 +190,7 @@ public class DeliveryServlet extends HttpServlet {
         "Error retrieving deliveries: " + e.getMessage()
       );
       RequestDispatcher dispatcher = request.getRequestDispatcher(
-        "delivery_list.jsp" // CORRECTED: This should be delivery_list.jsp
+        "delivery_list.jsp"
       );
       dispatcher.forward(request, response);
     }
@@ -268,6 +267,16 @@ public class DeliveryServlet extends HttpServlet {
       String nameOnDelivery = request.getParameter("nameOnDelivery");
       String trackingNumber = request.getParameter("trackingNumber");
 
+      // Check if delivery can be modified (only if current status is PENDING)
+      String currentStatus = deliveryManager.getDeliveryStatus(deliveryId);
+      if (currentStatus != null && !currentStatus.equalsIgnoreCase("PENDING")) {
+        session.setAttribute("errorMessage", 
+          "Cannot modify delivery details. Current status: " + currentStatus + 
+          ". Only pending deliveries can be modified.");
+        response.sendRedirect("delivery?action=list");
+        return;
+      }
+
       SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
       Date deliveringDate = sdf.parse(deliveringDateStr);
 
@@ -282,7 +291,6 @@ public class DeliveryServlet extends HttpServlet {
       );
 
       session.setAttribute("successMessage", "Delivery updated successfully!");
-      // Changed redirect to go back to the delivery list
       response.sendRedirect("delivery?action=list");
     } catch (ParseException e) {
       request.setAttribute(
@@ -335,6 +343,7 @@ public class DeliveryServlet extends HttpServlet {
     }
   }
 
+  // FIXED: Improved search functionality
   private void searchDeliveries(
     HttpServletRequest request,
     HttpServletResponse response,
@@ -347,44 +356,56 @@ public class DeliveryServlet extends HttpServlet {
     String errorMessage = null;
 
     try {
+      // Clean up the inputs
+      boolean hasSearchTerm = searchTerm != null && !searchTerm.trim().isEmpty();
+      boolean hasSearchDate = searchDateStr != null && !searchDateStr.trim().isEmpty();
+      
       LocalDate searchDate = null;
-      if (searchDateStr != null && !searchDateStr.trim().isEmpty()) {
+      if (hasSearchDate) {
         try {
           searchDate = LocalDate.parse(searchDateStr);
         } catch (DateTimeParseException e) {
-          errorMessage = "Invalid date format. Please use YYYY-MM-DD.";
+          errorMessage = "Invalid date format. Please use YYYY-MM-DD format.";
         }
       }
 
-      // Check if both search term and search date are provided
-      if (
-        (searchTerm != null && !searchTerm.trim().isEmpty()) &&
-        searchDate != null
-      ) {
-        // Search by both search term and date (AND condition)
-        deliveries = deliveryManager.searchDeliveries(searchTerm, searchDate);
-      } else if (searchTerm != null && !searchTerm.trim().isEmpty()) {
-        // Search by search term only
-        deliveries = deliveryManager.searchDeliveriesByID(searchTerm);
-      } else if (searchDate != null) {
-        // Search by date only
-        deliveries = deliveryManager.searchDeliveriesByDate(searchDate);
-      } else {
-        // No search criteria provided, fetch all deliveries
-        deliveries = deliveryManager.fetchAllDeliveries();
+      // Only proceed if no date parsing error occurred
+      if (errorMessage == null) {
+        if (hasSearchTerm && hasSearchDate) {
+          // Both search term and date provided - AND condition
+          deliveries = deliveryManager.searchDeliveries(searchTerm.trim(), searchDate);
+        } else if (hasSearchTerm) {
+          // Only search term provided
+          deliveries = deliveryManager.searchDeliveriesByID(searchTerm.trim());
+        } else if (hasSearchDate) {
+          // Only date provided
+          deliveries = deliveryManager.searchDeliveriesByDate(searchDate);
+        } else {
+          // No search criteria provided, fetch all deliveries
+          deliveries = deliveryManager.fetchAllDeliveries();
+        }
       }
+    } catch (SQLException e) {
+      errorMessage = "Database error occurred while searching: " + e.getMessage();
+      // Log the actual error for debugging
+      System.err.println("SQL Error in searchDeliveries: " + e.getMessage());
+      e.printStackTrace();
     } catch (Exception e) {
-      errorMessage = "Error searching deliveries: " + e.getMessage();
+      errorMessage = "An unexpected error occurred while searching: " + e.getMessage();
+      // Log the actual error for debugging
+      System.err.println("General Error in searchDeliveries: " + e.getMessage());
+      e.printStackTrace();
     } finally {
+      // Set attributes for the JSP
       request.setAttribute("deliveries", deliveries);
       request.setAttribute("searchTerm", searchTerm);
       request.setAttribute("searchDate", searchDateStr);
+      
       if (errorMessage != null) {
         request.setAttribute("errorMessage", errorMessage);
       }
-      RequestDispatcher dispatcher = request.getRequestDispatcher(
-        "delivery_list.jsp"
-      );
+      
+      RequestDispatcher dispatcher = request.getRequestDispatcher("delivery_list.jsp");
       dispatcher.forward(request, response);
     }
   }

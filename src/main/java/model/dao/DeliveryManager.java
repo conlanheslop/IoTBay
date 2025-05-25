@@ -74,6 +74,26 @@ public class DeliveryManager {
     }
   }
 
+  // NEW: Get delivery status by ID
+  public String getDeliveryStatus(String deliveryId) throws SQLException {
+    String sql = "SELECT status FROM Delivery WHERE deliveryId = ?";
+    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+      stmt.setString(1, deliveryId);
+      try (ResultSet rs = stmt.executeQuery()) {
+        if (rs.next()) {
+          return rs.getString("status");
+        }
+      }
+    }
+    return null; // Delivery not found
+  }
+
+  // NEW: Check if delivery can be modified (only if PENDING)
+  public boolean canModifyDelivery(String deliveryId) throws SQLException {
+    String currentStatus = getDeliveryStatus(deliveryId);
+    return currentStatus != null && currentStatus.equalsIgnoreCase("PENDING");
+  }
+
   // Update a delivery record
   public void updateDelivery(
     String deliveryId,
@@ -114,7 +134,7 @@ public class DeliveryManager {
   // Fetch all deliveries
   public List<Delivery> fetchAllDeliveries() throws SQLException {
     List<Delivery> deliveries = new ArrayList<>();
-    String query = "SELECT * FROM Delivery";
+    String query = "SELECT * FROM Delivery ORDER BY deliveringDate DESC";
     try (
       PreparedStatement pstmt = conn.prepareStatement(query);
       ResultSet rs = pstmt.executeQuery()
@@ -149,7 +169,7 @@ public class DeliveryManager {
     throws SQLException {
     List<Delivery> deliveries = new ArrayList<>();
     String sql =
-      "SELECT * FROM Delivery WHERE orderId LIKE ? OR trackingNumber LIKE ?";
+      "SELECT * FROM Delivery WHERE orderId LIKE ? OR trackingNumber LIKE ? ORDER BY deliveringDate DESC";
 
     try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
       pstmt.setString(1, "%" + searchTerm + "%");
@@ -182,14 +202,16 @@ public class DeliveryManager {
     return deliveries;
   }
 
-  // Search by Date
+  // Search by Date - Fixed for SQLite compatibility
   public List<Delivery> searchDeliveriesByDate(LocalDate searchDate)
     throws SQLException {
     List<Delivery> deliveries = new ArrayList<>();
-    String sql = "SELECT * FROM Delivery WHERE DATE(deliveringDate) = ?";
+    // Use SQLite's date() function to extract date part from datetime
+    String sql = "SELECT * FROM Delivery WHERE date(deliveringDate) = ? ORDER BY deliveringDate DESC";
 
     try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-      pstmt.setDate(1, java.sql.Date.valueOf(searchDate));
+      // Convert LocalDate to string in format SQLite expects
+      pstmt.setString(1, searchDate.toString()); // This gives yyyy-MM-dd format
       ResultSet rs = pstmt.executeQuery();
 
       while (rs.next()) {
@@ -218,17 +240,95 @@ public class DeliveryManager {
     return deliveries;
   }
 
-  // Search by both ID (substring) and Date (AND condition)
+  // Search by both ID (substring) and Date (AND condition) - Fixed
   public List<Delivery> searchDeliveries(String searchTerm, LocalDate searchDate)
     throws SQLException {
     List<Delivery> deliveries = new ArrayList<>();
+    // Fixed SQL query for SQLite
     String sql =
-      "SELECT * FROM Delivery WHERE (orderId LIKE ? OR trackingNumber LIKE ?) AND DATE(deliveringDate) = ?";
+      "SELECT * FROM Delivery WHERE (orderId LIKE ? OR trackingNumber LIKE ?) AND date(deliveringDate) = ? ORDER BY deliveringDate DESC";
 
     try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
       pstmt.setString(1, "%" + searchTerm + "%");
       pstmt.setString(2, "%" + searchTerm + "%");
-      pstmt.setDate(3, java.sql.Date.valueOf(searchDate));
+      pstmt.setString(3, searchDate.toString()); // Use string format for SQLite
+
+      ResultSet rs = pstmt.executeQuery();
+      while (rs.next()) {
+        String deliveryId = rs.getString("deliveryId");
+        String orderId = rs.getString("orderId");
+        Date deliveringDate = rs.getTimestamp("deliveringDate");
+        String status = rs.getString("status");
+        String deliveringAddress = rs.getString("deliveringAddress");
+        String nameOnDelivery = rs.getString("nameOnDelivery");
+        String trackingNumber = rs.getString("trackingNumber");
+
+        deliveries.add(
+          new Delivery(
+            deliveryId,
+            orderId,
+            deliveringDate,
+            status,
+            deliveringAddress,
+            nameOnDelivery,
+            trackingNumber
+          )
+        );
+      }
+    }
+
+    return deliveries;
+  }
+
+  // NEW: Search by date range functionality
+  public List<Delivery> searchDeliveriesByDateRange(LocalDate startDate, LocalDate endDate)
+    throws SQLException {
+    List<Delivery> deliveries = new ArrayList<>();
+    String sql = "SELECT * FROM Delivery WHERE date(deliveringDate) BETWEEN ? AND ? ORDER BY deliveringDate DESC";
+
+    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+      pstmt.setString(1, startDate.toString());
+      pstmt.setString(2, endDate.toString());
+      ResultSet rs = pstmt.executeQuery();
+
+      while (rs.next()) {
+        String deliveryId = rs.getString("deliveryId");
+        String orderId = rs.getString("orderId");
+        Date deliveringDate = rs.getTimestamp("deliveringDate");
+        String status = rs.getString("status");
+        String deliveringAddress = rs.getString("deliveringAddress");
+        String nameOnDelivery = rs.getString("nameOnDelivery");
+        String trackingNumber = rs.getString("trackingNumber");
+
+        deliveries.add(
+          new Delivery(
+            deliveryId,
+            orderId,
+            deliveringDate,
+            status,
+            deliveringAddress,
+            nameOnDelivery,
+            trackingNumber
+          )
+        );
+      }
+    }
+
+    return deliveries;
+  }
+
+  // NEW: Search with both term and date range
+  public List<Delivery> searchDeliveriesWithDateRange(String searchTerm, LocalDate startDate, LocalDate endDate)
+    throws SQLException {
+    List<Delivery> deliveries = new ArrayList<>();
+    String sql =
+      "SELECT * FROM Delivery WHERE (orderId LIKE ? OR trackingNumber LIKE ?) AND date(deliveringDate) BETWEEN ? AND ? ORDER BY deliveringDate DESC";
+
+    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+      pstmt.setString(1, "%" + searchTerm + "%");
+      pstmt.setString(2, "%" + searchTerm + "%");
+      pstmt.setString(3, startDate.toString());
+      pstmt.setString(4, endDate.toString());
 
       ResultSet rs = pstmt.executeQuery();
       while (rs.next()) {

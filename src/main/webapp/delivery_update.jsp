@@ -5,6 +5,7 @@
 <%@ page import="model.User"%>
 <%@ page import="model.Staff"%>
 <%@ page import="model.Customer"%>
+<%@ page import="model.dao.DeliveryManager"%>
 <jsp:include page="/ConnServlet" flush="true" />
 <!DOCTYPE html>
 <html>
@@ -51,57 +52,87 @@
       
       <% 
       Delivery delivery = (Delivery) request.getAttribute("delivery");
+      DeliveryManager deliveryManager = (DeliveryManager) session.getAttribute("deliveryManager");
+      boolean canModify = false;
 
       if (delivery != null) {
+        // Check if delivery can be modified
+        try {
+          canModify = deliveryManager != null && deliveryManager.canModifyDelivery(delivery.getDeliveryId());
+        } catch (Exception e) {
+          canModify = false;
+        }
+        
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
-        String formattedDate = formatter.format(delivery.getDeliveringDate()); %>
+        String formattedDate = formatter.format(delivery.getDeliveringDate()); 
+      %>
+      
+      <% if (!canModify) { %>
+      <div class="message error-message">
+        <strong>Note:</strong> This delivery cannot be modified because its status is "<%= delivery.getStatus() %>". 
+        Only deliveries with "PENDING" status can be modified.
+      </div>
+      <% } %>
+      
       <form class="delivery-form" action="delivery" method="post">
         <input type="hidden" name="action" value="update" />
         <input type="hidden" name="deliveryId" value="<%= delivery.getDeliveryId() %>" />
 
         <div>
           <label for="orderId">Order ID:</label>
-          <input type="text" id="orderId" name="orderId" value="<%= delivery.getOrderId() %>" required />
+          <input type="text" id="orderId" name="orderId" value="<%= delivery.getOrderId() %>" 
+                 <%= !canModify ? "readonly" : "" %> required />
         </div>
 
         <div>
           <label for="deliveringDate">Delivering Date:</label>
-          <input type="datetime-local" id="deliveringDate" name="deliveringDate" value="<%= formattedDate %>" required />
+          <input type="datetime-local" id="deliveringDate" name="deliveringDate" value="<%= formattedDate %>" 
+                 <%= !canModify ? "readonly" : "" %> required />
         </div>
 
         <div>
           <label for="status">Status:</label>
-          <select id="status" name="status" required>
-            <option value="Processing" <%= delivery.getStatus().equals("Processing") ? "selected" : "" %>>Processing</option>
-            <option value="Packed" <%= delivery.getStatus().equals("Packed") ? "selected" : "" %>>Packed</option>
-            <option value="Shipped" <%= delivery.getStatus().equals("Shipped") ? "selected" : "" %>>Shipped</option>
-            <option value="In Transit" <%= delivery.getStatus().equals("In Transit") ? "selected" : "" %>>In Transit</option>
-            <option value="Out for Delivery" <%= delivery.getStatus().equals("Out for Delivery") ? "selected" : "" %>>Out for Delivery</option>
-            <option value="Delivered" <%= delivery.getStatus().equals("Delivered") ? "selected" : "" %>>Delivered</option>
-            <option value="Failed Delivery" <%= delivery.getStatus().equals("Failed Delivery") ? "selected" : "" %>>Failed Delivery</option>
-            <option value="Returned" <%= delivery.getStatus().equals("Returned") ? "selected" : "" %>>Returned</option>
+          <select id="status" name="status" <%= !canModify ? "disabled" : "" %> required>
+            <option value="PENDING" <%= delivery.getStatus().equals("PENDING") ? "selected" : "" %>>PENDING</option>
+            <option value="PROCESSING" <%= delivery.getStatus().equals("PROCESSING") ? "selected" : "" %>>PROCESSING</option>
+            <option value="SHIPPED" <%= delivery.getStatus().equals("SHIPPED") ? "selected" : "" %>>SHIPPED</option>
+            <option value="IN_TRANSIT" <%= delivery.getStatus().equals("IN_TRANSIT") ? "selected" : "" %>>IN_TRANSIT</option>
+            <option value="OUT_FOR_DELIVERY" <%= delivery.getStatus().equals("OUT_FOR_DELIVERY") ? "selected" : "" %>>OUT_FOR_DELIVERY</option>
+            <option value="DELIVERED" <%= delivery.getStatus().equals("DELIVERED") ? "selected" : "" %>>DELIVERED</option>
+            <option value="FAILED_DELIVERY" <%= delivery.getStatus().equals("FAILED_DELIVERY") ? "selected" : "" %>>FAILED_DELIVERY</option>
+            <option value="RETURNED" <%= delivery.getStatus().equals("RETURNED") ? "selected" : "" %>>RETURNED</option>
           </select>
+          <% if (!canModify) { %>
+          <input type="hidden" name="status" value="<%= delivery.getStatus() %>" />
+          <% } %>
         </div>
 
         <div>
           <label for="deliveringAddress">Delivering Address:</label>
-          <textarea id="deliveringAddress" name="deliveringAddress" rows="3" required><%= delivery.getDeliveringAddress() %></textarea>
+          <textarea id="deliveringAddress" name="deliveringAddress" rows="3" 
+                    <%= !canModify ? "readonly" : "" %> required><%= delivery.getDeliveringAddress() %></textarea>
         </div>
 
         <div>
           <label for="nameOnDelivery">Name on Delivery:</label>
-          <input type="text" id="nameOnDelivery" name="nameOnDelivery" value="<%= delivery.getNameOnDelivery() %>" required />
+          <input type="text" id="nameOnDelivery" name="nameOnDelivery" value="<%= delivery.getNameOnDelivery() %>" 
+                 <%= !canModify ? "readonly" : "" %> required />
         </div>
 
         <div>
           <label for="trackingNumber">Tracking Number:</label>
-          <input type="text" id="trackingNumber" name="trackingNumber" value="<%= delivery.getTrackingNumber() %>" required />
+          <input type="text" id="trackingNumber" name="trackingNumber" value="<%= delivery.getTrackingNumber() %>" 
+                 <%= !canModify ? "readonly" : "" %> required />
         </div>
 
         <div>
+          <% if (canModify) { %>
           <button class="btn btn-primary" type="submit">Update Delivery</button>
           <button class="btn" type="reset">Reset</button>
-          <a class="btn" href="delivery?action=list">Cancel</a>
+          <% } else { %>
+          <p><em>This delivery cannot be modified in its current state.</em></p>
+          <% } %>
+          <a class="btn" href="delivery?action=list">Back to List</a>
         </div>
       </form>
       <% } else { %>

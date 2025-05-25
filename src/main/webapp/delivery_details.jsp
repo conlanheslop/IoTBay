@@ -105,18 +105,20 @@
           display: inline-block;
         ">Back to List</a>
         
-        <form style="display: inline-block;" action="delivery" method="post" onsubmit="return confirm('Are you sure you want to delete this delivery?');">
-          <input type="hidden" name="action" value="delete" />
-          <input type="hidden" name="deliveryId" value="<%= delivery.getDeliveryId() %>" />
-          <button type="submit" style="
-            background-color: #dc3545; 
-            color: white; 
-            border: none; 
-            padding: 10px 20px; 
-            border-radius: 5px; 
-            cursor: pointer;
-          ">Delete Delivery</button>
-        </form>
+        <% if ("Pending".equalsIgnoreCase(delivery.getStatus())) { %>
+          <form style="display: inline-block;" action="delivery" method="post" onsubmit="return confirm('Are you sure you want to delete this delivery?');">
+            <input type="hidden" name="action" value="delete" />
+            <input type="hidden" name="deliveryId" value="<%= delivery.getDeliveryId() %>" />
+            <button type="submit" style="
+              background-color: #dc3545; 
+              color: white; 
+              border: none; 
+              padding: 10px 20px; 
+              border-radius: 5px; 
+              cursor: pointer;
+            ">Delete Delivery</button>
+          </form>
+        <% } %>
       </div>
       
       <% } else { %>

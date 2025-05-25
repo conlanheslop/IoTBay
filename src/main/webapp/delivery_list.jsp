@@ -117,11 +117,13 @@
                   <button class="btn btn-primary" type="submit">Update</button>
                 </form>
 
-                <form class="inline-form" action="delivery" method="post" onsubmit="return confirm('Are you sure you want to delete this delivery?');">
-                  <input type="hidden" name="action" value="delete" />
-                  <input type="hidden" name="deliveryId" value="<%= delivery.getDeliveryId() %>"/>
-                  <button class="btn btn-danger" type="submit">Delete</button>
-                </form>
+                <% if ("Pending".equalsIgnoreCase(delivery.getStatus())) { %>
+                  <form class="inline-form" action="delivery" method="post" onsubmit="return confirm('Are you sure you want to delete this delivery?');">
+                    <input type="hidden" name="action" value="delete" />
+                    <input type="hidden" name="deliveryId" value="<%= delivery.getDeliveryId() %>"/>
+                    <button class="btn btn-danger" type="submit">Delete</button>
+                  </form>
+                <% } %>
               </td>
             </tr>
             <% }

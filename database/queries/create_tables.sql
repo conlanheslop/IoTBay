@@ -70,10 +70,12 @@ DROP TABLE IF EXISTS AccessLog;
 
 -- Create the access_log table
 CREATE TABLE AccessLog (
-    id INT PRIMARY KEY,
-    userId VARCHAR(8) NOT NULL,
-    loginDate TIMESTAMP,
-    logoutTime TIMESTAMP,
+    id           INTEGER       PRIMARY KEY AUTOINCREMENT,
+    userId       VARCHAR(8)    NOT NULL,
+    userName     TEXT,                 
+    userEmail    TEXT,                 
+    loginDate    TIMESTAMP     NOT NULL,
+    logoutTime   TIMESTAMP,
     FOREIGN KEY (userId) REFERENCES USER(id)
 );
 

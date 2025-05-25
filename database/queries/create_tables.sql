@@ -83,8 +83,11 @@ CREATE TABLE AccessLog (
 DROP TABLE IF EXISTS Staff;
 
 CREATE TABLE Staff (
-    userId VARCHAR(8) PRIMARY KEY,
-    FOREIGN KEY (userId) REFERENCES USER(id)
+    userId   TEXT    NOT NULL PRIMARY KEY,
+    position TEXT    NOT NULL DEFAULT 'staff',
+    FOREIGN KEY (userId)
+      REFERENCES USER(id)
+      ON DELETE CASCADE
 );
 
 -- Drop the Items table if it already exists

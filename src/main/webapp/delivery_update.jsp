@@ -101,7 +101,7 @@
         <div>
           <button class="btn btn-primary" type="submit">Update Delivery</button>
           <button class="btn" type="reset">Reset</button>
-          <a class="btn" href="delivery?action=view-single&deliveryId=<%= delivery.getDeliveryId() %>">Cancel</a>
+          <a class="btn" href="delivery?action=list">Cancel</a>
         </div>
       </form>
       <% } else { %>

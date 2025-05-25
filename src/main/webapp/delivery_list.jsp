@@ -66,6 +66,13 @@
             placeholder="Search by tracking number or order ID"
             value="<%= request.getAttribute("searchTerm") != null ? request.getAttribute("searchTerm") : "" %>"
           />
+          <input
+            type="date"
+            name="searchDate"
+            placeholder="Search by Delivering Date"
+            value="<%= request.getAttribute("searchDate") != null ? request.getAttribute("searchDate") : "" %>"
+            style="flex: 1; min-width: 200px; padding: 10px; border: 1px solid #ccc; border-radius: 5px;"
+          />
           <button class="btn btn-primary" type="submit">Search</button>
         </form>
       </section>

@@ -1,0 +1,334 @@
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #f4f4f4;
+    padding-top: 70px;  /* leave space for fixed header */
+}
+
+/* --- Header --- */
+header {
+    background-color: #333;
+    color: white;
+    padding: 1rem;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.logo a {
+    color: white;
+    text-decoration: none;
+}
+
+/* --- Navigation --- */
+.nav-links {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center; /* Center items horizontally */
+  align-items: center; /* Align items vertically */
+}
+
+.nav-links a, .nav-link {
+  color: #0066cc;
+  text-decoration: none;
+  margin-left: 20px;
+}
+
+.nav-links a:hover, .nav-link:hover {
+  text-decoration: underline;
+}
+
+header .nav-links a {
+  color: white;
+  text-decoration: none;
+  margin-left: 20px;
+}
+
+/* --- Main Container --- */
+.body-container {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* --- Page Titles and Section Headers --- */
+.page-title {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 2rem;
+}
+
+.section-title {
+    margin: 30px 0 15px;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.section-subtitle {
+    margin: 20px 0 10px;
+    font-size: 1.2rem;
+    color: #333;
+}
+
+/* --- Messages --- */
+.message {
+    padding: 12px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+
+.success-message {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* --- Forms --- */
+form div {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+input[type="text"],
+input[type="datetime-local"],
+select,
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+textarea {
+    resize: vertical;
+}
+
+/* --- Search Form --- */
+.search-section {
+    margin-bottom: 25px;
+    background-color: white;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.search-form {
+    display: flex;
+    align-items: center;
+}
+
+.search-input {
+    flex-grow: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 10px;
+}
+
+/* --- Buttons --- */
+.btn {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #a71d2a;
+}
+
+/* Reset button styles */
+button[type="reset"] {
+    background-color: #6c757d;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+button[type="reset"]:hover {
+    background-color: #5a6268;
+}
+
+/* --- Table Styles --- */
+.deliveries-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.table-header-row {
+    background-color: #007bff;
+}
+
+.table-header-cell {
+    color: white;
+    padding: 12px;
+    text-align: left;
+    font-weight: bold;
+}
+
+.table-data-row:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.table-data-cell {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+}
+
+.actions-cell {
+    white-space: nowrap;
+}
+
+.action-link {
+    color: #0066cc;
+    text-decoration: none;
+    margin-right: 8px;
+}
+
+.action-link:hover {
+    text-decoration: underline;
+}
+
+.inline-form {
+    display: inline;
+}
+
+.no-data-cell {
+    text-align: center;
+    padding: 20px;
+    color: #888;
+}
+
+/* --- Delivery Info --- */
+.delivery-info {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.delivery-data {
+    font-weight: normal;
+}
+
+.update-status-section, .actions-section {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.status-form {
+    display: flex;
+    align-items: center;
+}
+
+.status-select {
+    flex-grow: 1;
+    margin-right: 10px;
+}
+
+.no-info-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 15px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+/* --- Footer --- */
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 1rem;
+    margin-top: 2rem;
+    width: 100%;
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 768px) {
+    .search-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .search-input {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+    
+    .table-data-cell, .table-header-cell {
+        padding: 8px;
+    }
+    
+    .actions-cell {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .action-link, .inline-form {
+        margin-bottom: 5px;
+    }
+}

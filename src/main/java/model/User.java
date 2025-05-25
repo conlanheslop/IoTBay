@@ -1,3 +1,4 @@
+//Need to rework file currently works but alot of extra code has been carried over from my branch 
 package model;
 
 import java.io.Serializable;
@@ -6,7 +7,7 @@ import java.util.Date;
 /**
  * Represents a User in the system.
  * Parent class for specific user types like Customer and Staff.
- * Implements Serializable for potential session management or data transfer.
+ * Implements Serializable for  session management.
  */
 public class User implements Serializable {
 
@@ -55,10 +56,7 @@ public class User implements Serializable {
     }
 
     /**
-     * Full constructor for creating a new, fully-specified user instance programmatically.
-     * Initializes creation and modification dates.
-     * When loading from a database, date fields (createdDate, lastModifiedDate, lastLoginDate)
-     * are typically set via their respective setters after using this constructor.
+     * Full constructor for creating a new, fully-specified user instance.
      * @param id The user's unique ID.
      * @param name The user's full name.
      * @param password The user's password.
@@ -78,7 +76,7 @@ public class User implements Serializable {
         // If loading an existing user, specific dates from DB should be set via setters by the DAO.
     }
 
-    // --- Getters and Setters ---
+    //Getters and Setters
 
     public String getId() {
         return id;
@@ -139,8 +137,6 @@ public class User implements Serializable {
 
     public void setLastLoginDate(Date lastLoginDate) {
         this.lastLoginDate = lastLoginDate;
-        // Note: Main branch did not update lastModifiedDate here.
-        // If login should be considered a modification, add: this.lastModifiedDate = new Date();
     }
 
     public Date getCreatedDate() {
@@ -148,8 +144,6 @@ public class User implements Serializable {
     }
 
     public void setCreatedDate(Date createdDate) {
-        // Typically, createdDate is immutable after initial setting.
-        // However, providing a setter allows for data correction or specific hydration scenarios.
         this.createdDate = createdDate;
     }
 
@@ -161,45 +155,36 @@ public class User implements Serializable {
         this.lastModifiedDate = lastModifiedDate;
     }
 
-    // --- Business Logic Methods (from main branch) ---
 
     /**
      * Simulates user login. Updates the last login date.
-     * @return true if login is considered successful (for this model).
+     * @return true if login is considered successful.
      */
     public boolean login() {
         this.lastLoginDate = new Date();
         return true;
     }
 
-    /**
-     * Simulates user logout.
-     * Placeholder for any specific logout logic.
-     */
     public void logout() {
         // e.g., session invalidation, logging, etc.
     }
 
     /**
      * Simulates a password reset action.
-     * In a real application, this would involve more complex logic.
-     * @return true, indicating the conceptual success of the action.
+     * @return true, indicating success.
      */
     public boolean resetPassword() {
         // Actual password reset logic would be here.
-        // Changing the password via setPassword() would update lastModifiedDate.
         return true;
     }
 
     /**
      * Simulates updating the user's profile.
      * Updates the last modified date.
-     * @return true, indicating the conceptual success of the action.
+     * /
+      @return 
      */
     public boolean updateProfile() {
-        // Assumes individual fields have been updated via setters, which already update lastModifiedDate.
-        // This explicit call ensures lastModifiedDate is current if the updateProfile method itself
-        // signifies the end of a batch of changes.
         this.lastModifiedDate = new Date();
         return true;
     }

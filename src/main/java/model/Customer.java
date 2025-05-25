@@ -3,27 +3,20 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
-// Assuming Order and Item classes are defined elsewhere (e.g., model.Order, model.Item)
 
-/**
- * Customer class, a subclass of User, representing a customer.
- */
+
+// Customer class, a subclass of User, representing a customer.
+
 public class Customer extends User {
 
     private boolean isRegistered;
 
-    /**
-     * No-argument constructor for creating an unregistered customer (e.g., a walk-in).
-     * Assumes User superclass has a no-argument constructor.
-     */
     public Customer() {
         super(); // Calls User()
         this.isRegistered = false;
     }
 
     /**
-     * Constructor for registering a new customer with essential details.
-     * Assumes User superclass has a constructor like User(name, email, password, phone).
      * @param name The customer's full name.
      * @param email The customer's email address.
      * @param password The customer's chosen password.
@@ -34,9 +27,7 @@ public class Customer extends User {
     }
 
     /**
-     * Full constructor for loading a customer from the database or creating a fully detailed customer.
-     * The 'address' is handled by the User superclass.
-     * @param id The customer's unique ID (String).
+     * @param id The customer's unique ID (String) was originally int in my branch
      * @param name The customer's full name.
      * @param email The customer's email address.
      * @param password The customer's password.
@@ -46,19 +37,18 @@ public class Customer extends User {
      */
     public Customer(String id,
                     String name,
-                    String email, // Corrected order to match common User constructor patterns and previous UserManager
+                    String email, // Corrected order to match common User constructor
                     String password,
                     String phone,
                     String address,
                     boolean isRegistered) {
-        // This super call should match the main User constructor used by UserManager
+        // This super call should match User constructor used by UserManager
         super(id, name, password, email, phone, address);
         this.isRegistered = isRegistered;
     }
 
     /**
-     * Gets the customer's ID (inherited from User).
-     * @return The customer's ID as a String.
+     * @return * Gets the customer's ID which is a string (inherited from User).
      */
     public String getUserId() {
         return super.getId();

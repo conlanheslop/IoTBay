@@ -64,3 +64,15 @@ VALUES
 ('O0000003', 'ITM00007', 2, 119.99),
 
 ('O0000004', 'ITM00008', 1, 89.99);
+
+-- Insert Deliveries
+-- not added yet
+INSERT INTO Delivery (
+    deliveryId, orderId, deliveringDate, status, deliveringAddress, nameOnDelivery, trackingNumber
+)
+VALUES
+('D0000001', 'O0000001', '2025-05-15 10:00:00', 'In Transit', '101 Apple St, Cupertino', 'Alice Smith', 'TRK123456'),
+('D0000002', 'O0000002', '2025-05-16 12:30:00', 'Pending', '202 Orange Ave, Mountain View', 'Bob Johnson', 'TRK654321'),
+('D0000003', 'O0000003', '2025-05-17 08:45:00', 'Delivered', '303 Grape Rd, Palo Alto', 'Alice Smith', 'TRK789012'),
+('D0000004', 'O0000004', '2025-05-18 16:15:00', 'Cancelled', '101 Apple St, Cupertino', 'Alice Smith', 'TRK098765');
+

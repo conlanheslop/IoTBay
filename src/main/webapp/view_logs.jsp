@@ -1,12 +1,16 @@
+<!-- Logouttime was fixed recently -->
 <%@ page import="java.util.List, model.AccessLog, java.text.SimpleDateFormat" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-  if (session.getAttribute("user") == null) {
-    response.sendRedirect("login.jsp"); 
-    return;
-  }
-  List<AccessLog> logs = (List<AccessLog>) request.getAttribute("logs");
-  SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    // Redirect if not logged in
+    if (session.getAttribute("user") == null) {
+        response.sendRedirect("login.jsp");
+        return;
+    }
+
+    // Prepare logs and formatter
+    List<AccessLog> logs = (List<AccessLog>) request.getAttribute("logs");
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 %>
 <html>
 <head>
@@ -20,7 +24,7 @@
     }
     body {
       background-color: #f4f4f4;
-      padding-bottom: 70px; /* Footer spacing */
+      padding-bottom: 70px; 
     }
     header {
       background-color: #333;
@@ -124,52 +128,66 @@
 <body>
   <header>
     <div class="header-container">
-      <div class="logo"><a href="index.jsp">IoTBay</a></div>
+      <div class="logo"><a href="welcome.jsp">IoTBay</a></div>
     </div>
   </header>
 
   <div class="logs-container">
-    <h2>Your Access Logs</h2>
-    <form class="filter-form" method="get" action="ViewLogsServlet">
+    <h2>My Access Logs</h2>
+
+    <!-- Date filter form -->
+    <form class="filter-form" action="ViewLogsServlet" method="get">
       <label for="date">Filter by date:</label>
-      <input type="date" id="date" name="date"/>
-      <button type="submit">Search</button>
-      <a href="ViewLogsServlet">Show All</a>
+      <input type="date" id="date" name="date"
+             value="<%= request.getParameter("date") != null ? request.getParameter("date") : "" %>">
+      <button type="submit">Filter</button>
+      <a href="ViewLogsServlet">Clear</a>
     </form>
 
     <div class="table-container">
       <table>
-        <tr><th>Login Time</th><th>Logout Time</th></tr>
-        <% 
-        if (logs != null && !logs.isEmpty()) {
-            for (AccessLog log : logs) { 
-        %>
+        <thead>
           <tr>
-            <td><%= log.getLoginTime() != null ? sdf.format(log.getLoginTime()) : "N/A" %></td>
-            <td>
-              <% if (log.getLogoutTime() != null) { %>
-                <%= sdf.format(log.getLogoutTime()) %>
-              <% } else { %>
-                – still logged in –
-              <% } %>
-            </td>
+            <th>Login Time</th>
+            <th>Logout Time</th>
           </tr>
-        <% 
+        </thead>
+        <tbody>
+          <%
+            if (logs == null || logs.isEmpty()) {
+          %>
+            <tr>
+              <td colspan="2" style="text-align:center; font-style:italic;">
+                No access log entries to display.
+              </td>
+            </tr>
+          <%
+            } else {
+              for (AccessLog log : logs) {
+          %>
+            <tr>
+              <td><%= sdf.format(log.getLoginTime()) %></td>
+              <td>
+                <%= (log.getLogoutTime() != null)
+                     ? sdf.format(log.getLogoutTime())
+                     : "&ndash; still logged in &ndash;" %>
+              </td>
+            </tr>
+          <%
+              }
             }
-        } else { 
-        %>
-          <tr><td colspan="2" style="text-align: center">No access logs found</td></tr>
-        <% } %>
+          %>
+        </tbody>
       </table>
     </div>
 
     <div class="back-link">
-      <a href="index.jsp">← Back to Home</a>
+      <a href="welcome.jsp">&larr; Back to Home</a>
     </div>
   </div>
 
   <footer>
-    <p>2025 IoTBay. wrk1-G5-06.</p>
+    <p>&copy; 2025 IoTBay. wrk1-G5-06.</p>
   </footer>
 </body>
 </html>

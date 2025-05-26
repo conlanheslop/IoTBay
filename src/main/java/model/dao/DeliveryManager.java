@@ -131,6 +131,30 @@ public class DeliveryManager {
     }
   }
 
+  // Fetch all deliveries for a specific user
+  public List<Delivery> fetchDeliveriesByUserId(String userId) throws SQLException {
+      List<Delivery> deliveries = new ArrayList<>();
+      String query = "SELECT d.* FROM Delivery d JOIN Orders o ON d.orderId = o.orderId WHERE o.userId = ? ORDER BY d.deliveringDate DESC";
+      try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+          pstmt.setString(1, userId);
+          try (ResultSet rs = pstmt.executeQuery()) {
+              while (rs.next()) {
+                  String deliveryId = rs.getString("deliveryId");
+                  String orderId = rs.getString("orderId");
+                  Date deliveringDate = rs.getTimestamp("deliveringDate");
+                  String status = rs.getString("status");
+                  String deliveringAddress = rs.getString("deliveringAddress");
+                  String nameOnDelivery = rs.getString("nameOnDelivery");
+                  String trackingNumber = rs.getString("trackingNumber");
+
+                  deliveries.add(new Delivery(deliveryId, orderId, deliveringDate, status, deliveringAddress, nameOnDelivery, trackingNumber)
+                  );
+              }
+          }
+      }
+      return deliveries;
+  }
+
   // Fetch all deliveries
   public List<Delivery> fetchAllDeliveries() throws SQLException {
     List<Delivery> deliveries = new ArrayList<>();

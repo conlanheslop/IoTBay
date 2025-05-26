@@ -17,6 +17,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.dao.DeliveryManager;
 import model.Delivery;
+import model.User;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -178,7 +180,17 @@ public class DeliveryServlet extends HttpServlet {
   )
     throws ServletException, IOException {
     try {
-      List<Delivery> deliveries = deliveryManager.fetchAllDeliveries();
+      HttpSession session = request.getSession();
+      User user = (User) session.getAttribute("user");
+      List<Delivery> deliveries;
+
+      if (user != null) {
+        deliveries = deliveryManager.fetchDeliveriesByUserId(user.getId());
+      } else {
+        // fallback or empty list if no user is logged in
+        deliveries = new ArrayList<>();
+      }
+
       request.setAttribute("deliveries", deliveries);
       RequestDispatcher dispatcher = request.getRequestDispatcher(
         "delivery_list.jsp"
@@ -195,6 +207,7 @@ public class DeliveryServlet extends HttpServlet {
       dispatcher.forward(request, response);
     }
   }
+
 
   private void createDelivery(
     HttpServletRequest request,

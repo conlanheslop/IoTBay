@@ -15,6 +15,7 @@ import model.Bill;
 import model.Order;
 import model.OrderItem;
 import model.Payment;
+import model.User;
 import model.dao.BillManager;
 import model.dao.DBConnector;
 import model.dao.OrderItemManager;
@@ -40,6 +41,42 @@ public class ViewBillServlet extends HttpServlet {
         }
     }
 
+    private Order findOrderInSession(HttpSession session, String orderId) {
+        List<Order> anonymousOrderList = (List<Order>) session.getAttribute("anonymousOrderList");
+        if (anonymousOrderList != null) {
+            for (Order order : anonymousOrderList) {
+                if (order.getOrderId().equals(orderId)) {
+                    return order;
+                }
+            }
+        }
+        return null;
+    }
+
+    private Bill findBillInSession(HttpSession session, String billId) {
+        List<Bill> anonymousBillList = (List<Bill>) session.getAttribute("anonymousBillList");
+        if (anonymousBillList != null) {
+            for (Bill bill : anonymousBillList) {
+                if (bill.getBillId().equals(billId)) {
+                    return bill;
+                }
+            }
+        }
+        return null;
+    }
+
+    private Payment findPaymentInSession(HttpSession session, String paymentId) {
+        List<Payment> anonymousPaymentList = (List<Payment>) session.getAttribute("anonymousPaymentList");
+        if (anonymousPaymentList != null) {
+            for (Payment payment : anonymousPaymentList) {
+                if (payment.getPaymentId().equals(paymentId)) {
+                    return payment;
+                }
+            }
+        }
+        return null;
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -56,32 +93,48 @@ public class ViewBillServlet extends HttpServlet {
         }
 
         try {
-
             orderItemManager = (OrderItemManager) session.getAttribute("orderItemManager");
             orderManager = (OrderManager) session.getAttribute("orderManager");
             billManager = (BillManager) session.getAttribute("billManager");
             paymentManager = (PaymentManager) session.getAttribute("paymentManager");
 
-            Bill bill = billManager.findBill(billId);
+            User user = (User) session.getAttribute("user");
+            Bill bill;
+            Order order;
+            Payment payment = null;
 
-            if (bill == null) {
-                response.sendError(HttpServletResponse.SC_NOT_FOUND, "Bill not found");
-                return;
-            }
-
-            Order order = orderManager.getOrderById(bill.getOrderId());
-
-            if (order != null) {
-                List<OrderItem> itemList = orderItemManager.getItemsByOrderId(order.getOrderId());
-                order.setOrderItems(itemList);
-            }
-            if (bill != null) {
-                Payment payment = paymentManager.findPayment(bill.getPaymentId());
-                session.setAttribute("payment", payment);
+            if (user == null) {
+                // Anonymous user
+                bill = findBillInSession(session, billId);
+                if (bill == null) {
+                    response.sendError(HttpServletResponse.SC_NOT_FOUND, "Bill not found for anonymous user");
+                    return;
+                }
+                order = orderManager.getOrderById(bill.getOrderId());
+                order = findOrderInSession(session, bill.getOrderId());
+                if (bill.getPaymentId() != null) {
+                    payment = findPaymentInSession(session, bill.getPaymentId());
+                }
+            } else {
+                // Logged-in user
+                bill = billManager.findBill(billId);
+                if (bill == null) {
+                    response.sendError(HttpServletResponse.SC_NOT_FOUND, "Bill not found");
+                    return;
+                }
+                order = orderManager.getOrderById(bill.getOrderId());
+                if (order != null) {
+                    List<OrderItem> itemList = orderItemManager.getItemsByOrderId(order.getOrderId());
+                    order.setOrderItems(itemList);
+                }
+                if (bill.getPaymentId() != null) {
+                    payment = paymentManager.findPayment(bill.getPaymentId());
+                }
             }
 
             session.setAttribute("bill", bill);
             session.setAttribute("order", order);
+            session.setAttribute("payment", payment);
 
             request.getRequestDispatcher("/paymentManagement/viewBill.jsp").forward(request, response);
         } catch (SQLException ex) {
@@ -99,3 +152,4 @@ public class ViewBillServlet extends HttpServlet {
         }
     }
 }
+

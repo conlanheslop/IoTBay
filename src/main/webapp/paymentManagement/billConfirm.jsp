@@ -168,7 +168,7 @@
         <input type="text" name="cardholderName" required>
 
         <label>Card Number</label>
-        <input type="text" name="cardNumber" maxlength="16" required>
+        <input type="text" name="cardNumber" maxlength="19" required>
 
         <label>Expiry Date</label>
         <input type="month" name="expiryDate" required>

@@ -82,10 +82,12 @@
                 </form>
 
                 <!-- Delete button form -->
+                <% if(!b.getIsPaid()) { %>
                 <form action="DeleteBillServlet" method="post" onsubmit="return confirm('Are you sure you want to delete this bill?');">
                     <input type="hidden" name="billId" value="<%= b.getBillId() %>">
                     <button type="submit" class="btn" style="background-color: #dc3545;">Delete</button>
                 </form>
+                <% }%>
             </div>
         </div>
     <% } } else { %>

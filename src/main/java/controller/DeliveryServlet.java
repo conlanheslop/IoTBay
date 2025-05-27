@@ -356,19 +356,27 @@ public class DeliveryServlet extends HttpServlet {
     }
   }
 
-  // FIXED: Improved search functionality
-  private void searchDeliveries(
-    HttpServletRequest request,
-    HttpServletResponse response,
-    DeliveryManager deliveryManager
-  )
-    throws ServletException, IOException {
-    String searchTerm = request.getParameter("searchTerm");
-    String searchDateStr = request.getParameter("searchDate");
-    List<Delivery> deliveries = new ArrayList<>();
-    String errorMessage = null;
+  // FIXED: Improved search functionality with user filtering
+private void searchDeliveries(
+  HttpServletRequest request,
+  HttpServletResponse response,
+  DeliveryManager deliveryManager
+)
+  throws ServletException, IOException {
+  String searchTerm = request.getParameter("searchTerm");
+  String searchDateStr = request.getParameter("searchDate");
+  List<Delivery> deliveries = new ArrayList<>();
+  String errorMessage = null;
 
-    try {
+  try {
+    // Get the logged-in user
+    HttpSession session = request.getSession();
+    User user = (User) session.getAttribute("user");
+    
+    if (user == null) {
+      errorMessage = "You must be logged in to search deliveries.";
+      deliveries = new ArrayList<>();
+    } else {
       // Clean up the inputs
       boolean hasSearchTerm = searchTerm != null && !searchTerm.trim().isEmpty();
       boolean hasSearchDate = searchDateStr != null && !searchDateStr.trim().isEmpty();
@@ -384,42 +392,43 @@ public class DeliveryServlet extends HttpServlet {
 
       // Only proceed if no date parsing error occurred
       if (errorMessage == null) {
+        String userId = user.getId();
+        
         if (hasSearchTerm && hasSearchDate) {
           // Both search term and date provided - AND condition
-          deliveries = deliveryManager.searchDeliveries(searchTerm.trim(), searchDate);
+          deliveries = deliveryManager.searchDeliveriesByUser(searchTerm.trim(), searchDate, userId);
         } else if (hasSearchTerm) {
           // Only search term provided
-          deliveries = deliveryManager.searchDeliveriesByID(searchTerm.trim());
+          deliveries = deliveryManager.searchDeliveriesByIDAndUser(searchTerm.trim(), userId);
         } else if (hasSearchDate) {
           // Only date provided
-          deliveries = deliveryManager.searchDeliveriesByDate(searchDate);
+          deliveries = deliveryManager.searchDeliveriesByDateAndUser(searchDate, userId);
         } else {
-          // No search criteria provided, fetch all deliveries
-          deliveries = deliveryManager.fetchAllDeliveries();
+          // No search criteria provided, fetch user's deliveries
+          deliveries = deliveryManager.fetchDeliveriesByUserId(userId);
         }
       }
-    } catch (SQLException e) {
-      errorMessage = "Database error occurred while searching: " + e.getMessage();
-      // Log the actual error for debugging
-      System.err.println("SQL Error in searchDeliveries: " + e.getMessage());
-      e.printStackTrace();
-    } catch (Exception e) {
-      errorMessage = "An unexpected error occurred while searching: " + e.getMessage();
-      // Log the actual error for debugging
-      System.err.println("General Error in searchDeliveries: " + e.getMessage());
-      e.printStackTrace();
-    } finally {
-      // Set attributes for the JSP
-      request.setAttribute("deliveries", deliveries);
-      request.setAttribute("searchTerm", searchTerm);
-      request.setAttribute("searchDate", searchDateStr);
-      
-      if (errorMessage != null) {
-        request.setAttribute("errorMessage", errorMessage);
-      }
-      
-      RequestDispatcher dispatcher = request.getRequestDispatcher("delivery_list.jsp");
-      dispatcher.forward(request, response);
     }
+  } catch (SQLException e) {
+    errorMessage = "Database error occurred while searching: " + e.getMessage();
+    System.err.println("SQL Error in searchDeliveries: " + e.getMessage());
+    e.printStackTrace();
+  } catch (Exception e) {
+    errorMessage = "An unexpected error occurred while searching: " + e.getMessage();
+    System.err.println("General Error in searchDeliveries: " + e.getMessage());
+    e.printStackTrace();
+  } finally {
+    // Set attributes for the JSP
+    request.setAttribute("deliveries", deliveries);
+    request.setAttribute("searchTerm", searchTerm);
+    request.setAttribute("searchDate", searchDateStr);
+    
+    if (errorMessage != null) {
+      request.setAttribute("errorMessage", errorMessage);
+    }
+    
+    RequestDispatcher dispatcher = request.getRequestDispatcher("delivery_list.jsp");
+    dispatcher.forward(request, response);
   }
+}
 }

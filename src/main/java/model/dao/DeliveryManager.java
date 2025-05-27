@@ -380,4 +380,127 @@ public class DeliveryManager {
 
     return deliveries;
   }
+
+  // Search by Order ID or Tracking Number for specific user
+  public List<Delivery> searchDeliveriesByIDAndUser(String searchTerm, String userId)
+    throws SQLException {
+    List<Delivery> deliveries = new ArrayList<>();
+    String sql =
+      "SELECT d.* FROM Delivery d JOIN Orders o ON d.orderId = o.orderId " +
+      "WHERE (d.orderId LIKE ? OR d.trackingNumber LIKE ?) AND o.userId = ? " +
+      "ORDER BY d.deliveringDate DESC";
+
+    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+      pstmt.setString(1, "%" + searchTerm + "%");
+      pstmt.setString(2, "%" + searchTerm + "%");
+      pstmt.setString(3, userId);
+      ResultSet rs = pstmt.executeQuery();
+
+      while (rs.next()) {
+        String deliveryId = rs.getString("deliveryId");
+        String orderId = rs.getString("orderId");
+        Date deliveringDate = rs.getTimestamp("deliveringDate");
+        String status = rs.getString("status");
+        String deliveringAddress = rs.getString("deliveringAddress");
+        String nameOnDelivery = rs.getString("nameOnDelivery");
+        String trackingNumber = rs.getString("trackingNumber");
+
+        deliveries.add(
+          new Delivery(
+            deliveryId,
+            orderId,
+            deliveringDate,
+            status,
+            deliveringAddress,
+            nameOnDelivery,
+            trackingNumber
+          )
+        );
+      }
+    }
+
+    return deliveries;
+  }
+
+  // Search by Date for specific user
+  public List<Delivery> searchDeliveriesByDateAndUser(LocalDate searchDate, String userId)
+    throws SQLException {
+    List<Delivery> deliveries = new ArrayList<>();
+    String sql = 
+      "SELECT d.* FROM Delivery d JOIN Orders o ON d.orderId = o.orderId " +
+      "WHERE date(d.deliveringDate) = ? AND o.userId = ? " +
+      "ORDER BY d.deliveringDate DESC";
+
+    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+      pstmt.setString(1, searchDate.toString());
+      pstmt.setString(2, userId);
+      ResultSet rs = pstmt.executeQuery();
+
+      while (rs.next()) {
+        String deliveryId = rs.getString("deliveryId");
+        String orderId = rs.getString("orderId");
+        Date deliveringDate = rs.getTimestamp("deliveringDate");
+        String status = rs.getString("status");
+        String deliveringAddress = rs.getString("deliveringAddress");
+        String nameOnDelivery = rs.getString("nameOnDelivery");
+        String trackingNumber = rs.getString("trackingNumber");
+
+        deliveries.add(
+          new Delivery(
+            deliveryId,
+            orderId,
+            deliveringDate,
+            status,
+            deliveringAddress,
+            nameOnDelivery,
+            trackingNumber
+          )
+        );
+      }
+    }
+
+    return deliveries;
+  }
+
+  // Search by both ID and Date for specific user
+  public List<Delivery> searchDeliveriesByUser(String searchTerm, LocalDate searchDate, String userId)
+    throws SQLException {
+    List<Delivery> deliveries = new ArrayList<>();
+    String sql =
+      "SELECT d.* FROM Delivery d JOIN Orders o ON d.orderId = o.orderId " +
+      "WHERE (d.orderId LIKE ? OR d.trackingNumber LIKE ?) AND date(d.deliveringDate) = ? AND o.userId = ? " +
+      "ORDER BY d.deliveringDate DESC";
+
+    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+      pstmt.setString(1, "%" + searchTerm + "%");
+      pstmt.setString(2, "%" + searchTerm + "%");
+      pstmt.setString(3, searchDate.toString());
+      pstmt.setString(4, userId);
+
+      ResultSet rs = pstmt.executeQuery();
+      while (rs.next()) {
+        String deliveryId = rs.getString("deliveryId");
+        String orderId = rs.getString("orderId");
+        Date deliveringDate = rs.getTimestamp("deliveringDate");
+        String status = rs.getString("status");
+        String deliveringAddress = rs.getString("deliveringAddress");
+        String nameOnDelivery = rs.getString("nameOnDelivery");
+        String trackingNumber = rs.getString("trackingNumber");
+
+        deliveries.add(
+          new Delivery(
+            deliveryId,
+            orderId,
+            deliveringDate,
+            status,
+            deliveringAddress,
+            nameOnDelivery,
+            trackingNumber
+          )
+        );
+      }
+    }
+
+    return deliveries;
+  }
 }

@@ -203,7 +203,7 @@
     </div>
 
     <footer>
-        &copy; 2025 IoTBay. wrk1-G5-06.
+        &copy; 2025 IoTBay. wrk1-G4-06.
     </footer>
 </body>
 </html>

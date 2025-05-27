@@ -264,7 +264,7 @@
     </div>
 
     <footer>
-        <p>&copy; 2025 IoTBay. wrk1-G5-06.</p>
+        <p>&copy; 2025 IoTBay. wrk1-G4-06.</p>
     </footer>
 </body>
 </html>

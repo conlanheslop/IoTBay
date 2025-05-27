@@ -110,11 +110,7 @@ public class ViewBillServlet extends HttpServlet {
                     response.sendError(HttpServletResponse.SC_NOT_FOUND, "Bill not found for anonymous user");
                     return;
                 }
-                order = findOrderInSession(session, bill.getOrderId());
-                if (order == null) {
-                    response.sendError(HttpServletResponse.SC_NOT_FOUND, "Order not found for anonymous user");
-                    return;
-                }
+                order = orderManager.getOrderById(bill.getOrderId());
                 order = findOrderInSession(session, bill.getOrderId());
                 if (bill.getPaymentId() != null) {
                     payment = findPaymentInSession(session, bill.getPaymentId());

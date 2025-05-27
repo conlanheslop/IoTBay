@@ -21,6 +21,9 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -96,13 +99,13 @@ public class PaymentServlet extends HttpServlet {
             }else {
                 Order order = orderManager.getOrderById(orderId);
                 if (user == null) {
-                    order = findOrderInSession(session, orderId);
-                    //for testing
-                    if (order == null) {
-                        Order defaultOrder = orderManager.getOrderById("O0000001");
-                        saveOrderToSession(session, defaultOrder);
-                        order = findOrderInSession(session, orderId);
-                    }
+                    // order = findOrderInSession(session, orderId);
+                    // //for testing
+                    // if (order == null) {
+                    //     Order defaultOrder = orderManager.getOrderById("O0000001");
+                    //     saveOrderToSession(session, defaultOrder);
+                    //     order = findOrderInSession(session, orderId);
+                    // }
 
                     session.setAttribute("order", order);
                     
@@ -161,18 +164,41 @@ public class PaymentServlet extends HttpServlet {
             String expiryDate = request.getParameter("expiryDate");
             String cvv = request.getParameter("cvv");
 
-            // Check for missing fields
+            // Check for missing or invalid fields
             if (cardholderName == null || cardholderName.trim().isEmpty()) {
                 errors.add("Cardholder name is required.");
             }
+
             if (cardNumber == null || cardNumber.trim().isEmpty()) {
                 errors.add("Card number is required.");
+            } else {
+                cardNumber = cardNumber.trim();
+                if (!cardNumber.matches("\\d{13,19}")) {
+                    errors.add("Card number must be numeric and between 13 to 19 digits.");
+                }
             }
+
             if (expiryDate == null || expiryDate.trim().isEmpty()) {
                 errors.add("Expiry date is required.");
+            } else {
+                try {
+                    YearMonth expiry = YearMonth.parse(expiryDate); // expects yyyy-MM
+                    YearMonth now = YearMonth.now();
+                    if (expiry.isBefore(now)) {
+                        errors.add("Expiry date must be in the future.");
+                    }
+                } catch (DateTimeParseException e) {
+                    errors.add("Expiry date must be in YYYY-MM format.");
+                }
             }
+
             if (cvv == null || cvv.trim().isEmpty()) {
                 errors.add("CVV is required.");
+            } else {
+                cvv = cvv.trim();
+                if (!cvv.matches("\\d{3,4}")) {
+                    errors.add("CVV must be 3 or 4 digits.");
+                }
             }
 
             // Get userId from session (assuming user is logged in and userId is stored in session)

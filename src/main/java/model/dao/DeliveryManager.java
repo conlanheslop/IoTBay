@@ -122,6 +122,25 @@ public class DeliveryManager {
     }
   }
 
+  // Update only status, address, and name for pending deliveries
+  public void updateDeliveryLimited(
+    String deliveryId,
+    String status,
+    String deliveringAddress,
+    String nameOnDelivery
+  )
+    throws SQLException {
+    String safeQuery =
+      "UPDATE Delivery SET status=?, deliveringAddress=?, nameOnDelivery=? WHERE deliveryId=?";
+    try (PreparedStatement pstmt = conn.prepareStatement(safeQuery)) {
+      pstmt.setString(1, status);
+      pstmt.setString(2, deliveringAddress);
+      pstmt.setString(3, nameOnDelivery);
+      pstmt.setString(4, deliveryId);
+      pstmt.executeUpdate();
+    }
+  }
+
   // Delete a delivery
   public void deleteDelivery(String deliveryId) throws SQLException {
     String query = "DELETE FROM Delivery WHERE deliveryId = ?";

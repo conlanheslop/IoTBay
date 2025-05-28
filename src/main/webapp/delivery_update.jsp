@@ -80,14 +80,12 @@
 
         <div>
           <label for="orderId">Order ID:</label>
-          <input type="text" id="orderId" name="orderId" value="<%= delivery.getOrderId() %>" 
-                 <%= !canModify ? "readonly" : "" %> required />
+          <input type="text" id="orderId" name="orderId" value="<%= delivery.getOrderId() %>" readonly />
         </div>
 
         <div>
           <label for="deliveringDate">Delivering Date:</label>
-          <input type="datetime-local" id="deliveringDate" name="deliveringDate" value="<%= formattedDate %>" 
-                 <%= !canModify ? "readonly" : "" %> required />
+          <input type="datetime-local" id="deliveringDate" name="deliveringDate" value="<%= formattedDate %>" readonly />
         </div>
 
         <div>
@@ -95,12 +93,6 @@
           <select id="status" name="status" <%= !canModify ? "disabled" : "" %> required>
             <option value="PENDING" <%= delivery.getStatus().equals("PENDING") ? "selected" : "" %>>PENDING</option>
             <option value="PROCESSING" <%= delivery.getStatus().equals("PROCESSING") ? "selected" : "" %>>PROCESSING</option>
-            <option value="SHIPPED" <%= delivery.getStatus().equals("SHIPPED") ? "selected" : "" %>>SHIPPED</option>
-            <option value="IN_TRANSIT" <%= delivery.getStatus().equals("IN_TRANSIT") ? "selected" : "" %>>IN_TRANSIT</option>
-            <option value="OUT_FOR_DELIVERY" <%= delivery.getStatus().equals("OUT_FOR_DELIVERY") ? "selected" : "" %>>OUT_FOR_DELIVERY</option>
-            <option value="DELIVERED" <%= delivery.getStatus().equals("DELIVERED") ? "selected" : "" %>>DELIVERED</option>
-            <option value="FAILED_DELIVERY" <%= delivery.getStatus().equals("FAILED_DELIVERY") ? "selected" : "" %>>FAILED_DELIVERY</option>
-            <option value="RETURNED" <%= delivery.getStatus().equals("RETURNED") ? "selected" : "" %>>RETURNED</option>
           </select>
           <% if (!canModify) { %>
           <input type="hidden" name="status" value="<%= delivery.getStatus() %>" />
@@ -116,13 +108,12 @@
         <div>
           <label for="nameOnDelivery">Name on Delivery:</label>
           <input type="text" id="nameOnDelivery" name="nameOnDelivery" value="<%= delivery.getNameOnDelivery() %>" 
-                 <%= !canModify ? "readonly" : "" %> required />
+                <%= !canModify ? "readonly" : "" %> required />
         </div>
 
         <div>
           <label for="trackingNumber">Tracking Number:</label>
-          <input type="text" id="trackingNumber" name="trackingNumber" value="<%= delivery.getTrackingNumber() %>" 
-                 <%= !canModify ? "readonly" : "" %> required />
+          <input type="text" id="trackingNumber" name="trackingNumber" value="<%= delivery.getTrackingNumber() %>" readonly />
         </div>
 
         <div>

@@ -72,14 +72,7 @@ pageEncoding="UTF-8"%>
         <div>
           <label for="status">Status:</label>
           <select id="status" name="status" required>
-            <option value="Processing">Processing</option>
-            <option value="Packed">Packed</option>
-            <option value="Shipped">Shipped</option>
-            <option value="In Transit">In Transit</option>
-            <option value="Out for Delivery">Out for Delivery</option>
-            <option value="Delivered">Delivered</option>
-            <option value="Failed Delivery">Failed Delivery</option>
-            <option value="Returned">Returned</option>
+            <option value="PENDING" selected>PENDING</option>
           </select>
         </div>
 

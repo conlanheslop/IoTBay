@@ -273,12 +273,9 @@ public class DeliveryServlet extends HttpServlet {
     throws ServletException, IOException {
     try {
       String deliveryId = request.getParameter("deliveryId");
-      String orderId = request.getParameter("orderId");
-      String deliveringDateStr = request.getParameter("deliveringDate");
       String status = request.getParameter("status");
       String deliveringAddress = request.getParameter("deliveringAddress");
       String nameOnDelivery = request.getParameter("nameOnDelivery");
-      String trackingNumber = request.getParameter("trackingNumber");
 
       // Check if delivery can be modified (only if current status is PENDING)
       String currentStatus = deliveryManager.getDeliveryStatus(deliveryId);
@@ -290,27 +287,23 @@ public class DeliveryServlet extends HttpServlet {
         return;
       }
 
-      SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
-      Date deliveringDate = sdf.parse(deliveringDateStr);
+      // Get existing delivery data to preserve other fields
+      Delivery existingDelivery = deliveryManager.findDelivery(deliveryId);
+      if (existingDelivery == null) {
+        session.setAttribute("errorMessage", "Delivery not found.");
+        response.sendRedirect("delivery?action=list");
+        return;
+      }
 
-      deliveryManager.updateDelivery(
+      deliveryManager.updateDeliveryLimited(
         deliveryId,
-        orderId,
-        deliveringDate,
         status,
         deliveringAddress,
-        nameOnDelivery,
-        trackingNumber
+        nameOnDelivery
       );
 
       session.setAttribute("successMessage", "Delivery updated successfully!");
       response.sendRedirect("delivery?action=list");
-    } catch (ParseException e) {
-      request.setAttribute(
-        "errorMessage",
-        "Invalid date format: " + e.getMessage()
-      );
-      showUpdateForm(request, response, deliveryManager);
     } catch (SQLException e) {
       request.setAttribute(
         "errorMessage",

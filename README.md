@@ -19,7 +19,8 @@ https://www.qamadness.com/knowledge-base/how-to-install-maven-and-configure-envi
 
 ## How to Deploy
 1. In the “SERVERS” panel to the left, click “Create New Server”, click “yes”, and select “Apache Tomcat-11.0.0” to download server.
-2. Right click on the “webapp” folder in the Explorer, select “Run on Server”, and select the “Apache Tomcat” server you’ve installed. [Note: deploy your webapp folder, not individual files]
-3. Right click the tomcat server in the “SERVERS” panel and click “Start Server”, then right click again and click “Server Actions”, then “Show in Browser”, and then select your webapp.
-4. You should see a page pop up in your default browser with the “index.jsp” content. 
+2. Open your terminal and run the command ```mvn clean compile package```
+3. Right click on the "IoTBay" folder inside of the newly generated target folder in the Explorer, select "Run on Server", and select the "Apache Tomcat" server you've installed.
+4. Right click the tomcat server in the “SERVERS” panel and click “Start Server”, then right click again and click “Server Actions”, then “Show in Browser”, and then select your webapp.
+5. You should see a page pop up in your default browser with the “index.jsp” content. 
 
